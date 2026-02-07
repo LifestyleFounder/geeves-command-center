@@ -2547,6 +2547,96 @@ body {
     color: var(--text-primary);
 }
 
+/* Model Selector */
+.model-selector {
+    position: relative;
+}
+
+.model-selector-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.model-selector-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.model-icon {
+    font-size: 14px;
+}
+
+.model-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--charcoal);
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    min-width: 200px;
+    padding: var(--space-xs);
+    z-index: 100;
+    display: none;
+}
+
+.model-dropdown.open {
+    display: block;
+}
+
+.model-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: #fff;
+    transition: background 0.15s;
+}
+
+.model-option:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.model-option.selected {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.model-opt-icon {
+    font-size: 14px;
+}
+
+.model-opt-name {
+    flex: 1;
+    font-size: 14px;
+}
+
+.model-opt-check {
+    opacity: 0;
+    color: var(--success);
+    font-size: 14px;
+}
+
+.model-option.selected .model-opt-check {
+    opacity: 1;
+}
+
+.model-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: var(--space-xs) 0;
+}
+
 .chat-agent-info {
     padding: var(--space-sm) var(--space-md);
     background: var(--bg-secondary);

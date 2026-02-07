@@ -910,15 +910,59 @@
             <div class="chat-header-left">
                 <div class="agent-selector">
                     <select id="agentSelect" onchange="switchAgent(this.value)">
-                        <option value="geeves" selected>🤖 Geeves (Main)</option>
-                        <option value="copy">✍️ Copy (Copywriting)</option>
-                        <option value="close">💬 Close Bot (DM Sales)</option>
-                        <option value="workshop">🎯 Workshop (Sales Pages)</option>
-                        <option value="content">📱 Content (Social)</option>
+                        <option value="geeves" selected>🤖 Geeves</option>
+                        <option value="copy">✍️ Copy</option>
+                        <option value="close">💬 Close Bot</option>
+                        <option value="workshop">🎯 Workshop</option>
+                        <option value="content">📱 Content</option>
                     </select>
                 </div>
             </div>
             <div class="chat-header-right">
+                <div class="model-selector">
+                    <button class="model-selector-btn" id="modelSelectorBtn" onclick="toggleModelDropdown()">
+                        <span class="model-icon" id="modelIcon">🔮</span>
+                        <span class="model-name" id="modelName">Auto</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </button>
+                    <div class="model-dropdown" id="modelDropdown">
+                        <div class="model-option selected" data-model="auto" onclick="selectModel('auto')">
+                            <span class="model-opt-icon">🔮</span>
+                            <span class="model-opt-name">Auto</span>
+                            <span class="model-opt-check">✓</span>
+                        </div>
+                        <div class="model-divider"></div>
+                        <div class="model-option" data-model="claude-opus-4" onclick="selectModel('claude-opus-4')">
+                            <span class="model-opt-icon">🟠</span>
+                            <span class="model-opt-name">Claude Opus 4</span>
+                            <span class="model-opt-check">✓</span>
+                        </div>
+                        <div class="model-option" data-model="claude-sonnet-4" onclick="selectModel('claude-sonnet-4')">
+                            <span class="model-opt-icon">🟠</span>
+                            <span class="model-opt-name">Claude Sonnet 4</span>
+                            <span class="model-opt-check">✓</span>
+                        </div>
+                        <div class="model-divider"></div>
+                        <div class="model-option" data-model="gpt-4o" onclick="selectModel('gpt-4o')">
+                            <span class="model-opt-icon">🟢</span>
+                            <span class="model-opt-name">GPT-4o</span>
+                            <span class="model-opt-check">✓</span>
+                        </div>
+                        <div class="model-option" data-model="gpt-4-turbo" onclick="selectModel('gpt-4-turbo')">
+                            <span class="model-opt-icon">🟢</span>
+                            <span class="model-opt-name">GPT-4 Turbo</span>
+                            <span class="model-opt-check">✓</span>
+                        </div>
+                        <div class="model-divider"></div>
+                        <div class="model-option" data-model="gemini-pro" onclick="selectModel('gemini-pro')">
+                            <span class="model-opt-icon">🔵</span>
+                            <span class="model-opt-name">Gemini Pro</span>
+                            <span class="model-opt-check">✓</span>
+                        </div>
+                    </div>
+                </div>
                 <button class="btn-icon" onclick="openChatFullscreen()" title="Open fullscreen">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="15 3 21 3 21 9"/>

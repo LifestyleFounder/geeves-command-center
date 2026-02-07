@@ -1563,7 +1563,54 @@ const agents = {
 
 let chatOpen = false;
 let currentAgent = 'geeves';
+let currentModel = 'auto';
 let chatLoaded = false;
+
+const models = {
+    'auto': { name: 'Auto', icon: '🔮' },
+    'claude-opus-4': { name: 'Claude Opus 4', icon: '🟠' },
+    'claude-sonnet-4': { name: 'Claude Sonnet 4', icon: '🟠' },
+    'gpt-4o': { name: 'GPT-4o', icon: '🟢' },
+    'gpt-4-turbo': { name: 'GPT-4 Turbo', icon: '🟢' },
+    'gemini-pro': { name: 'Gemini Pro', icon: '🔵' }
+};
+
+function toggleModelDropdown() {
+    const dropdown = document.getElementById('modelDropdown');
+    dropdown.classList.toggle('open');
+}
+
+function selectModel(modelId) {
+    currentModel = modelId;
+    const model = models[modelId];
+    
+    // Update button display
+    document.getElementById('modelIcon').textContent = model.icon;
+    document.getElementById('modelName').textContent = model.name;
+    
+    // Update selected state in dropdown
+    document.querySelectorAll('.model-option').forEach(opt => {
+        opt.classList.toggle('selected', opt.dataset.model === modelId);
+    });
+    
+    // Close dropdown
+    document.getElementById('modelDropdown').classList.remove('open');
+    
+    // If chat is loaded, send model change command
+    // For now, we'll reload with the new model
+    if (chatLoaded && modelId !== 'auto') {
+        // Could send a /model command to the chat or reload
+        console.log('Model changed to:', modelId);
+    }
+}
+
+// Close model dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    const modelSelector = document.querySelector('.model-selector');
+    if (modelSelector && !modelSelector.contains(e.target)) {
+        document.getElementById('modelDropdown')?.classList.remove('open');
+    }
+});
 
 function toggleChat() {
     const panel = document.getElementById('chatPanel');
@@ -1754,6 +1801,8 @@ window.saveNote = saveNote;
 window.deleteNote = deleteNote;
 window.cancelNoteEdit = cancelNoteEdit;
 window.formatText = formatText;
+window.toggleModelDropdown = toggleModelDropdown;
+window.selectModel = selectModel;
 window.addNote = addNote;
 window.toggleNotes = toggleNotes;
 window.copyToClipboard = copyToClipboard;
