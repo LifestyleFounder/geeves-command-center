@@ -1540,8 +1540,8 @@ let isGenerating = false;
 
 const models = {
     'auto': { name: 'Auto', icon: '🔮', apiModel: null },
-    'claude-opus-4': { name: 'Claude Opus 4', icon: '🟠', apiModel: 'claude-3-opus-20240229', provider: 'anthropic' },
-    'claude-sonnet-4': { name: 'Claude Sonnet 4', icon: '🟠', apiModel: 'claude-3-5-sonnet-20241022', provider: 'anthropic' },
+    'claude-opus-4': { name: 'Claude Opus 4', icon: '🟠', apiModel: 'claude-opus-4-20250514', provider: 'anthropic' },
+    'claude-sonnet-4': { name: 'Claude Sonnet 4', icon: '🟠', apiModel: 'claude-sonnet-4-20250514', provider: 'anthropic' },
     'gpt-4o': { name: 'GPT-4o', icon: '🟢', apiModel: 'gpt-4o', provider: 'openai' },
     'gpt-4-turbo': { name: 'GPT-4 Turbo', icon: '🟢', apiModel: 'gpt-4-turbo-preview', provider: 'openai' }
 };
