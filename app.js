@@ -1845,7 +1845,7 @@ async function callAnthropic(messages, model, apiKey) {
 async function callOpenClaw(messages, model, openclawUrl) {
     // OpenClaw OpenAI-compatible HTTP endpoint
     const baseUrl = openclawUrl || '';
-    const settings = loadSettings();
+    const settings = getChatSettings();
     const token = settings.openclawToken || 'geeves-local-token-2026';
     
     try {
