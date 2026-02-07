@@ -1992,7 +1992,7 @@ body {
 /* Business Grid */
 .business-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
     gap: var(--space-lg);
 }
 
@@ -2186,13 +2186,29 @@ body {
 
 .pipeline-metrics-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-md);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
     margin-top: var(--space-md);
 }
 
 .pipeline-metrics-grid .metric-card {
-    padding: var(--space-lg);
+    padding: var(--space-md);
+}
+
+.pipeline-metrics-grid .metric-main {
+    font-size: 28px;
+}
+
+.pipeline-metrics-grid .metric-header {
+    margin-bottom: var(--space-xs);
+}
+
+.pipeline-metrics-grid .metric-icon {
+    font-size: 18px;
+}
+
+.pipeline-metrics-grid .metric-title {
+    font-size: 11px;
 }
 
 .metric-card.apps-card {
@@ -2263,7 +2279,7 @@ body {
     }
     
     .pipeline-metrics-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
     
     .business-grid {
