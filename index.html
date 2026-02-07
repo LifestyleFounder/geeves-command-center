@@ -902,6 +902,35 @@
                 <button class="btn btn-secondary" onclick="closeModal()">Close</button>
             </div>
         </div>
+
+        <!-- Chat Settings Modal -->
+        <div class="modal" id="chatSettingsModal">
+            <div class="modal-header">
+                <h2>Chat Settings</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>OpenAI API Key</label>
+                    <input type="password" id="openaiApiKey" placeholder="sk-...">
+                    <small>For GPT-4o and GPT-4 Turbo</small>
+                </div>
+                <div class="form-group">
+                    <label>Anthropic API Key</label>
+                    <input type="password" id="anthropicApiKey" placeholder="sk-ant-...">
+                    <small>For Claude models (requires proxy or local access)</small>
+                </div>
+                <div class="form-group">
+                    <label>OpenClaw URL (for Claude)</label>
+                    <input type="text" id="openclawUrl" placeholder="http://127.0.0.1:18789">
+                    <small>Your local OpenClaw instance</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveChatSettings()">Save</button>
+            </div>
+        </div>
     </div>
 
     <!-- Chat Panel -->
@@ -977,16 +1006,37 @@
             <span class="agent-name">Geeves</span>
             <span class="agent-desc">Your EA — strategy, ops, research, everything</span>
         </div>
-        <div class="chat-iframe-container">
-            <iframe 
-                id="chatIframe" 
-                src="about:blank" 
-                title="Chat with Geeves"
-                allow="clipboard-write"
-            ></iframe>
-            <div class="chat-loading" id="chatLoading">
-                <div class="chat-loading-spinner"></div>
-                <span>Connecting to Geeves...</span>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-welcome" id="chatWelcome">
+                <div class="welcome-icon" id="welcomeIcon">🤖</div>
+                <h3 id="welcomeTitle">Chat with Geeves</h3>
+                <p id="welcomeDesc">Your EA — strategy, ops, research, everything</p>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <div class="chat-input-container">
+                <textarea 
+                    id="chatInput" 
+                    placeholder="Message Geeves..."
+                    rows="1"
+                    onkeydown="handleChatKeydown(event)"
+                    oninput="autoResizeTextarea(this)"
+                ></textarea>
+                <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="chat-input-footer">
+                <span class="chat-model-indicator" id="chatModelIndicator">Using: Auto</span>
+                <button class="chat-settings-btn" onclick="openChatSettings()" title="API Settings">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                </button>
             </div>
         </div>
     </div>

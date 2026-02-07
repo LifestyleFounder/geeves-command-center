@@ -1529,50 +1529,38 @@ function openClientModal() {
 // CHAT PANEL
 // ===========================================
 
-const agents = {
-    geeves: {
-        name: 'Geeves',
-        desc: 'Your EA — strategy, ops, research, everything',
-        url: 'http://127.0.0.1:18789/?token=geeves-local-token-2026'
-    },
-    copy: {
-        name: 'Copy',
-        desc: 'Copywriting expert — hooks, emails, sales copy',
-        url: null, // Will be configured later
-        placeholder: true
-    },
-    close: {
-        name: 'Close Bot', 
-        desc: 'DM sales — Close By Chat methodology',
-        url: null,
-        placeholder: true
-    },
-    workshop: {
-        name: 'Workshop',
-        desc: 'Sales pages & workshop scripts',
-        url: null,
-        placeholder: true
-    },
-    content: {
-        name: 'Content',
-        desc: 'Social posts, video scripts, platform-specific',
-        url: null,
-        placeholder: true
-    }
-};
+// Agent configs loaded from agents.json
 
 let chatOpen = false;
 let currentAgent = 'geeves';
 let currentModel = 'auto';
-let chatLoaded = false;
+let chatMessages = [];
+let agentConfigs = {};
+let isGenerating = false;
 
 const models = {
-    'auto': { name: 'Auto', icon: '🔮' },
-    'claude-opus-4': { name: 'Claude Opus 4', icon: '🟠' },
-    'claude-sonnet-4': { name: 'Claude Sonnet 4', icon: '🟠' },
-    'gpt-4o': { name: 'GPT-4o', icon: '🟢' },
-    'gpt-4-turbo': { name: 'GPT-4 Turbo', icon: '🟢' }
+    'auto': { name: 'Auto', icon: '🔮', apiModel: null },
+    'claude-opus-4': { name: 'Claude Opus 4', icon: '🟠', apiModel: 'claude-3-opus-20240229', provider: 'anthropic' },
+    'claude-sonnet-4': { name: 'Claude Sonnet 4', icon: '🟠', apiModel: 'claude-3-5-sonnet-20241022', provider: 'anthropic' },
+    'gpt-4o': { name: 'GPT-4o', icon: '🟢', apiModel: 'gpt-4o', provider: 'openai' },
+    'gpt-4-turbo': { name: 'GPT-4 Turbo', icon: '🟢', apiModel: 'gpt-4-turbo-preview', provider: 'openai' }
 };
+
+// Load agent configs
+async function loadAgentConfigs() {
+    const data = await loadJSON('agents');
+    if (data && data.agents) {
+        data.agents.forEach(agent => {
+            agentConfigs[agent.id] = agent;
+        });
+    }
+}
+
+// Initialize chat on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadAgentConfigs();
+    loadChatSettings();
+});
 
 function toggleModelDropdown() {
     const dropdown = document.getElementById('modelDropdown');
@@ -1595,11 +1583,19 @@ function selectModel(modelId) {
     // Close dropdown
     document.getElementById('modelDropdown').classList.remove('open');
     
-    // If chat is loaded, send model change command
-    // For now, we'll reload with the new model
-    if (chatLoaded && modelId !== 'auto') {
-        // Could send a /model command to the chat or reload
-        console.log('Model changed to:', modelId);
+    // Update indicator
+    updateModelIndicator();
+}
+
+function updateModelIndicator() {
+    const indicator = document.getElementById('chatModelIndicator');
+    const model = models[currentModel];
+    const agent = agentConfigs[currentAgent];
+    
+    if (currentModel === 'auto' && agent) {
+        indicator.textContent = `Using: ${agent.defaultModel || 'claude-opus-4'}`;
+    } else {
+        indicator.textContent = `Using: ${model.name}`;
     }
 }
 
@@ -1611,6 +1607,253 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// Chat Settings
+function loadChatSettings() {
+    const settings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
+    if (document.getElementById('openaiApiKey')) {
+        document.getElementById('openaiApiKey').value = settings.openaiApiKey || '';
+    }
+    if (document.getElementById('anthropicApiKey')) {
+        document.getElementById('anthropicApiKey').value = settings.anthropicApiKey || '';
+    }
+    if (document.getElementById('openclawUrl')) {
+        document.getElementById('openclawUrl').value = settings.openclawUrl || 'http://127.0.0.1:18789';
+    }
+}
+
+function openChatSettings() {
+    loadChatSettings();
+    openModal('chatSettingsModal');
+}
+
+function saveChatSettings() {
+    const settings = {
+        openaiApiKey: document.getElementById('openaiApiKey').value.trim(),
+        anthropicApiKey: document.getElementById('anthropicApiKey').value.trim(),
+        openclawUrl: document.getElementById('openclawUrl').value.trim()
+    };
+    localStorage.setItem('chatSettings', JSON.stringify(settings));
+    closeModal();
+}
+
+function getChatSettings() {
+    return JSON.parse(localStorage.getItem('chatSettings') || '{}');
+}
+
+// Chat UI Functions
+function handleChatKeydown(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendChatMessage();
+    }
+}
+
+function autoResizeTextarea(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+}
+
+function addMessageToChat(role, content, agentIcon = null) {
+    const messagesContainer = document.getElementById('chatMessages');
+    const welcome = document.getElementById('chatWelcome');
+    
+    if (welcome) {
+        welcome.style.display = 'none';
+    }
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${role}`;
+    
+    const avatar = role === 'user' ? '👤' : (agentIcon || agentConfigs[currentAgent]?.icon || '🤖');
+    
+    messageDiv.innerHTML = `
+        <div class="message-avatar">${avatar}</div>
+        <div class="message-content">${formatMessageContent(content)}</div>
+    `;
+    
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
+    return messageDiv;
+}
+
+function addLoadingMessage() {
+    const messagesContainer = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'chat-message assistant';
+    messageDiv.id = 'loadingMessage';
+    
+    const agentIcon = agentConfigs[currentAgent]?.icon || '🤖';
+    
+    messageDiv.innerHTML = `
+        <div class="message-avatar">${agentIcon}</div>
+        <div class="message-content">
+            <div class="message-loading">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    `;
+    
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function removeLoadingMessage() {
+    const loading = document.getElementById('loadingMessage');
+    if (loading) loading.remove();
+}
+
+function formatMessageContent(content) {
+    // Basic markdown-like formatting
+    return content
+        .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br>');
+}
+
+async function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    
+    if (!message || isGenerating) return;
+    
+    // Add user message to chat
+    addMessageToChat('user', message);
+    chatMessages.push({ role: 'user', content: message });
+    
+    // Clear input
+    input.value = '';
+    input.style.height = 'auto';
+    
+    // Show loading
+    isGenerating = true;
+    document.getElementById('chatSendBtn').disabled = true;
+    addLoadingMessage();
+    
+    try {
+        const response = await callLLMAPI(message);
+        removeLoadingMessage();
+        addMessageToChat('assistant', response);
+        chatMessages.push({ role: 'assistant', content: response });
+    } catch (error) {
+        removeLoadingMessage();
+        addMessageToChat('assistant', `Error: ${error.message}. Check your API settings.`);
+    } finally {
+        isGenerating = false;
+        document.getElementById('chatSendBtn').disabled = false;
+    }
+}
+
+async function callLLMAPI(userMessage) {
+    const settings = getChatSettings();
+    const agent = agentConfigs[currentAgent] || {};
+    
+    // Determine which model to use
+    let modelConfig;
+    if (currentModel === 'auto') {
+        const defaultModel = agent.defaultModel || 'claude-opus-4';
+        modelConfig = models[defaultModel] || models['gpt-4o'];
+    } else {
+        modelConfig = models[currentModel];
+    }
+    
+    const systemPrompt = agent.systemPrompt || 'You are a helpful assistant.';
+    
+    // Build messages array
+    const messages = [
+        { role: 'system', content: systemPrompt },
+        ...chatMessages.slice(-10), // Keep last 10 messages for context
+        { role: 'user', content: userMessage }
+    ];
+    
+    if (modelConfig.provider === 'openai') {
+        return await callOpenAI(messages, modelConfig.apiModel, settings.openaiApiKey);
+    } else if (modelConfig.provider === 'anthropic') {
+        // Try OpenClaw first, then direct API
+        if (settings.openclawUrl) {
+            try {
+                return await callOpenClaw(messages, modelConfig.apiModel, settings.openclawUrl);
+            } catch (e) {
+                console.log('OpenClaw failed, trying direct API');
+            }
+        }
+        return await callAnthropic(messages, modelConfig.apiModel, settings.anthropicApiKey);
+    }
+    
+    throw new Error('No valid model configuration');
+}
+
+async function callOpenAI(messages, model, apiKey) {
+    if (!apiKey) {
+        throw new Error('OpenAI API key not configured');
+    }
+    
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            model: model,
+            messages: messages,
+            max_tokens: 2048
+        })
+    });
+    
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'OpenAI API error');
+    }
+    
+    const data = await response.json();
+    return data.choices[0].message.content;
+}
+
+async function callAnthropic(messages, model, apiKey) {
+    if (!apiKey) {
+        throw new Error('Anthropic API key not configured. Use GPT models or set up OpenClaw.');
+    }
+    
+    // Note: Anthropic doesn't allow direct browser calls (CORS)
+    // This will fail from browser - need proxy or OpenClaw
+    const systemMessage = messages.find(m => m.role === 'system');
+    const otherMessages = messages.filter(m => m.role !== 'system');
+    
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+            model: model,
+            max_tokens: 2048,
+            system: systemMessage?.content || '',
+            messages: otherMessages.map(m => ({
+                role: m.role === 'assistant' ? 'assistant' : 'user',
+                content: m.content
+            }))
+        })
+    });
+    
+    if (!response.ok) {
+        throw new Error('Anthropic API error (CORS may block browser calls - use OpenClaw)');
+    }
+    
+    const data = await response.json();
+    return data.content[0].text;
+}
+
+async function callOpenClaw(messages, model, openclawUrl) {
+    // This would need OpenClaw to expose an API endpoint
+    // For now, throw to fall back to direct API
+    throw new Error('OpenClaw API integration not yet implemented');
+}
+
 function toggleChat() {
     const panel = document.getElementById('chatPanel');
     const overlay = document.getElementById('chatOverlay');
@@ -1620,63 +1863,61 @@ function toggleChat() {
     if (chatOpen) {
         panel.classList.add('open');
         overlay.classList.add('open');
-        
-        // Load chat iframe if not already loaded
-        if (!chatLoaded) {
-            loadChatIframe(currentAgent);
-        }
+        updateChatUI();
+        document.getElementById('chatInput')?.focus();
     } else {
         panel.classList.remove('open');
         overlay.classList.remove('open');
     }
 }
 
-function loadChatIframe(agentId) {
-    const agent = agents[agentId];
-    const iframe = document.getElementById('chatIframe');
-    const loading = document.getElementById('chatLoading');
-    
-    if (!agent) return;
+function updateChatUI() {
+    const agent = agentConfigs[currentAgent] || {
+        name: 'Assistant',
+        icon: '🤖',
+        description: 'AI Assistant'
+    };
     
     // Update agent info
     document.getElementById('chatAgentInfo').innerHTML = `
         <span class="agent-name">${agent.name}</span>
-        <span class="agent-desc">${agent.desc}</span>
+        <span class="agent-desc">${agent.description}</span>
     `;
     
-    if (agent.placeholder) {
-        // Show placeholder for agents not yet configured
-        loading.innerHTML = `
-            <div style="text-align: center; padding: 40px;">
-                <div style="font-size: 48px; margin-bottom: 16px;">🚧</div>
-                <h3 style="margin-bottom: 8px;">${agent.name} Agent</h3>
-                <p style="color: var(--text-tertiary); margin-bottom: 16px;">${agent.desc}</p>
-                <p style="font-size: 13px; color: var(--text-tertiary);">
-                    This specialized agent is coming soon!<br>
-                    Ask Geeves to set it up for you.
-                </p>
-            </div>
-        `;
-        loading.classList.remove('hidden');
-        iframe.src = 'about:blank';
-        return;
-    }
+    // Update welcome screen
+    const welcomeIcon = document.getElementById('welcomeIcon');
+    const welcomeTitle = document.getElementById('welcomeTitle');
+    const welcomeDesc = document.getElementById('welcomeDesc');
     
-    if (agent.url) {
-        loading.classList.remove('hidden');
-        iframe.src = agent.url;
-        
-        iframe.onload = () => {
-            loading.classList.add('hidden');
-            chatLoaded = true;
-        };
-    }
+    if (welcomeIcon) welcomeIcon.textContent = agent.icon;
+    if (welcomeTitle) welcomeTitle.textContent = `Chat with ${agent.name}`;
+    if (welcomeDesc) welcomeDesc.textContent = agent.description;
+    
+    // Update input placeholder
+    const input = document.getElementById('chatInput');
+    if (input) input.placeholder = `Message ${agent.name}...`;
+    
+    // Update model indicator
+    updateModelIndicator();
 }
 
 function switchAgent(agentId) {
     currentAgent = agentId;
-    chatLoaded = false;
-    loadChatIframe(agentId);
+    
+    // Clear chat history when switching agents
+    chatMessages = [];
+    const messagesContainer = document.getElementById('chatMessages');
+    if (messagesContainer) {
+        messagesContainer.innerHTML = `
+            <div class="chat-welcome" id="chatWelcome">
+                <div class="welcome-icon" id="welcomeIcon">🤖</div>
+                <h3 id="welcomeTitle">Chat with Assistant</h3>
+                <p id="welcomeDesc">AI Assistant</p>
+            </div>
+        `;
+    }
+    
+    updateChatUI();
 }
 
 function openChatFullscreen() {
@@ -1802,6 +2043,11 @@ window.cancelNoteEdit = cancelNoteEdit;
 window.formatText = formatText;
 window.toggleModelDropdown = toggleModelDropdown;
 window.selectModel = selectModel;
+window.handleChatKeydown = handleChatKeydown;
+window.autoResizeTextarea = autoResizeTextarea;
+window.sendChatMessage = sendChatMessage;
+window.openChatSettings = openChatSettings;
+window.saveChatSettings = saveChatSettings;
 window.addNote = addNote;
 window.toggleNotes = toggleNotes;
 window.copyToClipboard = copyToClipboard;
