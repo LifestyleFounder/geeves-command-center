@@ -2999,3 +2999,12 @@ body {
         right: -100%;
     }
 }
+
+/* Calendar Embed */
+.calendar-embed {
+    margin-top: var(--space-md);
+}
+
+.calendar-embed iframe {
+    background: white;
+}
