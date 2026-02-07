@@ -60,7 +60,7 @@ function switchTab(tabName) {
     const titles = {
         business: 'Business',
         tracker: 'Performance',
-        kanban: 'Kanban',
+        kanban: 'Projects',
         activity: 'Activity',
         docs: 'Docs Hub',
         content: 'Content Intel',
@@ -1771,15 +1771,9 @@ async function callLLMAPI(userMessage) {
     if (modelConfig.provider === 'openai') {
         return await callOpenAI(messages, modelConfig.apiModel, settings.openaiApiKey);
     } else if (modelConfig.provider === 'anthropic') {
-        // Try OpenClaw first, then direct API
-        if (settings.openclawUrl) {
-            try {
-                return await callOpenClaw(messages, modelConfig.apiModel, settings.openclawUrl);
-            } catch (e) {
-                console.log('OpenClaw failed, trying direct API');
-            }
-        }
-        return await callAnthropic(messages, modelConfig.apiModel, settings.anthropicApiKey);
+        // Use OpenClaw for Claude (Anthropic doesn't allow direct browser calls)
+        const openclawUrl = settings.openclawUrl || 'http://127.0.0.1:18789';
+        return await callOpenClaw(messages, modelConfig.apiModel, openclawUrl);
     }
     
     throw new Error('No valid model configuration');
@@ -1849,9 +1843,38 @@ async function callAnthropic(messages, model, apiKey) {
 }
 
 async function callOpenClaw(messages, model, openclawUrl) {
-    // This would need OpenClaw to expose an API endpoint
-    // For now, throw to fall back to direct API
-    throw new Error('OpenClaw API integration not yet implemented');
+    // OpenClaw webchat API endpoint
+    const baseUrl = openclawUrl || 'http://127.0.0.1:18789';
+    
+    // Build the message content
+    const userMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
+    const systemPrompt = messages.find(m => m.role === 'system')?.content || '';
+    
+    // For OpenClaw, we send to the chat endpoint
+    // The system prompt is already configured in the agent, so we just send the user message
+    try {
+        const response = await fetch(`${baseUrl}/api/chat`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: userMessage,
+                systemPrompt: systemPrompt,
+                model: model
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('OpenClaw not responding');
+        }
+        
+        const data = await response.json();
+        return data.response || data.message || data.content || 'No response';
+    } catch (error) {
+        // If OpenClaw isn't available, provide helpful message
+        throw new Error('Cannot reach OpenClaw on your Mac. Make sure OpenClaw is running (openclaw gateway start) and you\'re accessing from your local network.');
+    }
 }
 
 function toggleChat() {

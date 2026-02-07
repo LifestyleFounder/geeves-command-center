@@ -1,7 +1,17 @@
 {
-  "lastUpdated": "2026-02-07T07:05:00Z",
+  "lastUpdated": "2026-02-07T14:00:00Z",
   "updatedBy": "geeves",
   "tasks": [
+    {
+      "id": "openai-api-key",
+      "title": "Get OpenAI API Key for Command Center",
+      "description": "Go to platform.openai.com/api-keys, create a key, add it to Command Center chat settings. Enables GPT-4o and GPT-4 Turbo for agents.",
+      "priority": "medium",
+      "status": "todo",
+      "due": "",
+      "createdAt": "2026-02-07T14:00:00Z",
+      "tags": ["geeves", "system", "api"]
+    },
     {
       "id": "ctx-backup-system",
       "title": "Context backup system",
