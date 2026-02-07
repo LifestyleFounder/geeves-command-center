@@ -1771,9 +1771,8 @@ async function callLLMAPI(userMessage) {
     if (modelConfig.provider === 'openai') {
         return await callOpenAI(messages, modelConfig.apiModel, settings.openaiApiKey);
     } else if (modelConfig.provider === 'anthropic') {
-        // Use OpenClaw for Claude (Anthropic doesn't allow direct browser calls)
-        const openclawUrl = settings.openclawUrl || '';
-        return await callOpenClaw(messages, modelConfig.apiModel, openclawUrl);
+        // Use Cloudflare Worker proxy for Anthropic
+        return await callAnthropicProxy(messages, modelConfig.apiModel);
     }
     
     throw new Error('No valid model configuration');
@@ -1804,6 +1803,38 @@ async function callOpenAI(messages, model, apiKey) {
     
     const data = await response.json();
     return data.choices[0].message.content;
+}
+
+async function callAnthropicProxy(messages, model) {
+    // Uses Cloudflare Worker proxy to call Anthropic API
+    const PROXY_URL = 'https://anthropic-proxy.geeves.workers.dev';
+    
+    const systemMessage = messages.find(m => m.role === 'system');
+    const otherMessages = messages.filter(m => m.role !== 'system');
+    
+    const response = await fetch(PROXY_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: model,
+            max_tokens: 4096,
+            system: systemMessage?.content || '',
+            messages: otherMessages.map(m => ({
+                role: m.role,
+                content: m.content
+            }))
+        })
+    });
+    
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'Anthropic API error');
+    }
+    
+    const data = await response.json();
+    return data.content?.[0]?.text || 'No response';
 }
 
 async function callAnthropic(messages, model, apiKey) {
