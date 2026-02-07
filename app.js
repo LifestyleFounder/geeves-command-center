@@ -1617,7 +1617,7 @@ function loadChatSettings() {
         document.getElementById('anthropicApiKey').value = settings.anthropicApiKey || '';
     }
     if (document.getElementById('openclawUrl')) {
-        document.getElementById('openclawUrl').value = settings.openclawUrl || 'http://daniels-mac-mini.tail89479a.ts.net:18789';
+        document.getElementById('openclawUrl').value = settings.openclawUrl || 'https://daniels-mac-mini.tail89479a.ts.net';
     }
 }
 
@@ -1772,7 +1772,7 @@ async function callLLMAPI(userMessage) {
         return await callOpenAI(messages, modelConfig.apiModel, settings.openaiApiKey);
     } else if (modelConfig.provider === 'anthropic') {
         // Use OpenClaw for Claude (Anthropic doesn't allow direct browser calls)
-        const openclawUrl = settings.openclawUrl || 'http://daniels-mac-mini.tail89479a.ts.net:18789';
+        const openclawUrl = settings.openclawUrl || 'https://daniels-mac-mini.tail89479a.ts.net';
         return await callOpenClaw(messages, modelConfig.apiModel, openclawUrl);
     }
     
@@ -1844,7 +1844,7 @@ async function callAnthropic(messages, model, apiKey) {
 
 async function callOpenClaw(messages, model, openclawUrl) {
     // OpenClaw webchat API endpoint (uses Tailscale IP for remote access)
-    const baseUrl = openclawUrl || 'http://daniels-mac-mini.tail89479a.ts.net:18789';
+    const baseUrl = openclawUrl || 'https://daniels-mac-mini.tail89479a.ts.net';
     
     // Build the message content
     const userMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
