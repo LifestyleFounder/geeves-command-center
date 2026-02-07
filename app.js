@@ -1571,8 +1571,7 @@ const models = {
     'claude-opus-4': { name: 'Claude Opus 4', icon: '🟠' },
     'claude-sonnet-4': { name: 'Claude Sonnet 4', icon: '🟠' },
     'gpt-4o': { name: 'GPT-4o', icon: '🟢' },
-    'gpt-4-turbo': { name: 'GPT-4 Turbo', icon: '🟢' },
-    'gemini-pro': { name: 'Gemini Pro', icon: '🔵' }
+    'gpt-4-turbo': { name: 'GPT-4 Turbo', icon: '🟢' }
 };
 
 function toggleModelDropdown() {
