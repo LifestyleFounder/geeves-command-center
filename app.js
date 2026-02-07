@@ -470,20 +470,35 @@ function addActivity(type, action, details) {
 
 let docFolderState = {
     selectedFolder: null,
-    expandedFolders: new Set(['research', 'memory', 'reports'])
+    expandedFolders: new Set(['notes', 'research', 'memory', 'reports'])
 };
 
 async function loadDocs() {
+    // Load docs index
     const data = await loadJSON('docs-index');
     if (data && data.docs) {
         state.docs = data.docs;
-        renderDocsTree();
-        renderDocs();
     }
+    
+    // Load local notes
+    await loadLocalNotes();
+    
+    renderDocsTree();
+    renderDocs();
 }
 
 function buildFolderTree(docs) {
     const tree = {};
+    
+    // Add local notes first
+    const localNotes = getNotesForTree();
+    if (localNotes.length > 0) {
+        tree['notes'] = {
+            name: 'notes',
+            docs: localNotes,
+            icon: '📝'
+        };
+    }
     
     docs.forEach(doc => {
         // Extract folder from path (e.g., "/research/file.md" -> "research")
@@ -510,6 +525,7 @@ function buildFolderTree(docs) {
 
 function getFolderIcon(folder) {
     const icons = {
+        notes: '📝',
         research: '🔬',
         memory: '🧠',
         reports: '📊',
@@ -532,8 +548,8 @@ function renderDocsTree() {
     
     const tree = buildFolderTree(filteredDocs);
     
-    // Define folder order
-    const folderOrder = ['research', 'memory', 'reports', 'root'];
+    // Define folder order (notes first)
+    const folderOrder = ['notes', 'research', 'memory', 'reports', 'root'];
     const sortedFolders = Object.keys(tree).sort((a, b) => {
         const aIdx = folderOrder.indexOf(a);
         const bIdx = folderOrder.indexOf(b);
@@ -674,7 +690,195 @@ function filterDocs() {
     renderDocs();
 }
 
+// ===========================================
+// LOCAL NOTES
+// ===========================================
+
+let notesState = {
+    notes: [],
+    editingNote: null,
+    isNew: false
+};
+
+async function loadLocalNotes() {
+    const data = await loadJSON('local-notes');
+    if (data && data.notes) {
+        notesState.notes = data.notes;
+    }
+}
+
+function saveLocalNotes() {
+    saveJSON('local-notes', {
+        lastUpdated: new Date().toISOString(),
+        notes: notesState.notes
+    });
+}
+
+function createNewNote() {
+    notesState.editingNote = {
+        id: 'note-' + Date.now(),
+        title: '',
+        content: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    };
+    notesState.isNew = true;
+    showNoteEditor();
+}
+
+function editNote(noteId) {
+    const note = notesState.notes.find(n => n.id === noteId);
+    if (!note) return;
+    
+    notesState.editingNote = { ...note };
+    notesState.isNew = false;
+    showNoteEditor();
+}
+
+function showNoteEditor() {
+    const preview = document.getElementById('docsPreview');
+    const editor = document.getElementById('noteEditor');
+    const titleInput = document.getElementById('noteTitleInput');
+    const contentEditor = document.getElementById('noteContentEditor');
+    const deleteBtn = document.getElementById('deleteNoteBtn');
+    const metaEl = document.getElementById('noteEditorMeta');
+    
+    preview.style.display = 'none';
+    editor.style.display = 'flex';
+    
+    titleInput.value = notesState.editingNote.title || '';
+    contentEditor.innerHTML = notesState.editingNote.content || '';
+    
+    deleteBtn.style.display = notesState.isNew ? 'none' : 'block';
+    
+    if (!notesState.isNew) {
+        const updated = new Date(notesState.editingNote.updatedAt);
+        metaEl.textContent = `Last edited: ${updated.toLocaleDateString()} ${updated.toLocaleTimeString()}`;
+    } else {
+        metaEl.textContent = 'New note';
+    }
+    
+    titleInput.focus();
+}
+
+function hideNoteEditor() {
+    const preview = document.getElementById('docsPreview');
+    const editor = document.getElementById('noteEditor');
+    
+    editor.style.display = 'none';
+    preview.style.display = 'block';
+    
+    notesState.editingNote = null;
+    notesState.isNew = false;
+}
+
+function cancelNoteEdit() {
+    hideNoteEditor();
+    state.selectedDoc = null;
+    renderDocsTree();
+    renderDocs();
+}
+
+function saveNote() {
+    const titleInput = document.getElementById('noteTitleInput');
+    const contentEditor = document.getElementById('noteContentEditor');
+    
+    const title = titleInput.value.trim() || 'Untitled Note';
+    const content = contentEditor.innerHTML;
+    
+    notesState.editingNote.title = title;
+    notesState.editingNote.content = content;
+    notesState.editingNote.updatedAt = new Date().toISOString();
+    
+    if (notesState.isNew) {
+        notesState.notes.unshift(notesState.editingNote);
+    } else {
+        const idx = notesState.notes.findIndex(n => n.id === notesState.editingNote.id);
+        if (idx !== -1) {
+            notesState.notes[idx] = notesState.editingNote;
+        }
+    }
+    
+    saveLocalNotes();
+    hideNoteEditor();
+    
+    // Refresh the docs view
+    renderDocsTree();
+    renderDocs();
+    
+    // Select the saved note
+    selectDoc(notesState.editingNote.id);
+}
+
+function deleteNote() {
+    if (!notesState.editingNote || notesState.isNew) return;
+    if (!confirm('Delete this note?')) return;
+    
+    notesState.notes = notesState.notes.filter(n => n.id !== notesState.editingNote.id);
+    saveLocalNotes();
+    
+    hideNoteEditor();
+    state.selectedDoc = null;
+    renderDocsTree();
+    renderDocs();
+}
+
+function formatText(command, value = null) {
+    document.execCommand(command, false, value);
+    document.getElementById('noteContentEditor').focus();
+}
+
+// Add notes to the folder tree
+function getNotesForTree() {
+    return notesState.notes.map(note => ({
+        id: note.id,
+        path: note.id,
+        title: note.title,
+        category: 'notes',
+        date: note.updatedAt.split('T')[0],
+        isNote: true
+    }));
+}
+
 function selectDoc(path) {
+    // Check if it's a local note
+    const note = notesState.notes.find(n => n.id === path);
+    if (note) {
+        state.selectedDoc = { id: note.id, title: note.title, category: 'notes', date: note.updatedAt.split('T')[0], isNote: true };
+        renderDocsTree();
+        renderDocs();
+        
+        // Show note in preview (read-only view with edit button)
+        const preview = document.getElementById('docsPreview');
+        const editor = document.getElementById('noteEditor');
+        
+        editor.style.display = 'none';
+        preview.style.display = 'block';
+        
+        preview.innerHTML = `
+            <div class="markdown-content">
+                <div class="note-preview-header">
+                    <h1>${escapeHtml(note.title)}</h1>
+                    <button class="btn btn-secondary btn-sm" onclick="editNote('${note.id}')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                        Edit
+                    </button>
+                </div>
+                <p class="doc-meta-info">
+                    <span class="doc-category">Note</span>
+                    <span>Updated: ${new Date(note.updatedAt).toLocaleDateString()}</span>
+                </p>
+                <hr>
+                <div class="note-preview-content">${note.content || '<em>Empty note</em>'}</div>
+            </div>
+        `;
+        return;
+    }
+    
+    // Regular doc
     const doc = state.docs.find(d => d.path === path);
     if (!doc) return;
     
@@ -683,6 +887,10 @@ function selectDoc(path) {
     renderDocs();
     
     const preview = document.getElementById('docsPreview');
+    const editor = document.getElementById('noteEditor');
+    
+    editor.style.display = 'none';
+    preview.style.display = 'block';
     
     // If doc has a Notion URL, show link to open in Notion
     if (doc.notionUrl) {
@@ -1539,6 +1747,12 @@ window.filterDocs = filterDocs;
 window.selectDoc = selectDoc;
 window.selectFolder = selectFolder;
 window.toggleAllFolders = toggleAllFolders;
+window.createNewNote = createNewNote;
+window.editNote = editNote;
+window.saveNote = saveNote;
+window.deleteNote = deleteNote;
+window.cancelNoteEdit = cancelNoteEdit;
+window.formatText = formatText;
 window.addNote = addNote;
 window.toggleNotes = toggleNotes;
 window.copyToClipboard = copyToClipboard;
