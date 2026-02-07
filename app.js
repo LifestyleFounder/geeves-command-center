@@ -59,6 +59,7 @@ function switchTab(tabName) {
     // Update mobile title
     const titles = {
         business: 'Business',
+        tracker: 'Performance',
         kanban: 'Kanban',
         activity: 'Activity',
         docs: 'Docs Hub',
