@@ -1834,6 +1834,10 @@ body {
     border-left: 4px solid #94a3b8;
 }
 
+.metric-card.workshop-card {
+    border-left: 4px solid #06b6d4;
+}
+
 .metric-card.premium-card {
     border-left: 4px solid #8b5cf6;
 }
@@ -1850,8 +1854,35 @@ body {
     border-left: 4px solid var(--forest-green);
 }
 
-.metric-card.cash-card {
-    border-left: 4px solid #22c55e;
+.metric-unit {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-left: 4px;
+}
+
+.metric-cap {
+    font-size: 20px;
+    color: var(--text-tertiary);
+}
+
+.change-up {
+    color: #22c55e;
+}
+
+.change-up::before {
+    content: "↑";
+}
+
+.change-down {
+    color: #ef4444;
+}
+
+.change-down::before {
+    content: "↓";
+}
+
+.change-neutral {
+    color: var(--text-tertiary);
 }
 
 .metric-header {

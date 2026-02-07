@@ -1357,26 +1357,73 @@ function renderBusiness() {
     
     const b = state.business;
     
-    // Member tiers
-    if (b.members) {
-        const setIfExists = (id, val) => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = val;
-        };
-        setIfExists('freeCurrent', formatNumber(b.members.free || 0));
-        setIfExists('premiumCurrent', formatNumber(b.members.premium || 0));
-        setIfExists('vipCurrent', formatNumber(b.members.vip || 0));
-        setIfExists('oneoneCurrent', formatNumber(b.members.oneone || 0));
+    const setIfExists = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    };
+    
+    // Free Community
+    if (b.free) {
+        setIfExists('freeTotal', formatNumber(b.free.total || 0));
+        setIfExists('freeLast30', formatNumber(b.free.last30Days || 0));
     }
     
-    // Revenue
-    if (b.revenue) {
-        const setIfExists = (id, val) => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = val;
-        };
-        setIfExists('cashCurrent', formatNumber(b.revenue.cash || 0));
-        setIfExists('mrrCurrent', formatNumber(b.revenue.mrr || 0));
+    // Workshop Customers
+    if (b.workshop) {
+        setIfExists('workshopSales', formatNumber(b.workshop.sales || 0));
+        setIfExists('workshopCash', formatNumber(b.workshop.cashCollected || 0));
+    }
+    
+    // Premium Community
+    if (b.premium) {
+        setIfExists('premiumTotal', formatNumber(b.premium.total || 0));
+        const premiumDiff = (b.premium.total || 0) - (b.premium.lastMonth || 0);
+        const premiumChangeEl = document.getElementById('premiumChange');
+        if (premiumChangeEl) {
+            if (premiumDiff > 0) {
+                premiumChangeEl.className = 'change-up';
+                premiumChangeEl.textContent = premiumDiff;
+            } else if (premiumDiff < 0) {
+                premiumChangeEl.className = 'change-down';
+                premiumChangeEl.textContent = Math.abs(premiumDiff);
+            } else {
+                premiumChangeEl.className = 'change-neutral';
+                premiumChangeEl.textContent = '—';
+            }
+        }
+    }
+    
+    // VIP Tier
+    if (b.vip) {
+        setIfExists('vipTotal', formatNumber(b.vip.total || 0));
+        const vipDiff = (b.vip.total || 0) - (b.vip.lastMonth || 0);
+        const vipChangeEl = document.getElementById('vipChange');
+        if (vipChangeEl) {
+            if (vipDiff > 0) {
+                vipChangeEl.className = 'change-up';
+                vipChangeEl.textContent = vipDiff;
+            } else if (vipDiff < 0) {
+                vipChangeEl.className = 'change-down';
+                vipChangeEl.textContent = Math.abs(vipDiff);
+            } else {
+                vipChangeEl.className = 'change-neutral';
+                vipChangeEl.textContent = '—';
+            }
+        }
+    }
+    
+    // 1:1 Tier
+    if (b.oneone) {
+        const total = b.oneone.total || 0;
+        const cap = b.oneone.cap || 12;
+        setIfExists('oneoneTotal', total);
+        setIfExists('oneoneSpots', cap - total);
+    }
+    
+    // MRR
+    if (b.mrr) {
+        setIfExists('mrrCurrent', formatNumber(b.mrr.current || 0));
+        setIfExists('mrrLastMonth', formatNumber(b.mrr.lastMonthEnd || 0));
     }
     
     // Client Health

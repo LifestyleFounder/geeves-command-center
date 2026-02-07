@@ -177,21 +177,34 @@
                                 <span class="metric-title">Free Community</span>
                             </div>
                             <div class="metric-main">
-                                <span class="metric-current" id="freeCurrent">0</span>
+                                <span class="metric-current" id="freeTotal">0</span>
                             </div>
-                            <div class="metric-sub">Free tier members</div>
+                            <div class="metric-sub">+<span id="freeLast30">0</span> last 30 days</div>
                         </div>
 
-                        <!-- Premium Members -->
+                        <!-- Workshop Customers -->
+                        <div class="metric-card workshop-card">
+                            <div class="metric-header">
+                                <span class="metric-icon">🎓</span>
+                                <span class="metric-title">Workshops</span>
+                            </div>
+                            <div class="metric-main">
+                                <span class="metric-current" id="workshopSales">0</span>
+                                <span class="metric-unit">sales</span>
+                            </div>
+                            <div class="metric-sub">$<span id="workshopCash">0</span> collected</div>
+                        </div>
+
+                        <!-- Premium Community -->
                         <div class="metric-card premium-card">
                             <div class="metric-header">
                                 <span class="metric-icon">⚡</span>
                                 <span class="metric-title">Premium</span>
                             </div>
                             <div class="metric-main">
-                                <span class="metric-current" id="premiumCurrent">0</span>
+                                <span class="metric-current" id="premiumTotal">0</span>
                             </div>
-                            <div class="metric-sub">$100/mo members</div>
+                            <div class="metric-sub"><span id="premiumChange" class="change-neutral">—</span> vs last month</div>
                         </div>
 
                         <!-- VIP Tier -->
@@ -201,9 +214,9 @@
                                 <span class="metric-title">VIP</span>
                             </div>
                             <div class="metric-main">
-                                <span class="metric-current" id="vipCurrent">0</span>
+                                <span class="metric-current" id="vipTotal">0</span>
                             </div>
-                            <div class="metric-sub">$1,000/mo members</div>
+                            <div class="metric-sub"><span id="vipChange" class="change-neutral">—</span> vs last month</div>
                         </div>
 
                         <!-- 1:1 Tier -->
@@ -213,22 +226,11 @@
                                 <span class="metric-title">1:1</span>
                             </div>
                             <div class="metric-main">
-                                <span class="metric-current" id="oneoneCurrent">0</span>
+                                <span class="metric-current" id="oneoneTotal">0</span>
+                                <span class="metric-separator">/</span>
+                                <span class="metric-cap">12</span>
                             </div>
-                            <div class="metric-sub">$2,000/mo members</div>
-                        </div>
-
-                        <!-- Cash Collected -->
-                        <div class="metric-card cash-card">
-                            <div class="metric-header">
-                                <span class="metric-icon">🏦</span>
-                                <span class="metric-title">Cash (Feb)</span>
-                            </div>
-                            <div class="metric-main">
-                                <span class="metric-currency">$</span>
-                                <span class="metric-current" id="cashCurrent">0</span>
-                            </div>
-                            <div class="metric-sub">Collected this month</div>
+                            <div class="metric-sub"><span id="oneoneSpots">12</span> spots left</div>
                         </div>
 
                         <!-- MRR -->
@@ -241,7 +243,7 @@
                                 <span class="metric-currency">$</span>
                                 <span class="metric-current" id="mrrCurrent">0</span>
                             </div>
-                            <div class="metric-sub">Monthly recurring</div>
+                            <div class="metric-sub">Last month: $<span id="mrrLastMonth">0</span></div>
                         </div>
                     </div>
 
