@@ -679,22 +679,49 @@ function selectDoc(path) {
     if (!doc) return;
     
     state.selectedDoc = doc;
+    renderDocsTree();
     renderDocs();
     
-    // Show loading state
     const preview = document.getElementById('docsPreview');
-    preview.innerHTML = `<div class="empty-state"><p>Loading...</p></div>`;
     
-    // In a real implementation, you'd fetch and render the markdown
-    // For now, show a placeholder
+    // If doc has a Notion URL, show link to open in Notion
+    if (doc.notionUrl) {
+        preview.innerHTML = `
+            <div class="markdown-content">
+                <h1>${escapeHtml(doc.title)}</h1>
+                <p class="doc-meta-info">
+                    <span class="doc-category">${escapeHtml(doc.category)}</span>
+                    <span>${escapeHtml(doc.date)}</span>
+                </p>
+                <hr>
+                <div class="notion-preview">
+                    <div class="notion-icon">📝</div>
+                    <p>This document is stored in Notion</p>
+                    <a href="${escapeHtml(doc.notionUrl)}" target="_blank" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                            <polyline points="15 3 21 3 21 9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                        Open in Notion
+                    </a>
+                </div>
+            </div>
+        `;
+        return;
+    }
+    
+    // Local file - show placeholder
     preview.innerHTML = `
         <div class="markdown-content">
             <h1>${escapeHtml(doc.title)}</h1>
-            <p><em>Path: ${escapeHtml(doc.path)}</em></p>
+            <p class="doc-meta-info">
+                <span class="doc-category">${escapeHtml(doc.category)}</span>
+                <span>${escapeHtml(doc.date)}</span>
+            </p>
             <hr>
-            <p>Document preview would be rendered here.</p>
-            <p>To view the full document, open the file directly:</p>
-            <code>${escapeHtml(doc.path)}</code>
+            <p>Local document preview coming soon.</p>
+            <p>Path: <code>${escapeHtml(doc.path)}</code></p>
         </div>
     `;
 }

@@ -850,6 +850,37 @@ body {
 .docs-preview th { background: var(--bg-tertiary); font-weight: 600; }
 .docs-preview hr { border: none; border-top: 1px solid var(--border); margin: var(--space-lg) 0; }
 .docs-preview blockquote { border-left: 3px solid var(--gold); padding-left: var(--space-md); margin: var(--space-md) 0; color: #666; }
+
+.doc-meta-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-size: 13px;
+    color: #666;
+    margin-bottom: var(--space-md);
+}
+
+.notion-preview {
+    text-align: center;
+    padding: var(--space-2xl) var(--space-lg);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-lg);
+}
+
+.notion-preview .notion-icon {
+    font-size: 48px;
+    margin-bottom: var(--space-md);
+}
+
+.notion-preview p {
+    color: #666;
+    margin-bottom: var(--space-lg);
+}
+
+.notion-preview .btn {
+    display: inline-flex;
+}
 .docs-preview strong { font-weight: 600; }
 
 /* ===========================================
