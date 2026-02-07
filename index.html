@@ -168,85 +168,6 @@
                         </div>
                     </div>
                     
-                    <!-- Key Metrics Row -->
-                    <div class="business-metrics-row six-cols">
-                        <!-- Free Community -->
-                        <div class="metric-card free-card">
-                            <div class="metric-header">
-                                <span class="metric-icon">🌱</span>
-                                <span class="metric-title">Free Community</span>
-                            </div>
-                            <div class="metric-main">
-                                <span class="metric-current" id="freeTotal">0</span>
-                            </div>
-                            <div class="metric-sub">+<span id="freeLast30">0</span> last 30 days</div>
-                        </div>
-
-                        <!-- Workshop Customers -->
-                        <div class="metric-card workshop-card">
-                            <div class="metric-header">
-                                <span class="metric-icon">🎓</span>
-                                <span class="metric-title">Workshops</span>
-                            </div>
-                            <div class="metric-main">
-                                <span class="metric-current" id="workshopSales">0</span>
-                                <span class="metric-unit">sales</span>
-                            </div>
-                            <div class="metric-sub">$<span id="workshopCash">0</span> collected</div>
-                        </div>
-
-                        <!-- Premium Community -->
-                        <div class="metric-card premium-card">
-                            <div class="metric-header">
-                                <span class="metric-icon">⚡</span>
-                                <span class="metric-title">Premium</span>
-                            </div>
-                            <div class="metric-main">
-                                <span class="metric-current" id="premiumTotal">0</span>
-                            </div>
-                            <div class="metric-sub"><span id="premiumChange" class="change-neutral">—</span> vs last month</div>
-                        </div>
-
-                        <!-- VIP Tier -->
-                        <div class="metric-card vip-card">
-                            <div class="metric-header">
-                                <span class="metric-icon">💎</span>
-                                <span class="metric-title">VIP</span>
-                            </div>
-                            <div class="metric-main">
-                                <span class="metric-current" id="vipTotal">0</span>
-                            </div>
-                            <div class="metric-sub"><span id="vipChange" class="change-neutral">—</span> vs last month</div>
-                        </div>
-
-                        <!-- 1:1 Tier -->
-                        <div class="metric-card oneone-card">
-                            <div class="metric-header">
-                                <span class="metric-icon">⭐</span>
-                                <span class="metric-title">1:1</span>
-                            </div>
-                            <div class="metric-main">
-                                <span class="metric-current" id="oneoneTotal">0</span>
-                                <span class="metric-separator">/</span>
-                                <span class="metric-cap">12</span>
-                            </div>
-                            <div class="metric-sub"><span id="oneoneSpots">12</span> spots left</div>
-                        </div>
-
-                        <!-- MRR -->
-                        <div class="metric-card mrr-card">
-                            <div class="metric-header">
-                                <span class="metric-icon">💰</span>
-                                <span class="metric-title">MRR</span>
-                            </div>
-                            <div class="metric-main">
-                                <span class="metric-currency">$</span>
-                                <span class="metric-current" id="mrrCurrent">0</span>
-                            </div>
-                            <div class="metric-sub">Last month: $<span id="mrrLastMonth">0</span></div>
-                        </div>
-                    </div>
-
                     <!-- Calendar & Pipeline Row -->
                     <div class="business-grid">
                         <!-- Calendar Today -->
@@ -338,35 +259,86 @@
                             </div>
                         </div>
 
-                        <!-- Quick Pipeline -->
+                        <!-- Pipeline Metrics -->
                         <div class="card pipeline-card">
                             <div class="card-header">
                                 <h2>🔥 Pipeline (This Week)</h2>
                             </div>
-                            <div class="pipeline-stats">
-                                <div class="pipeline-stat">
-                                    <span class="pipeline-value" id="pipelineLeads">142</span>
-                                    <span class="pipeline-label">Leads</span>
+                            <div class="pipeline-metrics-grid">
+                                <!-- Free Community -->
+                                <div class="metric-card free-card">
+                                    <div class="metric-header">
+                                        <span class="metric-icon">🌱</span>
+                                        <span class="metric-title">Free Community</span>
+                                    </div>
+                                    <div class="metric-main">
+                                        <span class="metric-current" id="freeTotal">0</span>
+                                    </div>
+                                    <div class="metric-sub">+<span id="freeLast30">0</span> last 30 days</div>
                                 </div>
-                                <div class="pipeline-arrow">→</div>
-                                <div class="pipeline-stat">
-                                    <span class="pipeline-value" id="pipelineApps">3</span>
-                                    <span class="pipeline-label">Applications</span>
+
+                                <!-- Workshop Customers -->
+                                <div class="metric-card workshop-card">
+                                    <div class="metric-header">
+                                        <span class="metric-icon">🎓</span>
+                                        <span class="metric-title">Workshops</span>
+                                    </div>
+                                    <div class="metric-main">
+                                        <span class="metric-current" id="workshopSales">0</span>
+                                        <span class="metric-unit">sales</span>
+                                    </div>
+                                    <div class="metric-sub">$<span id="workshopCash">0</span> collected</div>
                                 </div>
-                                <div class="pipeline-arrow">→</div>
-                                <div class="pipeline-stat">
-                                    <span class="pipeline-value" id="pipelineCalls">1</span>
-                                    <span class="pipeline-label">Calls</span>
+
+                                <!-- Premium Community -->
+                                <div class="metric-card premium-card">
+                                    <div class="metric-header">
+                                        <span class="metric-icon">⚡</span>
+                                        <span class="metric-title">Premium</span>
+                                    </div>
+                                    <div class="metric-main">
+                                        <span class="metric-current" id="premiumTotal">0</span>
+                                    </div>
+                                    <div class="metric-sub"><span id="premiumChange" class="change-neutral">—</span> vs last month</div>
                                 </div>
-                                <div class="pipeline-arrow">→</div>
-                                <div class="pipeline-stat highlight">
-                                    <span class="pipeline-value" id="pipelineClosed">0</span>
-                                    <span class="pipeline-label">Closed</span>
+
+                                <!-- VIP Tier -->
+                                <div class="metric-card vip-card">
+                                    <div class="metric-header">
+                                        <span class="metric-icon">💎</span>
+                                        <span class="metric-title">VIP</span>
+                                    </div>
+                                    <div class="metric-main">
+                                        <span class="metric-current" id="vipTotal">0</span>
+                                    </div>
+                                    <div class="metric-sub"><span id="vipChange" class="change-neutral">—</span> vs last month</div>
                                 </div>
-                            </div>
-                            <div class="pipeline-metrics">
-                                <span class="pipeline-metric">CPL: $<span id="pipelineCPL">5.07</span></span>
-                                <span class="pipeline-metric">App Rate: <span id="pipelineAppRate">2.1</span>%</span>
+
+                                <!-- 1:1 Tier -->
+                                <div class="metric-card oneone-card">
+                                    <div class="metric-header">
+                                        <span class="metric-icon">⭐</span>
+                                        <span class="metric-title">1:1</span>
+                                    </div>
+                                    <div class="metric-main">
+                                        <span class="metric-current" id="oneoneTotal">0</span>
+                                        <span class="metric-separator">/</span>
+                                        <span class="metric-cap">12</span>
+                                    </div>
+                                    <div class="metric-sub"><span id="oneoneSpots">12</span> spots left</div>
+                                </div>
+
+                                <!-- Applications -->
+                                <div class="metric-card apps-card">
+                                    <div class="metric-header">
+                                        <span class="metric-icon">📋</span>
+                                        <span class="metric-title">Applications</span>
+                                    </div>
+                                    <div class="metric-main">
+                                        <span class="metric-current" id="appsTotal">0</span>
+                                    </div>
+                                    <div class="metric-sub">this week</div>
+                                </div>
                             </div>
                         </div>
                     </div>

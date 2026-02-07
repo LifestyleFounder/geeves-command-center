@@ -1420,10 +1420,9 @@ function renderBusiness() {
         setIfExists('oneoneSpots', cap - total);
     }
     
-    // MRR
-    if (b.mrr) {
-        setIfExists('mrrCurrent', formatNumber(b.mrr.current || 0));
-        setIfExists('mrrLastMonth', formatNumber(b.mrr.lastMonthEnd || 0));
+    // Applications
+    if (b.applications) {
+        setIfExists('appsTotal', formatNumber(b.applications.thisWeek || 0));
     }
     
     // Client Health

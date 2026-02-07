@@ -19,9 +19,8 @@
     "total": 0,
     "cap": 12
   },
-  "mrr": {
-    "current": 0,
-    "lastMonthEnd": 0
+  "applications": {
+    "thisWeek": 0
   },
   "lastUpdated": "2026-02-07"
 }

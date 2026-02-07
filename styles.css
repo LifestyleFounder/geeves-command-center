@@ -2184,6 +2184,21 @@ body {
     border: 1px solid var(--border);
 }
 
+.pipeline-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.pipeline-metrics-grid .metric-card {
+    padding: var(--space-lg);
+}
+
+.metric-card.apps-card {
+    border-left: 4px solid #3b82f6;
+}
+
 .pipeline-stats {
     display: flex;
     align-items: center;
@@ -2244,6 +2259,10 @@ body {
     }
     
     .business-metrics-row.six-cols {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .pipeline-metrics-grid {
         grid-template-columns: repeat(2, 1fr);
     }
     
