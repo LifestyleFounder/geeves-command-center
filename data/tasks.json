@@ -1,0 +1,129 @@
+{
+  "lastUpdated": "2026-02-07T07:05:00Z",
+  "updatedBy": "geeves",
+  "tasks": [
+    {
+      "id": "ctx-backup-system",
+      "title": "Context backup system",
+      "description": "5-min cron checkpoint + ACTIVE.md tracking",
+      "priority": "high",
+      "status": "done",
+      "due": "2026-02-02",
+      "createdAt": "2026-02-02T15:40:00Z",
+      "completedAt": "2026-02-02T15:45:00Z",
+      "tags": ["geeves", "system"]
+    },
+    {
+      "id": "kanban-rebuild",
+      "title": "Rebuild Kanban board",
+      "description": "File-based JSON storage, Geeves can read/write",
+      "priority": "high",
+      "status": "done",
+      "due": "2026-02-02",
+      "createdAt": "2026-02-02T15:40:00Z",
+      "completedAt": "2026-02-06T22:30:00Z",
+      "tags": ["geeves", "system"]
+    },
+    {
+      "id": "command-center-build",
+      "title": "Build Geeves Command Center",
+      "description": "Unified dashboard for all Geeves operations - status, kanban, activity, docs, content intel, analytics",
+      "priority": "high",
+      "status": "done",
+      "due": "2026-02-06",
+      "createdAt": "2026-02-06T21:00:00Z",
+      "completedAt": "2026-02-07T06:50:00Z",
+      "tags": ["geeves", "system"]
+    },
+    {
+      "id": "skool-ghl-middleware",
+      "title": "Skool → GHL Middleware",
+      "description": "Connect Skool events to GHL webhooks via Make/n8n. Workflows ready, need middleware.",
+      "priority": "high",
+      "status": "todo",
+      "due": "",
+      "createdAt": "2026-02-01T12:00:00Z",
+      "tags": ["geeves", "integration"]
+    },
+    {
+      "id": "daily-metrics-automation",
+      "title": "Daily Metrics Automation",
+      "description": "Pull Skool, GHL, Meta Ads, Stripe metrics → automated dashboard",
+      "priority": "high",
+      "status": "todo",
+      "due": "",
+      "createdAt": "2026-01-30T08:00:00Z",
+      "tags": ["geeves", "automation"]
+    },
+    {
+      "id": "dave-morrow-close",
+      "title": "Close Dave Morrow → VIP",
+      "description": "Hot lead, understands the math, ready for 90-day offer with 1:1 session",
+      "priority": "high",
+      "status": "todo",
+      "due": "2026-02-03",
+      "createdAt": "2026-02-01T12:00:00Z",
+      "tags": ["lfg", "sales"]
+    },
+    {
+      "id": "instagram-launch",
+      "title": "Instagram Strategy Launch",
+      "description": "Bio rewrite, unfollow sprints, Week 1 content filmed/scheduled",
+      "priority": "high",
+      "status": "todo",
+      "due": "2026-02-03",
+      "createdAt": "2026-01-30T08:00:00Z",
+      "tags": ["lfg", "content"]
+    },
+    {
+      "id": "multi-agent-setup",
+      "title": "Set up Specialized Agents",
+      "description": "Create Copy, Close Bot, Workshop, Content agents with specialized prompts and knowledge",
+      "priority": "medium",
+      "status": "todo",
+      "due": "",
+      "createdAt": "2026-02-07T06:50:00Z",
+      "tags": ["geeves", "system"]
+    },
+    {
+      "id": "token-optimization",
+      "title": "Implement Token Saving Strategy",
+      "description": "Review and implement optimizations from ScaleUP Media guide: 1) Route heartbeats to Haiku/Sonnet instead of Opus, 2) Skip MEMORY.md on heartbeats, 3) Consider Ollama for heartbeats, 4) Set budget limits. Biggest win: model routing for heartbeats (50-80% savings).",
+      "priority": "medium",
+      "status": "inbox",
+      "due": "",
+      "createdAt": "2026-02-07T07:05:00Z",
+      "tags": ["geeves", "system", "cost"]
+    },
+    {
+      "id": "client-progress-system",
+      "title": "Client Progress Monitoring",
+      "description": "Build system to track who's stuck, who needs attention",
+      "priority": "medium",
+      "status": "inbox",
+      "due": "",
+      "createdAt": "2026-01-30T08:00:00Z",
+      "tags": ["geeves", "system"]
+    },
+    {
+      "id": "youtube-api-setup",
+      "title": "YouTube API Setup",
+      "description": "Get API key from Google Cloud Console, configure channel tracking",
+      "priority": "medium",
+      "status": "inbox",
+      "due": "",
+      "createdAt": "2026-02-06T20:00:00Z",
+      "tags": ["lfg", "analytics"]
+    },
+    {
+      "id": "command-center-client-product",
+      "title": "Command Center as Client Product",
+      "description": "Package dashboard for clients: template version, setup guide, white-label option. Potential offers: $297 template, $2-5K done-with-you, $97-297/mo hosted SaaS, $5-10K white-label license.",
+      "priority": "low",
+      "status": "inbox",
+      "due": "",
+      "createdAt": "2026-02-07T06:55:00Z",
+      "tags": ["lfg", "product", "future"]
+    }
+  ]
+}

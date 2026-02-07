@@ -1,0 +1,72 @@
+{
+  "oneone": {
+    "current": 8,
+    "goal": 12,
+    "lastUpdated": "2026-02-06"
+  },
+  "vip": {
+    "current": 27,
+    "goal": 60,
+    "lastUpdated": "2026-02-06"
+  },
+  "mrr": {
+    "current": 35000,
+    "goal": 84000,
+    "lastUpdated": "2026-02-06"
+  },
+  "cash": {
+    "collectedThisMonth": 0,
+    "targetThisMonth": 40000,
+    "lastUpdated": "2026-02-06"
+  },
+  "clients": {
+    "healthy": [
+      { "name": "Sarah M.", "type": "1:1", "note": "Crushing it" },
+      { "name": "Mike R.", "type": "1:1", "note": "On track" },
+      { "name": "Lisa K.", "type": "VIP", "note": "Active" },
+      { "name": "James T.", "type": "VIP", "note": "Great engagement" },
+      { "name": "Amy W.", "type": "VIP", "note": "Posting wins" },
+      { "name": "Chris D.", "type": "VIP", "note": "Active" },
+      { "name": "Jennifer L.", "type": "VIP", "note": "Active" },
+      { "name": "Robert H.", "type": "VIP", "note": "Active" },
+      { "name": "Maria G.", "type": "VIP", "note": "Active" },
+      { "name": "David S.", "type": "VIP", "note": "Active" }
+    ],
+    "warning": [
+      { "name": "Drew T.", "type": "VIP", "note": "Low engagement (4 days)" },
+      { "name": "Kevin P.", "type": "VIP", "note": "Missed last call" },
+      { "name": "Susan B.", "type": "1:1", "note": "Rescheduled 2x" },
+      { "name": "Tom H.", "type": "VIP", "note": "Quiet this week" },
+      { "name": "Rachel M.", "type": "VIP", "note": "No posts in 5 days" }
+    ],
+    "atRisk": [
+      { "name": "Brian K.", "type": "VIP", "note": "No login 2 weeks" },
+      { "name": "Carol W.", "type": "VIP", "note": "Requested pause" }
+    ],
+    "alerts": [
+      { "type": "warning", "icon": "⚠️", "text": "Drew T. — Low engagement (4 days)" },
+      { "type": "success", "icon": "🎉", "text": "Nick H. — New VIP, posted first win!" }
+    ]
+  },
+  "pipeline": {
+    "leads": 142,
+    "applications": 3,
+    "calls": 1,
+    "closed": 0,
+    "cpl": 5.07,
+    "appRate": 2.1,
+    "weekOf": "2026-02-03"
+  },
+  "schedule": {
+    "today": {
+      "dayName": "Friday",
+      "dayType": "light",
+      "events": []
+    },
+    "upcoming": [
+      { "event": "LFG Mastermind", "date": "Tue Feb 10" },
+      { "event": "AI Business Summit", "date": "Tue Feb 10, 1pm" },
+      { "event": "VIP Momentum Call", "date": "Thu Feb 12" }
+    ]
+  }
+}

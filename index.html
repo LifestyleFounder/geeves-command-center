@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geeves Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Status Bar (Always Visible) -->
+        <header class="status-bar">
+            <div class="status-left">
+                <div class="status-indicator" id="statusIndicator">
+                    <span class="status-dot idle"></span>
+                    <span class="status-text">Idle</span>
+                </div>
+                <div class="current-task" id="currentTask">
+                    <span>Waiting for instructions</span>
+                </div>
+            </div>
+            <div class="status-right">
+                <div class="status-meta">
+                    <span class="meta-item" id="lastHeartbeat">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                        <span>--</span>
+                    </span>
+                    <span class="meta-item" id="modelInUse">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                        <span>claude-opus-4.5</span>
+                    </span>
+                </div>
+                <button class="btn-icon" onclick="toggleNotes()" title="Quick Notes">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    <span class="note-badge" id="noteBadge">0</span>
+                </button>
+                <button class="btn-icon chat-toggle" onclick="toggleChat()" title="Chat with Geeves">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="main-container">
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo">
+                        <span class="logo-icon">🤖</span>
+                        <span class="logo-text">Geeves</span>
+                    </div>
+                    <button class="btn-icon mobile-close" onclick="toggleSidebar()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+                <ul class="nav-list">
+                    <li class="nav-item active" data-tab="business">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                        <span>Business</span>
+                    </li>
+                    <li class="nav-item" data-tab="kanban">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        <span>Kanban</span>
+                    </li>
+                    <li class="nav-item" data-tab="activity">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        <span>Activity</span>
+                    </li>
+                    <li class="nav-item" data-tab="docs">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <span>Docs Hub</span>
+                    </li>
+                    <li class="nav-item" data-tab="content">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        <span>Content Intel</span>
+                    </li>
+                    <li class="nav-item" data-tab="youtube">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                        <span>YouTube</span>
+                    </li>
+                    <li class="nav-item" data-tab="instagram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        <span>Instagram</span>
+                    </li>
+                    <li class="nav-item" data-tab="schedules">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span>Schedules</span>
+                    </li>
+                </ul>
+                <div class="sidebar-footer">
+                    <span class="version">Command Center v1.0</span>
+                </div>
+            </nav>
+
+            <!-- Mobile Header -->
+            <div class="mobile-header">
+                <button class="btn-icon" onclick="toggleSidebar()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <span class="mobile-title" id="mobileTitle">Kanban</span>
+            </div>
+
+            <!-- Main Content Area -->
+            <main class="content">
+                <!-- Business Dashboard Tab -->
+                <section class="tab-content active" id="business">
+                    <div class="tab-header">
+                        <h1>🎯 Business Dashboard</h1>
+                        <div class="tab-actions">
+                            <button class="btn btn-secondary" onclick="openBusinessSettings()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                                </svg>
+                                Update Numbers
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Key Metrics Row -->
+                    <div class="business-metrics-row">
+                        <!-- 1:1 Clients -->
+                        <div class="metric-card oneone-card">
+                            <div class="metric-header">
+                                <span class="metric-icon">⭐</span>
+                                <span class="metric-title">1:1 Clients</span>
+                            </div>
+                            <div class="metric-main">
+                                <span class="metric-current" id="oneoneCurrent">8</span>
+                                <span class="metric-separator">/</span>
+                                <span class="metric-goal" id="oneoneGoal">12</span>
+                            </div>
+                            <div class="metric-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill oneone" id="oneoneProgress" style="width: 66.7%"></div>
+                                </div>
+                                <span class="progress-label"><span id="oneonePercent">66.7</span>% full</span>
+                            </div>
+                            <div class="metric-sub">$2K/mo program • <span id="oneoneSpots">4</span> spots left</div>
+                        </div>
+
+                        <!-- VIP Clients -->
+                        <div class="metric-card vip-card">
+                            <div class="metric-header">
+                                <span class="metric-icon">💎</span>
+                                <span class="metric-title">VIP Clients</span>
+                            </div>
+                            <div class="metric-main">
+                                <span class="metric-current" id="vipCurrent">27</span>
+                                <span class="metric-separator">/</span>
+                                <span class="metric-goal" id="vipGoal">60</span>
+                            </div>
+                            <div class="metric-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill vip" id="vipProgress" style="width: 45%"></div>
+                                </div>
+                                <span class="progress-label"><span id="vipPercent">45</span>% full</span>
+                            </div>
+                            <div class="metric-sub">$1K/mo program • <span id="vipSpots">33</span> spots left</div>
+                        </div>
+
+                        <!-- MRR Tracker -->
+                        <div class="metric-card mrr-card">
+                            <div class="metric-header">
+                                <span class="metric-icon">💰</span>
+                                <span class="metric-title">MRR</span>
+                            </div>
+                            <div class="metric-main">
+                                <span class="metric-currency">$</span>
+                                <span class="metric-current" id="mrrCurrent">35,000</span>
+                            </div>
+                            <div class="metric-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill mrr" id="mrrProgress" style="width: 41.7%"></div>
+                                </div>
+                                <span class="progress-label">$<span id="mrrGoal">84,000</span> goal</span>
+                            </div>
+                            <div class="metric-sub">$<span id="mrrGap">49,000</span> to go</div>
+                        </div>
+
+                        <!-- Cash Collected -->
+                        <div class="metric-card cash-card">
+                            <div class="metric-header">
+                                <span class="metric-icon">🏦</span>
+                                <span class="metric-title">Cash (Feb)</span>
+                            </div>
+                            <div class="metric-main">
+                                <span class="metric-currency">$</span>
+                                <span class="metric-current" id="cashCurrent">0</span>
+                            </div>
+                            <div class="metric-sub" id="cashTarget">
+                                Target: $40,000
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Calendar & Pipeline Row -->
+                    <div class="business-grid">
+                        <!-- Calendar Today -->
+                        <div class="card calendar-card">
+                            <div class="card-header">
+                                <h2>📅 Schedule</h2>
+                            </div>
+                            <div class="schedule-today" id="scheduleToday">
+                                <div class="today-banner">
+                                    <span class="today-day">Friday</span>
+                                    <span class="today-type light">Light Day</span>
+                                </div>
+                            </div>
+                            <div class="schedule-list" id="scheduleList">
+                                <div class="schedule-item empty">
+                                    <span class="schedule-icon">☀️</span>
+                                    <span class="schedule-text">No calls today — enjoy!</span>
+                                </div>
+                            </div>
+                            <div class="schedule-upcoming">
+                                <div class="upcoming-header">Next Up</div>
+                                <div class="upcoming-list" id="upcomingEvents">
+                                    <div class="upcoming-item">
+                                        <div class="upcoming-dot"></div>
+                                        <div class="upcoming-content">
+                                            <span class="upcoming-event">LFG Mastermind</span>
+                                            <span class="upcoming-date">Tue Feb 10</span>
+                                        </div>
+                                    </div>
+                                    <div class="upcoming-item">
+                                        <div class="upcoming-dot"></div>
+                                        <div class="upcoming-content">
+                                            <span class="upcoming-event">AI Business Summit</span>
+                                            <span class="upcoming-date">Tue Feb 10, 1pm</span>
+                                        </div>
+                                    </div>
+                                    <div class="upcoming-item">
+                                        <div class="upcoming-dot"></div>
+                                        <div class="upcoming-content">
+                                            <span class="upcoming-event">VIP Momentum Call</span>
+                                            <span class="upcoming-date">Thu Feb 12</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Client Health -->
+                        <div class="card clients-card">
+                            <div class="card-header">
+                                <h2>👥 Client Health</h2>
+                            </div>
+                            <div class="client-summary">
+                                <div class="health-stat healthy clickable" onclick="toggleClientList('healthy')">
+                                    <span class="health-count" id="clientsHealthy">28</span>
+                                    <span class="health-label">Healthy</span>
+                                    <span class="health-expand">▼</span>
+                                </div>
+                                <div class="health-stat warning clickable" onclick="toggleClientList('warning')">
+                                    <span class="health-count" id="clientsWarning">5</span>
+                                    <span class="health-label">Watch</span>
+                                    <span class="health-expand">▼</span>
+                                </div>
+                                <div class="health-stat at-risk clickable" onclick="toggleClientList('atRisk')">
+                                    <span class="health-count" id="clientsAtRisk">2</span>
+                                    <span class="health-label">At Risk</span>
+                                    <span class="health-expand">▼</span>
+                                </div>
+                            </div>
+                            <div class="client-list-expanded" id="clientListExpanded" style="display: none;">
+                                <div class="client-list-header">
+                                    <span id="clientListTitle">Healthy Clients</span>
+                                    <button class="btn-close" onclick="toggleClientList(null)">×</button>
+                                </div>
+                                <div class="client-list-items" id="clientListItems">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                            <div class="client-alerts" id="clientAlerts">
+                                <div class="alerts-header">Recent Activity</div>
+                                <div class="alert-item warning">
+                                    <span class="alert-icon">⚠️</span>
+                                    <span class="alert-text">Drew T. — Low engagement (4 days)</span>
+                                </div>
+                                <div class="alert-item success">
+                                    <span class="alert-icon">🎉</span>
+                                    <span class="alert-text">Nick H. — New VIP, posted first win!</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Pipeline -->
+                        <div class="card pipeline-card">
+                            <div class="card-header">
+                                <h2>🔥 Pipeline (This Week)</h2>
+                            </div>
+                            <div class="pipeline-stats">
+                                <div class="pipeline-stat">
+                                    <span class="pipeline-value" id="pipelineLeads">142</span>
+                                    <span class="pipeline-label">Leads</span>
+                                </div>
+                                <div class="pipeline-arrow">→</div>
+                                <div class="pipeline-stat">
+                                    <span class="pipeline-value" id="pipelineApps">3</span>
+                                    <span class="pipeline-label">Applications</span>
+                                </div>
+                                <div class="pipeline-arrow">→</div>
+                                <div class="pipeline-stat">
+                                    <span class="pipeline-value" id="pipelineCalls">1</span>
+                                    <span class="pipeline-label">Calls</span>
+                                </div>
+                                <div class="pipeline-arrow">→</div>
+                                <div class="pipeline-stat highlight">
+                                    <span class="pipeline-value" id="pipelineClosed">0</span>
+                                    <span class="pipeline-label">Closed</span>
+                                </div>
+                            </div>
+                            <div class="pipeline-metrics">
+                                <span class="pipeline-metric">CPL: $<span id="pipelineCPL">5.07</span></span>
+                                <span class="pipeline-metric">App Rate: <span id="pipelineAppRate">2.1</span>%</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Kanban Tab -->
+                <section class="tab-content" id="kanban">
+                    <div class="tab-header">
+                        <h1>📋 Task Board</h1>
+                        <div class="tab-actions">
+                            <button class="btn btn-primary" onclick="openAddTaskModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/>
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                Add Task
+                            </button>
+                        </div>
+                    </div>
+                    <div class="kanban-board" id="kanbanBoard">
+                        <div class="kanban-column" data-status="inbox">
+                            <div class="column-header">
+                                <span class="column-icon">📥</span>
+                                <span class="column-title">Inbox</span>
+                                <span class="column-count">0</span>
+                            </div>
+                            <div class="column-tasks" data-status="inbox"></div>
+                        </div>
+                        <div class="kanban-column" data-status="todo">
+                            <div class="column-header">
+                                <span class="column-icon">🔄</span>
+                                <span class="column-title">To Do</span>
+                                <span class="column-count">0</span>
+                            </div>
+                            <div class="column-tasks" data-status="todo"></div>
+                        </div>
+                        <div class="kanban-column" data-status="progress">
+                            <div class="column-header">
+                                <span class="column-icon">⚡</span>
+                                <span class="column-title">In Progress</span>
+                                <span class="column-count">0</span>
+                            </div>
+                            <div class="column-tasks" data-status="progress"></div>
+                        </div>
+                        <div class="kanban-column" data-status="done">
+                            <div class="column-header">
+                                <span class="column-icon">✅</span>
+                                <span class="column-title">Done</span>
+                                <span class="column-count">0</span>
+                            </div>
+                            <div class="column-tasks" data-status="done"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Activity Tab -->
+                <section class="tab-content" id="activity">
+                    <div class="tab-header">
+                        <h1>📜 Activity Log</h1>
+                        <div class="tab-actions">
+                            <input type="text" class="search-input" id="activitySearch" placeholder="Search activities..." oninput="filterActivity()">
+                            <select class="filter-select" id="activityFilter" onchange="filterActivity()">
+                                <option value="all">All Types</option>
+                                <option value="task">Tasks</option>
+                                <option value="research">Research</option>
+                                <option value="communication">Communication</option>
+                                <option value="scheduled">Scheduled</option>
+                                <option value="system">System</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="activity-list" id="activityList">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Docs Hub Tab -->
+                <section class="tab-content" id="docs">
+                    <div class="tab-header">
+                        <h1>📁 Docs Hub</h1>
+                        <div class="tab-actions">
+                            <input type="text" class="search-input" id="docsSearch" placeholder="Search docs..." oninput="filterDocs()">
+                            <button class="btn btn-secondary btn-icon-only" onclick="toggleAllFolders()" title="Expand/Collapse All">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="docs-container">
+                        <div class="docs-sidebar" id="docsSidebar">
+                            <div class="docs-tree" id="docsTree">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                        <div class="docs-main">
+                            <div class="docs-list" id="docsList">
+                                <!-- Populated by JS -->
+                            </div>
+                            <div class="docs-preview" id="docsPreview">
+                                <div class="empty-state">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                    </svg>
+                                    <p>Select a document to preview</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Content Intelligence Tab -->
+                <section class="tab-content" id="content">
+                    <div class="tab-header">
+                        <h1>📡 Content Intelligence</h1>
+                        <div class="tab-actions">
+                            <span class="last-updated" id="contentLastUpdated">Last updated: --</span>
+                        </div>
+                    </div>
+                    <div class="content-grid">
+                        <!-- Trends -->
+                        <div class="card trends-card">
+                            <h2>🔥 Trend Radar</h2>
+                            <div class="trend-section">
+                                <h3>Hot Now</h3>
+                                <div class="trend-tags" id="hotTrends"></div>
+                            </div>
+                            <div class="trend-section">
+                                <h3>Rising</h3>
+                                <div class="trend-tags rising" id="risingTrends"></div>
+                            </div>
+                        </div>
+
+                        <!-- Outliers -->
+                        <div class="card outliers-card">
+                            <h2>🏆 Outlier Communities</h2>
+                            <div class="outlier-list" id="outlierList"></div>
+                        </div>
+
+                        <!-- YouTube Ideas -->
+                        <div class="card full-width">
+                            <h2>🎬 YouTube Ideas</h2>
+                            <div class="ideas-grid" id="youtubeIdeas"></div>
+                        </div>
+
+                        <!-- Instagram Ideas -->
+                        <div class="card full-width">
+                            <h2>📸 Instagram Ideas</h2>
+                            <div class="ideas-grid" id="instagramIdeas"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- YouTube Tab -->
+                <section class="tab-content" id="youtube">
+                    <div class="tab-header">
+                        <h1>📺 YouTube Analytics</h1>
+                        <div class="tab-actions">
+                            <button class="btn btn-secondary" onclick="openYouTubeConfig()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                </svg>
+                                Configure
+                            </button>
+                        </div>
+                    </div>
+                    <div class="yt-stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon yt">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-label">Subscribers</span>
+                                <span class="stat-value" id="ytSubs">--</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon yt">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-label">Total Views</span>
+                                <span class="stat-value" id="ytViews">--</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon yt">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="23 7 16 12 23 17 23 7"/>
+                                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-label">Total Videos</span>
+                                <span class="stat-value" id="ytVideos">--</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon yt">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="20" x2="12" y2="10"/>
+                                    <line x1="18" y1="20" x2="18" y2="4"/>
+                                    <line x1="6" y1="20" x2="6" y2="16"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-label">Avg Views/Video</span>
+                                <span class="stat-value" id="ytAvgViews">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Recent Videos</h2>
+                        </div>
+                        <div class="yt-video-list" id="ytVideoList">
+                            <div class="empty-state">
+                                <p>Connect YouTube API to see your videos</p>
+                                <small>Click Configure to add your API key</small>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Instagram Tab -->
+                <section class="tab-content" id="instagram">
+                    <div class="tab-header">
+                        <h1>📸 Instagram Analytics</h1>
+                        <div class="tab-actions">
+                            <button class="btn btn-primary" onclick="openIgSnapshotModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/>
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                Add Snapshot
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ig-stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon ig">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-label">Followers</span>
+                                <span class="stat-value" id="igFollowers">--</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon ig">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="8.5" cy="7" r="4"/>
+                                    <line x1="20" y1="8" x2="20" y2="14"/>
+                                    <line x1="23" y1="11" x2="17" y2="11"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-label">Following</span>
+                                <span class="stat-value" id="igFollowing">--</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon ig">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21 15 16 10 5 21"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-label">Posts</span>
+                                <span class="stat-value" id="igPosts">--</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon ig">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-label">Engagement</span>
+                                <span class="stat-value" id="igEngagement">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Weekly Snapshots</h2>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Followers</th>
+                                    <th>Following</th>
+                                    <th>Posts</th>
+                                    <th>Avg Likes</th>
+                                    <th>Engagement</th>
+                                </tr>
+                            </thead>
+                            <tbody id="igHistoryBody">
+                                <tr><td colspan="6" class="empty">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Schedules Tab -->
+                <section class="tab-content" id="schedules">
+                    <div class="tab-header">
+                        <h1>⏰ Scheduled Tasks</h1>
+                        <div class="tab-actions">
+                            <span class="last-updated" id="schedulesLastUpdated">Last updated: --</span>
+                        </div>
+                    </div>
+                    <div class="schedules-grid" id="schedulesList">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+            </main>
+
+            <!-- Quick Notes Sidebar -->
+            <aside class="notes-sidebar" id="notesSidebar">
+                <div class="notes-header">
+                    <h2>📝 Quick Notes</h2>
+                    <button class="btn-icon" onclick="toggleNotes()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="notes-input">
+                    <textarea id="noteInput" placeholder="Drop a note for Geeves..."></textarea>
+                    <button class="btn btn-primary" onclick="addNote()">Add Note</button>
+                </div>
+                <div class="notes-list" id="notesList">
+                    <div class="empty-state small">
+                        <p>No pending notes</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="modalOverlay">
+        <!-- Add Task Modal -->
+        <div class="modal" id="addTaskModal">
+            <div class="modal-header">
+                <h2>Add New Task</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="taskTitle" placeholder="What needs to be done?">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="taskDescription" placeholder="Add details..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="taskPriority">
+                            <option value="low">🟢 Low</option>
+                            <option value="medium" selected>🟡 Medium</option>
+                            <option value="high">🔴 High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input type="date" id="taskDue">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Tags (comma separated)</label>
+                    <input type="text" id="taskTags" placeholder="lfg, content, system">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveTask()">Add Task</button>
+            </div>
+        </div>
+
+        <!-- YouTube Config Modal -->
+        <div class="modal" id="ytConfigModal">
+            <div class="modal-header">
+                <h2>YouTube Configuration</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>YouTube API Key</label>
+                    <input type="password" id="ytApiKey" placeholder="AIzaSy...">
+                    <small>Get one from <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console</a></small>
+                </div>
+                <div class="form-group">
+                    <label>Channel ID</label>
+                    <input type="text" id="ytChannelId" placeholder="UCsaposjX2IR0HY3YhrkUnMg">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveYouTubeConfig()">Save</button>
+            </div>
+        </div>
+
+        <!-- Instagram Snapshot Modal -->
+        <div class="modal" id="igSnapshotModal">
+            <div class="modal-header">
+                <h2>Add Instagram Snapshot</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="igDate">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Followers</label>
+                        <input type="number" id="igInputFollowers" placeholder="20800">
+                    </div>
+                    <div class="form-group">
+                        <label>Following</label>
+                        <input type="number" id="igInputFollowing" placeholder="500">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Posts</label>
+                        <input type="number" id="igInputPosts" placeholder="711">
+                    </div>
+                    <div class="form-group">
+                        <label>Avg Likes</label>
+                        <input type="number" id="igInputLikes" placeholder="150">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveIgSnapshot()">Save Snapshot</button>
+            </div>
+        </div>
+
+        <!-- Task Detail Modal -->
+        <div class="modal" id="taskDetailModal">
+            <div class="modal-header">
+                <h2 id="taskDetailTitle">Task Details</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="taskDetailBody">
+                <!-- Populated by JS -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="deleteTask()">Delete</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Panel -->
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header">
+            <div class="chat-header-left">
+                <div class="agent-selector">
+                    <select id="agentSelect" onchange="switchAgent(this.value)">
+                        <option value="geeves" selected>🤖 Geeves (Main)</option>
+                        <option value="copy">✍️ Copy (Copywriting)</option>
+                        <option value="close">💬 Close Bot (DM Sales)</option>
+                        <option value="workshop">🎯 Workshop (Sales Pages)</option>
+                        <option value="content">📱 Content (Social)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="chat-header-right">
+                <button class="btn-icon" onclick="openChatFullscreen()" title="Open fullscreen">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 3 21 3 21 9"/>
+                        <polyline points="9 21 3 21 3 15"/>
+                        <line x1="21" y1="3" x2="14" y2="10"/>
+                        <line x1="3" y1="21" x2="10" y2="14"/>
+                    </svg>
+                </button>
+                <button class="btn-icon" onclick="toggleChat()" title="Close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="chat-agent-info" id="chatAgentInfo">
+            <span class="agent-name">Geeves</span>
+            <span class="agent-desc">Your EA — strategy, ops, research, everything</span>
+        </div>
+        <div class="chat-iframe-container">
+            <iframe 
+                id="chatIframe" 
+                src="about:blank" 
+                title="Chat with Geeves"
+                allow="clipboard-write"
+            ></iframe>
+            <div class="chat-loading" id="chatLoading">
+                <div class="chat-loading-spinner"></div>
+                <span>Connecting to Geeves...</span>
+            </div>
+        </div>
+    </div>
+    <div class="chat-overlay" id="chatOverlay" onclick="toggleChat()"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

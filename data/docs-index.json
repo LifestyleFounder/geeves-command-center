@@ -1,0 +1,65 @@
+{
+  "lastUpdated": "2026-02-07T08:15:00Z",
+  "directories": [
+    "/research/",
+    "/memory/",
+    "/reports/"
+  ],
+  "docs": [
+    {
+      "path": "/research/content-intelligence-2026-02-06.md",
+      "title": "Content Intelligence Report - Feb 2026",
+      "category": "research",
+      "date": "2026-02-06",
+      "size": 17137
+    },
+    {
+      "path": "/memory/2026-02-06.md",
+      "title": "Daily Memory - Feb 6, 2026",
+      "category": "memory",
+      "date": "2026-02-06"
+    },
+    {
+      "path": "/memory/2026-02-05.md",
+      "title": "Daily Memory - Feb 5, 2026",
+      "category": "memory",
+      "date": "2026-02-05"
+    },
+    {
+      "path": "/memory/2026-02-04.md",
+      "title": "Daily Memory - Feb 4, 2026",
+      "category": "memory",
+      "date": "2026-02-04"
+    },
+    {
+      "path": "/memory/2026-02-03.md",
+      "title": "Daily Memory - Feb 3, 2026",
+      "category": "memory",
+      "date": "2026-02-03"
+    },
+    {
+      "path": "/memory/2026-02-02.md",
+      "title": "Daily Memory - Feb 2, 2026",
+      "category": "memory",
+      "date": "2026-02-02"
+    },
+    {
+      "path": "/memory/2026-02-01.md",
+      "title": "Daily Memory - Feb 1, 2026",
+      "category": "memory",
+      "date": "2026-02-01"
+    },
+    {
+      "path": "/memory/2026-01-30.md",
+      "title": "Daily Memory - Jan 30, 2026",
+      "category": "memory",
+      "date": "2026-01-30"
+    },
+    {
+      "path": "/reports/gabby-report-2026-02-05.md",
+      "title": "Gabby Report - Feb 5, 2026",
+      "category": "reports",
+      "date": "2026-02-05"
+    }
+  ]
+}
