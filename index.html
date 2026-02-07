@@ -169,64 +169,53 @@
                     </div>
                     
                     <!-- Key Metrics Row -->
-                    <div class="business-metrics-row">
-                        <!-- 1:1 Clients -->
-                        <div class="metric-card oneone-card">
+                    <div class="business-metrics-row six-cols">
+                        <!-- Free Community -->
+                        <div class="metric-card free-card">
                             <div class="metric-header">
-                                <span class="metric-icon">⭐</span>
-                                <span class="metric-title">1:1 Clients</span>
+                                <span class="metric-icon">🌱</span>
+                                <span class="metric-title">Free Community</span>
                             </div>
                             <div class="metric-main">
-                                <span class="metric-current" id="oneoneCurrent">8</span>
-                                <span class="metric-separator">/</span>
-                                <span class="metric-goal" id="oneoneGoal">12</span>
+                                <span class="metric-current" id="freeCurrent">0</span>
                             </div>
-                            <div class="metric-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill oneone" id="oneoneProgress" style="width: 66.7%"></div>
-                                </div>
-                                <span class="progress-label"><span id="oneonePercent">66.7</span>% full</span>
-                            </div>
-                            <div class="metric-sub">$2K/mo program • <span id="oneoneSpots">4</span> spots left</div>
+                            <div class="metric-sub">Free tier members</div>
                         </div>
 
-                        <!-- VIP Clients -->
+                        <!-- Premium Members -->
+                        <div class="metric-card premium-card">
+                            <div class="metric-header">
+                                <span class="metric-icon">⚡</span>
+                                <span class="metric-title">Premium</span>
+                            </div>
+                            <div class="metric-main">
+                                <span class="metric-current" id="premiumCurrent">0</span>
+                            </div>
+                            <div class="metric-sub">$100/mo members</div>
+                        </div>
+
+                        <!-- VIP Tier -->
                         <div class="metric-card vip-card">
                             <div class="metric-header">
                                 <span class="metric-icon">💎</span>
-                                <span class="metric-title">VIP Clients</span>
+                                <span class="metric-title">VIP</span>
                             </div>
                             <div class="metric-main">
-                                <span class="metric-current" id="vipCurrent">27</span>
-                                <span class="metric-separator">/</span>
-                                <span class="metric-goal" id="vipGoal">60</span>
+                                <span class="metric-current" id="vipCurrent">0</span>
                             </div>
-                            <div class="metric-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill vip" id="vipProgress" style="width: 45%"></div>
-                                </div>
-                                <span class="progress-label"><span id="vipPercent">45</span>% full</span>
-                            </div>
-                            <div class="metric-sub">$1K/mo program • <span id="vipSpots">33</span> spots left</div>
+                            <div class="metric-sub">$1,000/mo members</div>
                         </div>
 
-                        <!-- MRR Tracker -->
-                        <div class="metric-card mrr-card">
+                        <!-- 1:1 Tier -->
+                        <div class="metric-card oneone-card">
                             <div class="metric-header">
-                                <span class="metric-icon">💰</span>
-                                <span class="metric-title">MRR</span>
+                                <span class="metric-icon">⭐</span>
+                                <span class="metric-title">1:1</span>
                             </div>
                             <div class="metric-main">
-                                <span class="metric-currency">$</span>
-                                <span class="metric-current" id="mrrCurrent">35,000</span>
+                                <span class="metric-current" id="oneoneCurrent">0</span>
                             </div>
-                            <div class="metric-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill mrr" id="mrrProgress" style="width: 41.7%"></div>
-                                </div>
-                                <span class="progress-label">$<span id="mrrGoal">84,000</span> goal</span>
-                            </div>
-                            <div class="metric-sub">$<span id="mrrGap">49,000</span> to go</div>
+                            <div class="metric-sub">$2,000/mo members</div>
                         </div>
 
                         <!-- Cash Collected -->
@@ -239,9 +228,20 @@
                                 <span class="metric-currency">$</span>
                                 <span class="metric-current" id="cashCurrent">0</span>
                             </div>
-                            <div class="metric-sub" id="cashTarget">
-                                Target: $40,000
+                            <div class="metric-sub">Collected this month</div>
+                        </div>
+
+                        <!-- MRR -->
+                        <div class="metric-card mrr-card">
+                            <div class="metric-header">
+                                <span class="metric-icon">💰</span>
+                                <span class="metric-title">MRR</span>
                             </div>
+                            <div class="metric-main">
+                                <span class="metric-currency">$</span>
+                                <span class="metric-current" id="mrrCurrent">0</span>
+                            </div>
+                            <div class="metric-sub">Monthly recurring</div>
                         </div>
                     </div>
 

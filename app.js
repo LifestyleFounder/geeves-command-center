@@ -1357,43 +1357,26 @@ function renderBusiness() {
     
     const b = state.business;
     
-    // 1:1 Clients
-    if (b.oneone) {
-        const oneonePercent = ((b.oneone.current / b.oneone.goal) * 100).toFixed(1);
-        const oneoneSpots = b.oneone.goal - b.oneone.current;
-        document.getElementById('oneoneCurrent').textContent = b.oneone.current;
-        document.getElementById('oneoneGoal').textContent = b.oneone.goal;
-        document.getElementById('oneonePercent').textContent = oneonePercent;
-        document.getElementById('oneoneProgress').style.width = `${oneonePercent}%`;
-        document.getElementById('oneoneSpots').textContent = oneoneSpots;
+    // Member tiers
+    if (b.members) {
+        const setIfExists = (id, val) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = val;
+        };
+        setIfExists('freeCurrent', formatNumber(b.members.free || 0));
+        setIfExists('premiumCurrent', formatNumber(b.members.premium || 0));
+        setIfExists('vipCurrent', formatNumber(b.members.vip || 0));
+        setIfExists('oneoneCurrent', formatNumber(b.members.oneone || 0));
     }
     
-    // VIP Clients
-    if (b.vip) {
-        const vipPercent = ((b.vip.current / b.vip.goal) * 100).toFixed(1);
-        const vipSpots = b.vip.goal - b.vip.current;
-        document.getElementById('vipCurrent').textContent = b.vip.current;
-        document.getElementById('vipGoal').textContent = b.vip.goal;
-        document.getElementById('vipPercent').textContent = vipPercent;
-        document.getElementById('vipProgress').style.width = `${vipPercent}%`;
-        document.getElementById('vipSpots').textContent = vipSpots;
-    }
-    
-    // MRR Tracker
-    if (b.mrr) {
-        const mrrPercent = ((b.mrr.current / b.mrr.goal) * 100).toFixed(1);
-        const mrrGap = b.mrr.goal - b.mrr.current;
-        
-        document.getElementById('mrrCurrent').textContent = formatNumber(b.mrr.current);
-        document.getElementById('mrrGoal').textContent = formatNumber(b.mrr.goal);
-        document.getElementById('mrrGap').textContent = formatNumber(mrrGap);
-        document.getElementById('mrrProgress').style.width = `${mrrPercent}%`;
-    }
-    
-    // Cash Collected
-    if (b.cash) {
-        document.getElementById('cashCurrent').textContent = formatNumber(b.cash.collectedThisMonth);
-        document.getElementById('cashTarget').textContent = `Target: $${formatNumber(b.cash.targetThisMonth)}`;
+    // Revenue
+    if (b.revenue) {
+        const setIfExists = (id, val) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = val;
+        };
+        setIfExists('cashCurrent', formatNumber(b.revenue.cash || 0));
+        setIfExists('mrrCurrent', formatNumber(b.revenue.mrr || 0));
     }
     
     // Client Health

@@ -1813,9 +1813,13 @@ body {
 
 .business-metrics-row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--space-lg);
     margin-bottom: var(--space-lg);
+}
+
+.business-metrics-row.six-cols {
+    grid-template-columns: repeat(6, 1fr);
 }
 
 .metric-card {
@@ -1826,8 +1830,20 @@ body {
     border: 1px solid var(--border);
 }
 
+.metric-card.free-card {
+    border-left: 4px solid #94a3b8;
+}
+
+.metric-card.premium-card {
+    border-left: 4px solid #8b5cf6;
+}
+
 .metric-card.vip-card {
     border-left: 4px solid var(--gold);
+}
+
+.metric-card.oneone-card {
+    border-left: 4px solid #f59e0b;
 }
 
 .metric-card.mrr-card {
@@ -2185,12 +2201,29 @@ body {
 }
 
 /* Responsive */
+@media (max-width: 1400px) {
+    .business-metrics-row.six-cols {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
 @media (max-width: 1200px) {
     .business-metrics-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .business-metrics-row.six-cols {
+        grid-template-columns: repeat(2, 1fr);
     }
     
     .business-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .business-metrics-row,
+    .business-metrics-row.six-cols {
         grid-template-columns: 1fr;
     }
 }
