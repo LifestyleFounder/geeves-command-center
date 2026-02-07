@@ -1843,37 +1843,37 @@ async function callAnthropic(messages, model, apiKey) {
 }
 
 async function callOpenClaw(messages, model, openclawUrl) {
-    // OpenClaw webchat API endpoint (uses Tailscale IP for remote access)
+    // OpenClaw OpenAI-compatible HTTP endpoint
     const baseUrl = openclawUrl || '';
+    const settings = loadSettings();
+    const token = settings.openclawToken || 'geeves-local-token-2026';
     
-    // Build the message content
-    const userMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
-    const systemPrompt = messages.find(m => m.role === 'system')?.content || '';
-    
-    // For OpenClaw, we send to the chat endpoint
-    // The system prompt is already configured in the agent, so we just send the user message
     try {
-        const response = await fetch(`${baseUrl}/api/chat`, {
+        const response = await fetch(`${baseUrl}/v1/chat/completions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'x-openclaw-agent-id': 'main'
             },
             body: JSON.stringify({
-                message: userMessage,
-                systemPrompt: systemPrompt,
-                model: model
+                model: 'openclaw',
+                messages: messages
             })
         });
         
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error('OpenClaw error:', response.status, errorText);
             throw new Error('OpenClaw not responding');
         }
         
         const data = await response.json();
-        return data.response || data.message || data.content || 'No response';
+        // OpenAI format: choices[0].message.content
+        return data.choices?.[0]?.message?.content || data.response || 'No response';
     } catch (error) {
-        // If OpenClaw isn't available, provide helpful message
-        throw new Error('Cannot reach OpenClaw on your Mac. Make sure OpenClaw is running (openclaw gateway start) and you\'re accessing from your local network.');
+        console.error('OpenClaw fetch error:', error);
+        throw new Error('Cannot reach OpenClaw on your Mac. Make sure OpenClaw is running (openclaw gateway start) and you\'re accessing from your local network.. Check your API settings.');
     }
 }
 
