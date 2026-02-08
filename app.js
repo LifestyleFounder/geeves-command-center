@@ -68,7 +68,8 @@ function switchTab(tabName) {
         youtube: 'YouTube',
         instagram: 'Instagram',
         schedules: 'Schedules',
-        'meta-ads': 'Meta Ads'
+        'meta-ads': 'Meta Ads',
+        'ad-swipes': 'Ad Swipes'
     };
     document.getElementById('mobileTitle').textContent = titles[tabName] || tabName;
     
@@ -3718,6 +3719,172 @@ window.openMetaAdsSettings = openMetaAdsSettings;
 window.switchMetaTab = switchMetaTab;
 window.saveMetaAdsSettings = saveMetaAdsSettings;
 window.quickAddMetaData = quickAddMetaData;
+
+// ===========================================
+// AD SWIPE FILE
+// ===========================================
+
+let adSwipesData = {
+    lastUpdated: null,
+    lastResearch: null,
+    competitors: [],
+    swipes: []
+};
+
+// Load ad swipes
+async function loadAdSwipes() {
+    try {
+        const response = await fetch(`data/ad-swipes.json?t=${Date.now()}`);
+        if (response.ok) {
+            adSwipesData = await response.json();
+            localStorage.setItem('geeves-ad-swipes', JSON.stringify(adSwipesData));
+        }
+    } catch (e) {
+        const saved = localStorage.getItem('geeves-ad-swipes');
+        if (saved) adSwipesData = JSON.parse(saved);
+    }
+    renderAdSwipes();
+}
+
+// Save ad swipes
+function saveAdSwipes() {
+    localStorage.setItem('geeves-ad-swipes', JSON.stringify(adSwipesData));
+}
+
+// Render ad swipes
+function renderAdSwipes() {
+    // Update last research date
+    const lastResearchEl = document.getElementById('lastResearchDate');
+    if (lastResearchEl && adSwipesData.lastResearch) {
+        lastResearchEl.textContent = 'Last research: ' + formatRelativeTime(adSwipesData.lastResearch);
+    }
+    
+    // Update competitors list in empty state
+    const competitorsListEl = document.getElementById('competitorsList');
+    if (competitorsListEl) {
+        competitorsListEl.textContent = adSwipesData.competitors?.join(', ') || 'None set';
+    }
+    
+    // Populate competitor filter
+    const competitorFilter = document.getElementById('swipeFilterCompetitor');
+    if (competitorFilter && adSwipesData.competitors) {
+        const currentValue = competitorFilter.value;
+        competitorFilter.innerHTML = '<option value="all">All Competitors</option>' +
+            adSwipesData.competitors.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+        competitorFilter.value = currentValue || 'all';
+    }
+    
+    // Update count
+    const countEl = document.getElementById('swipeCount');
+    if (countEl) {
+        countEl.textContent = `${adSwipesData.swipes?.length || 0} ads`;
+    }
+    
+    // Render swipes grid
+    const grid = document.getElementById('swipesGrid');
+    const emptyState = document.getElementById('swipesEmpty');
+    
+    if (!adSwipesData.swipes || adSwipesData.swipes.length === 0) {
+        if (emptyState) emptyState.style.display = 'block';
+        return;
+    }
+    
+    if (emptyState) emptyState.style.display = 'none';
+    
+    // Get filtered swipes
+    const filtered = getFilteredSwipes();
+    
+    grid.innerHTML = filtered.map(swipe => `
+        <div class="swipe-card" onclick="openSwipeDetail('${swipe.id}')">
+            <div class="swipe-media">
+                ${swipe.mediaType === 'video' 
+                    ? `<div class="swipe-video-placeholder">🎬 Video</div>`
+                    : `<img src="${swipe.imageUrl || swipe.thumbnail}" alt="${escapeHtml(swipe.headline || '')}">`
+                }
+                <span class="swipe-type-badge">${swipe.mediaType || 'image'}</span>
+            </div>
+            <div class="swipe-info">
+                <div class="swipe-advertiser">${escapeHtml(swipe.advertiser)}</div>
+                <div class="swipe-headline">${escapeHtml(swipe.headline || swipe.primaryText?.substring(0, 60) + '...' || 'No headline')}</div>
+                <div class="swipe-meta">
+                    <span class="swipe-category">${swipe.category || 'uncategorized'}</span>
+                    <span class="swipe-date">${formatRelativeTime(swipe.foundDate)}</span>
+                </div>
+            </div>
+            ${swipe.notes ? `<div class="swipe-notes">"${escapeHtml(swipe.notes)}"</div>` : ''}
+        </div>
+    `).join('');
+    
+    // Update filtered count
+    if (countEl) {
+        countEl.textContent = `${filtered.length} of ${adSwipesData.swipes.length} ads`;
+    }
+}
+
+// Filter swipes
+function getFilteredSwipes() {
+    const competitor = document.getElementById('swipeFilterCompetitor')?.value || 'all';
+    const type = document.getElementById('swipeFilterType')?.value || 'all';
+    const category = document.getElementById('swipeFilterCategory')?.value || 'all';
+    
+    return (adSwipesData.swipes || []).filter(swipe => {
+        if (competitor !== 'all' && swipe.advertiser !== competitor) return false;
+        if (type !== 'all' && swipe.mediaType !== type) return false;
+        if (category !== 'all' && swipe.category !== category) return false;
+        return true;
+    });
+}
+
+function filterSwipes() {
+    renderAdSwipes();
+}
+
+// Open competitor settings
+function openCompetitorSettings() {
+    const textarea = document.getElementById('competitorList');
+    if (textarea) {
+        textarea.value = (adSwipesData.competitors || []).join('\n');
+    }
+    openModal('competitorSettingsModal');
+}
+
+// Save competitors
+function saveCompetitors() {
+    const textarea = document.getElementById('competitorList');
+    if (textarea) {
+        adSwipesData.competitors = textarea.value
+            .split('\n')
+            .map(c => c.trim())
+            .filter(Boolean);
+        saveAdSwipes();
+        renderAdSwipes();
+    }
+    closeModal();
+}
+
+// Open swipe detail (for future expansion)
+function openSwipeDetail(swipeId) {
+    const swipe = adSwipesData.swipes.find(s => s.id === swipeId);
+    if (!swipe) return;
+    
+    // For now, open the ads library link if available
+    if (swipe.adsLibraryUrl) {
+        window.open(swipe.adsLibraryUrl, '_blank');
+    }
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+    loadAdSwipes();
+});
+
+// Export functions
+window.loadAdSwipes = loadAdSwipes;
+window.renderAdSwipes = renderAdSwipes;
+window.filterSwipes = filterSwipes;
+window.openCompetitorSettings = openCompetitorSettings;
+window.saveCompetitors = saveCompetitors;
+window.openSwipeDetail = openSwipeDetail;
 window.initSortableSidebar = initSortableSidebar;
 window.loadSidebarOrder = loadSidebarOrder;
 window.saveSidebarOrder = saveSidebarOrder;

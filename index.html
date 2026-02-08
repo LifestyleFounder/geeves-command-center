@@ -147,6 +147,14 @@
                         </svg>
                         <span>Meta Ads</span>
                     </li>
+                    <li class="nav-item" data-tab="ad-swipes" draggable="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        <span>Ad Swipes</span>
+                    </li>
                 </ul>
                 <div class="sidebar-footer">
                     <span class="version">Command Center v1.0</span>
@@ -916,6 +924,56 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- Ad Swipes Tab -->
+                <section class="tab-content" id="ad-swipes">
+                    <div class="tab-header">
+                        <h1>🎯 Ad Swipe File</h1>
+                        <div class="tab-actions">
+                            <span class="last-research" id="lastResearchDate">Last research: --</span>
+                            <button class="btn btn-secondary" onclick="openCompetitorSettings()">
+                                👥 Competitors
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Bar -->
+                    <div class="swipes-filter-bar">
+                        <div class="filter-group">
+                            <select id="swipeFilterCompetitor" onchange="filterSwipes()">
+                                <option value="all">All Competitors</option>
+                            </select>
+                            <select id="swipeFilterType" onchange="filterSwipes()">
+                                <option value="all">All Types</option>
+                                <option value="image">Image</option>
+                                <option value="video">Video</option>
+                                <option value="carousel">Carousel</option>
+                            </select>
+                            <select id="swipeFilterCategory" onchange="filterSwipes()">
+                                <option value="all">All Categories</option>
+                                <option value="hook">Great Hook</option>
+                                <option value="offer">Strong Offer</option>
+                                <option value="creative">Creative Format</option>
+                                <option value="copy">Copy Inspiration</option>
+                                <option value="social-proof">Social Proof</option>
+                                <option value="retargeting">Retargeting</option>
+                            </select>
+                        </div>
+                        <div class="filter-stats">
+                            <span id="swipeCount">0 ads</span>
+                        </div>
+                    </div>
+
+                    <!-- Swipes Grid -->
+                    <div class="swipes-grid" id="swipesGrid">
+                        <div class="swipes-empty" id="swipesEmpty">
+                            <div class="empty-icon">🎯</div>
+                            <h3>No Ad Swipes Yet</h3>
+                            <p>I'll research competitor ads weekly and add inspiring examples here.</p>
+                            <p class="competitors-list">Watching: <span id="competitorsList">Loading...</span></p>
+                        </div>
+                    </div>
+                </section>
             </main>
 
             <!-- Quick Notes Sidebar -->
@@ -1201,6 +1259,36 @@ Retargeting, 150, 8" rows="4"></textarea>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                 <button class="btn btn-primary" onclick="saveMetaAdsSettings()">Save & Sync</button>
+            </div>
+        </div>
+
+        <!-- Competitor Settings Modal -->
+        <div class="modal" id="competitorSettingsModal">
+            <div class="modal-header">
+                <h2>Competitors to Watch</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">I'll research these competitors weekly in the Meta Ads Library and pull inspiring ads into your swipe file.</p>
+                <div class="form-group">
+                    <label>Competitors (one per line)</label>
+                    <textarea id="competitorList" rows="10" placeholder="Skool
+Hormozi
+Sam Ovens
+..."></textarea>
+                </div>
+                <div class="info-box">
+                    <strong>Tips for competitor research:</strong>
+                    <ul>
+                        <li>Add Facebook Page names or advertiser names</li>
+                        <li>Include direct competitors AND adjacent niches</li>
+                        <li>Mix big players with smaller successful ones</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveCompetitors()">Save</button>
             </div>
         </div>
 
