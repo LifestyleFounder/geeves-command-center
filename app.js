@@ -2208,6 +2208,26 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+function showToast(message, duration = 4000) {
+    // Remove existing toast if any
+    const existing = document.querySelector('.toast-notification');
+    if (existing) existing.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    // Auto-remove
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+
 function formatNumber(num) {
     if (num === null || num === undefined) return '--';
     return new Intl.NumberFormat().format(num);
@@ -3794,13 +3814,38 @@ function renderAdSwipes() {
     // Get filtered swipes
     const filtered = getFilteredSwipes();
     
-    grid.innerHTML = filtered.map(swipe => `
+    grid.innerHTML = filtered.map(swipe => {
+        // Determine media display
+        let mediaContent;
+        const categoryIcons = { 
+            hook: '🪝', 
+            offer: '🎁', 
+            creative: '🎨', 
+            copy: '✍️', 
+            'social-proof': '👥', 
+            retargeting: '🎯' 
+        };
+        
+        // Only show actual image if we have a valid URL
+        if (swipe.imageUrl && swipe.imageUrl.startsWith('http')) {
+            mediaContent = `<img src="${swipe.imageUrl}" alt="${escapeHtml(swipe.headline || '')}" onerror="this.parentElement.innerHTML='<div class=\\'swipe-video-placeholder\\'>🖼️ Image</div>'">`;
+        } else if (swipe.thumbnail && swipe.thumbnail.startsWith('http')) {
+            mediaContent = `<img src="${swipe.thumbnail}" alt="${escapeHtml(swipe.headline || '')}" onerror="this.parentElement.innerHTML='<div class=\\'swipe-video-placeholder\\'>🖼️ Image</div>'">`;
+        } else if (swipe.mediaType === 'video') {
+            mediaContent = `<div class="swipe-video-placeholder">🎬 Video Ad</div>`;
+        } else if (swipe.mediaType === 'carousel') {
+            mediaContent = `<div class="swipe-video-placeholder">🎠 Carousel Ad</div>`;
+        } else {
+            // Default placeholder - show category icon with nice label
+            const icon = categoryIcons[swipe.category] || '📢';
+            const label = swipe.mediaType === 'image' ? 'Image Ad' : (swipe.mediaType || 'Ad');
+            mediaContent = `<div class="swipe-video-placeholder">${icon} ${label}</div>`;
+        }
+        
+        return `
         <div class="swipe-card" onclick="openSwipeDetail('${swipe.id}')">
             <div class="swipe-media">
-                ${swipe.mediaType === 'video' 
-                    ? `<div class="swipe-video-placeholder">🎬 Video</div>`
-                    : `<img src="${swipe.imageUrl || swipe.thumbnail}" alt="${escapeHtml(swipe.headline || '')}">`
-                }
+                ${mediaContent}
                 <span class="swipe-type-badge">${swipe.mediaType || 'image'}</span>
             </div>
             <div class="swipe-info">
@@ -3811,9 +3856,9 @@ function renderAdSwipes() {
                     <span class="swipe-date">${formatRelativeTime(swipe.foundDate)}</span>
                 </div>
             </div>
-            ${swipe.notes ? `<div class="swipe-notes">"${escapeHtml(swipe.notes)}"</div>` : ''}
+            ${swipe.notes ? `<div class="swipe-notes">"${escapeHtml(swipe.notes.substring(0, 100))}${swipe.notes.length > 100 ? '...' : ''}"</div>` : ''}
         </div>
-    `).join('');
+    `}).join('');
     
     // Update filtered count
     if (countEl) {
@@ -3848,29 +3893,57 @@ function openCompetitorSettings() {
     openModal('competitorSettingsModal');
 }
 
-// Save competitors
+// Save competitors - copies to clipboard for Geeves to update
 function saveCompetitors() {
     const textarea = document.getElementById('competitorList');
     if (textarea) {
-        adSwipesData.competitors = textarea.value
+        const competitors = textarea.value
             .split('\n')
             .map(c => c.trim())
             .filter(Boolean);
+        
+        // Update local state for immediate UI feedback
+        adSwipesData.competitors = competitors;
         saveAdSwipes();
         renderAdSwipes();
+        
+        // Copy to clipboard so user can share with Geeves
+        const clipboardText = `Update competitors to:\n${competitors.join('\n')}`;
+        navigator.clipboard.writeText(clipboardText).then(() => {
+            showToast('✅ Saved locally & copied to clipboard — paste to Geeves to sync permanently');
+        }).catch(() => {
+            showToast('✅ Saved locally — tell Geeves your new competitor list to sync');
+        });
     }
     closeModal();
 }
 
-// Open swipe detail (for future expansion)
+// Open swipe detail modal
 function openSwipeDetail(swipeId) {
     const swipe = adSwipesData.swipes.find(s => s.id === swipeId);
     if (!swipe) return;
     
-    // For now, open the ads library link if available
+    // Populate modal
+    document.getElementById('swipeDetailTitle').textContent = swipe.headline || 'Ad Details';
+    document.getElementById('swipeDetailAdvertiser').textContent = swipe.advertiser || 'Unknown';
+    document.getElementById('swipeDetailType').textContent = swipe.mediaType || 'image';
+    document.getElementById('swipeDetailCategory').textContent = swipe.category || 'uncategorized';
+    document.getElementById('swipeDetailHeadline').textContent = swipe.headline || 'No headline';
+    document.getElementById('swipeDetailText').textContent = swipe.primaryText || 'No ad copy available';
+    document.getElementById('swipeDetailCta').textContent = swipe.cta || 'No CTA';
+    document.getElementById('swipeDetailWhy').textContent = swipe.whyItWorks || 'Analysis coming soon...';
+    document.getElementById('swipeDetailNotes').textContent = swipe.notes || 'No notes yet';
+    
+    // Set link
+    const link = document.getElementById('swipeDetailLink');
     if (swipe.adsLibraryUrl) {
-        window.open(swipe.adsLibraryUrl, '_blank');
+        link.href = swipe.adsLibraryUrl;
+        link.style.display = 'inline-flex';
+    } else {
+        link.style.display = 'none';
     }
+    
+    openModal('swipeDetailModal');
 }
 
 // Initialize on load
