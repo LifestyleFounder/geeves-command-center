@@ -1120,15 +1120,24 @@ function renderYouTube() {
     const videos = state.youtube.recentVideos || [];
     
     if (videos.length > 0) {
-        videoList.innerHTML = videos.map(video => `
+        videoList.innerHTML = videos.map(video => {
+            const stats = video.stats || {};
+            return `
             <div class="yt-video-item" onclick="window.open('https://youtube.com/watch?v=${video.id}', '_blank')">
                 <img class="yt-video-thumb" src="${video.thumbnail}" alt="${escapeHtml(video.title)}">
                 <div class="yt-video-info">
                     <div class="yt-video-title">${escapeHtml(video.title)}</div>
-                    <div class="yt-video-date">${formatRelativeTime(video.publishedAt)}</div>
+                    <div class="yt-video-meta">
+                        <span class="yt-video-date">${formatRelativeTime(video.publishedAt)}</span>
+                    </div>
+                    <div class="yt-video-stats">
+                        <span class="yt-stat" title="Views">👁 ${formatCompactNumber(stats.views)}</span>
+                        <span class="yt-stat" title="Likes">👍 ${formatCompactNumber(stats.likes)}</span>
+                        <span class="yt-stat" title="Comments">💬 ${formatCompactNumber(stats.comments)}</span>
+                    </div>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
     } else if (state.youtube.config?.apiKey) {
         videoList.innerHTML = `
             <div class="empty-state">
@@ -1137,6 +1146,14 @@ function renderYouTube() {
             </div>
         `;
     }
+}
+
+// Format large numbers compactly (1.2K, 3.4M, etc)
+function formatCompactNumber(num) {
+    if (num === undefined || num === null) return '—';
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+    return num.toString();
 }
 
 function openYouTubeConfig() {
@@ -1214,20 +1231,42 @@ async function fetchYouTubeData() {
             thumbnail: channel.snippet.thumbnails?.default?.url
         };
         
-        // Fetch recent videos
+        // Fetch recent videos (last 8)
         const videosRes = await fetch(
             `https://www.googleapis.com/youtube/v3/search?` +
-            `part=snippet&channelId=${channelId}&maxResults=10&order=date&type=video&key=${apiKey}`
+            `part=snippet&channelId=${channelId}&maxResults=8&order=date&type=video&key=${apiKey}`
         );
         
         if (videosRes.ok) {
             const videosData = await videosRes.json();
+            const videoIds = videosData.items.map(v => v.id.videoId).join(',');
+            
+            // Fetch detailed stats for each video
+            const statsRes = await fetch(
+                `https://www.googleapis.com/youtube/v3/videos?` +
+                `part=statistics,contentDetails&id=${videoIds}&key=${apiKey}`
+            );
+            
+            let videoStats = {};
+            if (statsRes.ok) {
+                const statsData = await statsRes.json();
+                statsData.items.forEach(item => {
+                    videoStats[item.id] = {
+                        views: parseInt(item.statistics.viewCount) || 0,
+                        likes: parseInt(item.statistics.likeCount) || 0,
+                        comments: parseInt(item.statistics.commentCount) || 0,
+                        duration: item.contentDetails.duration
+                    };
+                });
+            }
+            
             state.youtube.recentVideos = (videosData.items || []).map(v => ({
                 id: v.id.videoId,
                 title: v.snippet.title,
                 description: v.snippet.description,
                 thumbnail: v.snippet.thumbnails?.medium?.url,
-                publishedAt: v.snippet.publishedAt
+                publishedAt: v.snippet.publishedAt,
+                stats: videoStats[v.id.videoId] || {}
             }));
         }
         

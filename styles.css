@@ -3868,3 +3868,28 @@ body {
     max-height: 400px;
     overflow-y: auto;
 }
+
+/* YouTube Video Stats */
+.yt-video-meta {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.yt-video-stats {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-xs);
+}
+
+.yt-stat {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.yt-video-item:hover .yt-stat {
+    color: var(--text-primary);
+}
