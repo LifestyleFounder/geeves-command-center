@@ -2358,25 +2358,36 @@ function getPipelineContext() {
 // Initialize @mention autocomplete on chat input
 function initMentionAutocomplete() {
     const input = document.getElementById('chatInput');
-    if (!input) return;
+    if (!input) {
+        console.log('Chat input not found, retrying in 500ms...');
+        setTimeout(initMentionAutocomplete, 500);
+        return;
+    }
     
-    // Create autocomplete dropdown
+    // Create autocomplete dropdown in the chat-input-container
+    const container = input.closest('.chat-input-container') || input.parentNode;
     let dropdown = document.getElementById('mentionDropdown');
     if (!dropdown) {
         dropdown = document.createElement('div');
         dropdown.id = 'mentionDropdown';
         dropdown.className = 'mention-dropdown';
         dropdown.style.display = 'none';
-        input.parentNode.appendChild(dropdown);
+        container.appendChild(dropdown);
     }
+    
+    // Remove any existing listeners to avoid duplicates
+    input.removeEventListener('input', handleMentionInput);
+    input.removeEventListener('keydown', handleMentionKeydown);
     
     // Handle input for @mention detection
     input.addEventListener('input', handleMentionInput);
     input.addEventListener('keydown', handleMentionKeydown);
     input.addEventListener('blur', () => {
         // Delay hiding to allow click on dropdown
-        setTimeout(() => hideMentionDropdown(), 200);
+        setTimeout(() => hideMentionDropdown(), 250);
     });
+    
+    console.log('Mention autocomplete initialized');
 }
 
 function handleMentionInput(e) {
@@ -2388,9 +2399,19 @@ function handleMentionInput(e) {
     const textBeforeCursor = text.slice(0, cursorPos);
     const lastAtIndex = textBeforeCursor.lastIndexOf('@');
     
-    if (lastAtIndex === -1 || (lastAtIndex > 0 && text[lastAtIndex - 1] !== ' ' && text[lastAtIndex - 1] !== '\n')) {
+    // Check if @ is valid (at start, after space, or after newline)
+    if (lastAtIndex === -1) {
         hideMentionDropdown();
         return;
+    }
+    
+    // @ must be at start or preceded by whitespace
+    if (lastAtIndex > 0) {
+        const charBefore = text[lastAtIndex - 1];
+        if (charBefore !== ' ' && charBefore !== '\n' && charBefore !== '\t') {
+            hideMentionDropdown();
+            return;
+        }
     }
     
     // Get query after @
@@ -2412,6 +2433,8 @@ function handleMentionInput(e) {
         item.displayName.toLowerCase().includes(query) ||
         item.name.toLowerCase().includes(query)
     ).slice(0, 8);
+    
+    console.log('Mention query:', query, 'Matches:', mentionState.matches.length);
     
     if (mentionState.matches.length > 0) {
         mentionState.selectedIndex = 0;
@@ -2456,10 +2479,14 @@ function handleMentionKeydown(e) {
 
 function showMentionDropdown() {
     const dropdown = document.getElementById('mentionDropdown');
-    if (!dropdown) return;
+    if (!dropdown) {
+        console.log('Dropdown not found');
+        return;
+    }
     
     dropdown.style.display = 'block';
     renderMentionDropdown();
+    console.log('Dropdown shown');
 }
 
 function hideMentionDropdown() {
@@ -2476,13 +2503,21 @@ function renderMentionDropdown() {
     
     dropdown.innerHTML = mentionState.matches.map((item, idx) => `
         <div class="mention-item ${idx === mentionState.selectedIndex ? 'selected' : ''}"
-             onclick="selectMention(getAllMentionableItems().find(i => i.id === '${item.id}'))"
+             data-item-id="${item.id}"
+             onmousedown="event.preventDefault(); selectMentionById('${item.id}')"
              onmouseenter="mentionState.selectedIndex = ${idx}; renderMentionDropdown()">
             <span class="mention-icon">${item.icon}</span>
             <span class="mention-name">@${item.displayName}</span>
             <span class="mention-type">${item.type}</span>
         </div>
     `).join('');
+}
+
+function selectMentionById(itemId) {
+    const item = getAllMentionableItems().find(i => i.id === itemId);
+    if (item) {
+        selectMention(item);
+    }
 }
 
 function selectMention(item) {
@@ -2869,6 +2904,7 @@ window.syncFromNotion = syncFromNotion;
 window.openNotionSettings = openNotionSettings;
 window.saveNotionSettings = saveNotionSettings;
 window.selectMention = selectMention;
+window.selectMentionById = selectMentionById;
 window.getAllMentionableItems = getAllMentionableItems;
 
 // ===========================================
