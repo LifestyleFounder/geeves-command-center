@@ -1114,6 +1114,29 @@ function renderYouTube() {
     if (state.youtube.config) {
         document.getElementById('ytChannelId').value = state.youtube.config.channelId || '';
     }
+    
+    // Render recent videos
+    const videoList = document.getElementById('ytVideoList');
+    const videos = state.youtube.recentVideos || [];
+    
+    if (videos.length > 0) {
+        videoList.innerHTML = videos.map(video => `
+            <div class="yt-video-item" onclick="window.open('https://youtube.com/watch?v=${video.id}', '_blank')">
+                <img class="yt-video-thumb" src="${video.thumbnail}" alt="${escapeHtml(video.title)}">
+                <div class="yt-video-info">
+                    <div class="yt-video-title">${escapeHtml(video.title)}</div>
+                    <div class="yt-video-date">${formatRelativeTime(video.publishedAt)}</div>
+                </div>
+            </div>
+        `).join('');
+    } else if (state.youtube.config?.apiKey) {
+        videoList.innerHTML = `
+            <div class="empty-state">
+                <p>No videos loaded yet</p>
+                <button class="btn btn-primary btn-sm" onclick="fetchYouTubeData()">Fetch Videos</button>
+            </div>
+        `;
+    }
 }
 
 function openYouTubeConfig() {
@@ -1123,6 +1146,11 @@ function openYouTubeConfig() {
 function saveYouTubeConfig() {
     const apiKey = document.getElementById('ytApiKey').value.trim();
     const channelId = document.getElementById('ytChannelId').value.trim();
+    
+    if (!apiKey || !channelId) {
+        alert('Please enter both API Key and Channel ID');
+        return;
+    }
     
     if (!state.youtube) state.youtube = {};
     state.youtube.config = {
@@ -1135,6 +1163,88 @@ function saveYouTubeConfig() {
     
     // Add activity
     addActivity('system', 'Updated YouTube configuration', 'API key and channel ID saved');
+    
+    // Fetch data immediately
+    fetchYouTubeData();
+}
+
+async function fetchYouTubeData() {
+    const config = state.youtube?.config;
+    if (!config?.apiKey || !config?.channelId) {
+        console.log('YouTube not configured');
+        return;
+    }
+    
+    const { apiKey, channelId } = config;
+    
+    try {
+        // Fetch channel statistics
+        const channelRes = await fetch(
+            `https://www.googleapis.com/youtube/v3/channels?` +
+            `part=statistics,snippet&id=${channelId}&key=${apiKey}`
+        );
+        
+        if (!channelRes.ok) {
+            const err = await channelRes.json();
+            throw new Error(err.error?.message || 'YouTube API error');
+        }
+        
+        const channelData = await channelRes.json();
+        
+        if (!channelData.items || channelData.items.length === 0) {
+            throw new Error('Channel not found. Check your Channel ID.');
+        }
+        
+        const channel = channelData.items[0];
+        const stats = channel.statistics;
+        
+        // Update state with channel stats
+        state.youtube.manualStats = {
+            subscribers: parseInt(stats.subscriberCount) || 0,
+            totalViews: parseInt(stats.viewCount) || 0,
+            totalVideos: parseInt(stats.videoCount) || 0,
+            avgViewsPerVideo: stats.videoCount > 0 
+                ? Math.round(parseInt(stats.viewCount) / parseInt(stats.videoCount)) 
+                : 0
+        };
+        
+        state.youtube.channelInfo = {
+            title: channel.snippet.title,
+            description: channel.snippet.description,
+            thumbnail: channel.snippet.thumbnails?.default?.url
+        };
+        
+        // Fetch recent videos
+        const videosRes = await fetch(
+            `https://www.googleapis.com/youtube/v3/search?` +
+            `part=snippet&channelId=${channelId}&maxResults=10&order=date&type=video&key=${apiKey}`
+        );
+        
+        if (videosRes.ok) {
+            const videosData = await videosRes.json();
+            state.youtube.recentVideos = (videosData.items || []).map(v => ({
+                id: v.id.videoId,
+                title: v.snippet.title,
+                description: v.snippet.description,
+                thumbnail: v.snippet.thumbnails?.medium?.url,
+                publishedAt: v.snippet.publishedAt
+            }));
+        }
+        
+        state.youtube.lastUpdated = new Date().toISOString();
+        saveJSON('youtube', state.youtube);
+        renderYouTube();
+        
+        addActivity('system', 'YouTube data refreshed', `${state.youtube.manualStats.subscribers.toLocaleString()} subscribers`);
+        
+    } catch (error) {
+        console.error('YouTube fetch error:', error);
+        alert('Failed to fetch YouTube data: ' + error.message);
+    }
+}
+
+function refreshYouTube() {
+    fetchYouTubeData();
 }
 
 // ===========================================
@@ -2138,6 +2248,8 @@ window.toggleNotes = toggleNotes;
 window.copyToClipboard = copyToClipboard;
 window.openYouTubeConfig = openYouTubeConfig;
 window.saveYouTubeConfig = saveYouTubeConfig;
+window.fetchYouTubeData = fetchYouTubeData;
+window.refreshYouTube = refreshYouTube;
 window.openIgSnapshotModal = openIgSnapshotModal;
 window.saveIgSnapshot = saveIgSnapshot;
 window.openModal = openModal;
