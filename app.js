@@ -2870,3 +2870,475 @@ window.openNotionSettings = openNotionSettings;
 window.saveNotionSettings = saveNotionSettings;
 window.selectMention = selectMention;
 window.getAllMentionableItems = getAllMentionableItems;
+
+// ===========================================
+// RESIZABLE GRID CARDS
+// ===========================================
+
+// Grid layout state
+let gridLayout = {
+    cards: {}
+};
+
+// Load saved grid layout
+function loadGridLayout() {
+    const saved = localStorage.getItem('geeves-grid-layout');
+    if (saved) {
+        try {
+            gridLayout = JSON.parse(saved);
+            applyGridLayout();
+        } catch (e) {
+            console.error('Failed to load grid layout:', e);
+        }
+    }
+}
+
+// Save grid layout
+function saveGridLayout() {
+    localStorage.setItem('geeves-grid-layout', JSON.stringify(gridLayout));
+}
+
+// Apply saved layout to cards
+function applyGridLayout() {
+    Object.entries(gridLayout.cards).forEach(([cardId, layout]) => {
+        const card = document.querySelector(`[data-card="${cardId}"]`);
+        if (card && layout) {
+            if (layout.colSpan) card.style.gridColumn = `span ${layout.colSpan}`;
+            if (layout.rowSpan) card.style.gridRow = `span ${layout.rowSpan}`;
+            if (layout.order !== undefined) card.style.order = layout.order;
+        }
+    });
+}
+
+// Initialize resizable cards
+function initResizableCards() {
+    const cards = document.querySelectorAll('.resizable-card');
+    
+    cards.forEach(card => {
+        const handles = card.querySelectorAll('.resize-handle');
+        
+        handles.forEach(handle => {
+            handle.addEventListener('mousedown', (e) => startResize(e, card, handle));
+        });
+        
+        // Drag to reorder
+        const dragBtn = card.querySelector('.btn-drag');
+        if (dragBtn) {
+            dragBtn.addEventListener('mousedown', (e) => startDrag(e, card));
+        }
+    });
+    
+    loadGridLayout();
+}
+
+// Resize functionality
+let resizing = null;
+
+function startResize(e, card, handle) {
+    e.preventDefault();
+    
+    const grid = card.parentElement;
+    const gridRect = grid.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const computedStyle = getComputedStyle(grid);
+    const colWidth = (gridRect.width - (11 * parseFloat(computedStyle.gap))) / 12;
+    const rowHeight = 200; // minmax value
+    
+    resizing = {
+        card,
+        handle,
+        startX: e.clientX,
+        startY: e.clientY,
+        startWidth: cardRect.width,
+        startHeight: cardRect.height,
+        colWidth,
+        rowHeight,
+        direction: handle.classList.contains('resize-handle-e') ? 'e' : 
+                   handle.classList.contains('resize-handle-s') ? 's' : 'se'
+    };
+    
+    document.addEventListener('mousemove', doResize);
+    document.addEventListener('mouseup', stopResize);
+}
+
+function doResize(e) {
+    if (!resizing) return;
+    
+    const { card, startX, startY, startWidth, startHeight, colWidth, rowHeight, direction } = resizing;
+    const cardId = card.dataset.card;
+    
+    if (!gridLayout.cards[cardId]) {
+        gridLayout.cards[cardId] = {};
+    }
+    
+    if (direction === 'e' || direction === 'se') {
+        const deltaX = e.clientX - startX;
+        const newWidth = startWidth + deltaX;
+        const newColSpan = Math.max(2, Math.min(12, Math.round(newWidth / colWidth)));
+        card.style.gridColumn = `span ${newColSpan}`;
+        gridLayout.cards[cardId].colSpan = newColSpan;
+    }
+    
+    if (direction === 's' || direction === 'se') {
+        const deltaY = e.clientY - startY;
+        const newHeight = startHeight + deltaY;
+        const newRowSpan = Math.max(1, Math.min(4, Math.round(newHeight / rowHeight)));
+        card.style.gridRow = `span ${newRowSpan}`;
+        gridLayout.cards[cardId].rowSpan = newRowSpan;
+    }
+}
+
+function stopResize() {
+    if (resizing) {
+        saveGridLayout();
+        resizing = null;
+    }
+    document.removeEventListener('mousemove', doResize);
+    document.removeEventListener('mouseup', stopResize);
+}
+
+// Drag to reorder
+let dragging = null;
+
+function startDrag(e, card) {
+    e.preventDefault();
+    
+    dragging = {
+        card,
+        startX: e.clientX,
+        startY: e.clientY
+    };
+    
+    card.classList.add('dragging');
+    
+    document.addEventListener('mousemove', doDrag);
+    document.addEventListener('mouseup', stopDrag);
+}
+
+function doDrag(e) {
+    if (!dragging) return;
+    
+    const { card } = dragging;
+    const grid = card.parentElement;
+    const cards = Array.from(grid.querySelectorAll('.resizable-card'));
+    
+    // Find card under mouse
+    const target = document.elementFromPoint(e.clientX, e.clientY);
+    const targetCard = target?.closest('.resizable-card');
+    
+    cards.forEach(c => c.classList.remove('drop-target'));
+    
+    if (targetCard && targetCard !== card) {
+        targetCard.classList.add('drop-target');
+    }
+}
+
+function stopDrag(e) {
+    if (!dragging) return;
+    
+    const { card } = dragging;
+    const grid = card.parentElement;
+    const cards = Array.from(grid.querySelectorAll('.resizable-card'));
+    
+    card.classList.remove('dragging');
+    cards.forEach(c => c.classList.remove('drop-target'));
+    
+    // Find drop target
+    const target = document.elementFromPoint(e.clientX, e.clientY);
+    const targetCard = target?.closest('.resizable-card');
+    
+    if (targetCard && targetCard !== card) {
+        // Swap order
+        const cardOrder = parseInt(getComputedStyle(card).order) || 0;
+        const targetOrder = parseInt(getComputedStyle(targetCard).order) || 0;
+        
+        const cardId = card.dataset.card;
+        const targetId = targetCard.dataset.card;
+        
+        // Update DOM order
+        const cardIndex = cards.indexOf(card);
+        const targetIndex = cards.indexOf(targetCard);
+        
+        if (cardIndex < targetIndex) {
+            targetCard.after(card);
+        } else {
+            targetCard.before(card);
+        }
+        
+        // Save order
+        const newCards = Array.from(grid.querySelectorAll('.resizable-card'));
+        newCards.forEach((c, i) => {
+            const id = c.dataset.card;
+            if (!gridLayout.cards[id]) gridLayout.cards[id] = {};
+            gridLayout.cards[id].order = i;
+            c.style.order = i;
+        });
+        
+        saveGridLayout();
+    }
+    
+    dragging = null;
+    document.removeEventListener('mousemove', doDrag);
+    document.removeEventListener('mouseup', stopDrag);
+}
+
+// ===========================================
+// META ADS INTEGRATION
+// ===========================================
+
+let metaAdsData = {
+    lastUpdated: null,
+    summary: {
+        spend: 0,
+        leads: 0,
+        cpl: 0,
+        roas: 0,
+        impressions: 0,
+        revenue: 0
+    },
+    campaigns: []
+};
+
+// Load Meta Ads data
+async function loadMetaAds() {
+    // Try loading from localStorage first
+    const saved = localStorage.getItem('geeves-meta-ads');
+    if (saved) {
+        try {
+            metaAdsData = JSON.parse(saved);
+            renderMetaAds();
+        } catch (e) {
+            console.error('Failed to load Meta Ads data:', e);
+        }
+    }
+    
+    // Try fetching from data file
+    try {
+        const response = await fetch(`data/meta-ads.json?t=${Date.now()}`);
+        if (response.ok) {
+            metaAdsData = await response.json();
+            localStorage.setItem('geeves-meta-ads', JSON.stringify(metaAdsData));
+            renderMetaAds();
+        }
+    } catch (e) {
+        console.log('No meta-ads.json found, using localStorage');
+    }
+}
+
+// Save Meta Ads data
+function saveMetaAds() {
+    localStorage.setItem('geeves-meta-ads', JSON.stringify(metaAdsData));
+}
+
+// Render Meta Ads data
+function renderMetaAds() {
+    const { summary, campaigns, lastUpdated } = metaAdsData;
+    
+    // Update summary stats
+    document.getElementById('metaSpend').textContent = '$' + (summary.spend || 0).toLocaleString();
+    document.getElementById('metaLeads').textContent = (summary.leads || 0).toLocaleString();
+    document.getElementById('metaCPL').textContent = '$' + (summary.cpl || 0).toFixed(2);
+    document.getElementById('metaROAS').textContent = (summary.roas || 0).toFixed(1) + 'x';
+    
+    // Update last updated
+    const lastUpdatedEl = document.getElementById('metaLastUpdated');
+    if (lastUpdated) {
+        lastUpdatedEl.textContent = 'Last updated: ' + formatRelativeTime(lastUpdated);
+    }
+    
+    // Update campaigns
+    const campaignsContainer = document.getElementById('metaAdsCampaigns');
+    const emptyState = document.getElementById('metaAdsEmpty');
+    
+    if (campaigns && campaigns.length > 0) {
+        if (emptyState) emptyState.style.display = 'none';
+        
+        // Keep header row, remove other rows
+        const header = campaignsContainer.querySelector('.campaign-row.header');
+        campaignsContainer.innerHTML = '';
+        if (header) campaignsContainer.appendChild(header);
+        
+        campaigns.forEach(campaign => {
+            const row = document.createElement('div');
+            row.className = 'campaign-row';
+            row.innerHTML = `
+                <span>${escapeHtml(campaign.name)}</span>
+                <span>$${(campaign.spend || 0).toLocaleString()}</span>
+                <span>${campaign.leads || 0}</span>
+                <span>$${campaign.leads ? (campaign.spend / campaign.leads).toFixed(2) : '—'}</span>
+            `;
+            campaignsContainer.appendChild(row);
+        });
+    } else {
+        if (emptyState) emptyState.style.display = 'block';
+    }
+}
+
+// Refresh Meta Ads (from API)
+async function refreshMetaAds() {
+    const token = localStorage.getItem('metaAccessToken');
+    const adAccountId = localStorage.getItem('metaAdAccountId');
+    
+    if (!token || !adAccountId) {
+        alert('Please configure Meta Ads API settings first');
+        openMetaAdsSettings();
+        return;
+    }
+    
+    const btn = document.querySelector('[onclick="refreshMetaAds()"]');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳';
+    }
+    
+    try {
+        // Fetch insights from Meta API
+        const fields = 'spend,impressions,reach,actions,action_values';
+        const datePreset = 'last_7d';
+        
+        const response = await fetch(
+            `https://graph.facebook.com/v18.0/${adAccountId}/insights?` +
+            `fields=${fields}&date_preset=${datePreset}&access_token=${token}`
+        );
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error?.message || 'Meta API error');
+        }
+        
+        const data = await response.json();
+        
+        if (data.data && data.data.length > 0) {
+            const insights = data.data[0];
+            
+            // Parse actions for leads
+            const leads = insights.actions?.find(a => a.action_type === 'lead')?.value || 0;
+            const purchases = insights.action_values?.find(a => a.action_type === 'purchase')?.value || 0;
+            
+            metaAdsData.summary = {
+                spend: parseFloat(insights.spend || 0),
+                leads: parseInt(leads),
+                cpl: leads > 0 ? parseFloat(insights.spend) / leads : 0,
+                roas: insights.spend > 0 ? purchases / parseFloat(insights.spend) : 0,
+                impressions: parseInt(insights.impressions || 0),
+                revenue: parseFloat(purchases)
+            };
+            
+            // Fetch campaign breakdown
+            const campaignsRes = await fetch(
+                `https://graph.facebook.com/v18.0/${adAccountId}/campaigns?` +
+                `fields=name,insights{spend,actions}&date_preset=${datePreset}&access_token=${token}`
+            );
+            
+            if (campaignsRes.ok) {
+                const campaignsData = await campaignsRes.json();
+                metaAdsData.campaigns = (campaignsData.data || []).map(c => ({
+                    name: c.name,
+                    spend: parseFloat(c.insights?.data?.[0]?.spend || 0),
+                    leads: parseInt(c.insights?.data?.[0]?.actions?.find(a => a.action_type === 'lead')?.value || 0)
+                })).filter(c => c.spend > 0);
+            }
+            
+            metaAdsData.lastUpdated = new Date().toISOString();
+            saveMetaAds();
+            renderMetaAds();
+        }
+        
+    } catch (error) {
+        console.error('Meta Ads refresh failed:', error);
+        alert('Failed to refresh: ' + error.message);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = '🔄';
+        }
+    }
+}
+
+// Open Meta Ads settings
+function openMetaAdsSettings() {
+    document.getElementById('metaAccessToken').value = localStorage.getItem('metaAccessToken') || '';
+    document.getElementById('metaAdAccountId').value = localStorage.getItem('metaAdAccountId') || '';
+    openModal('metaAdsSettingsModal');
+}
+
+// Switch Meta settings tab
+function switchMetaTab(tab) {
+    document.querySelectorAll('.tabs-mini .tab-mini').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tabs-mini .tab-mini[onclick*="${tab}"]`).classList.add('active');
+    
+    document.getElementById('metaTabApi').style.display = tab === 'api' ? 'block' : 'none';
+    document.getElementById('metaTabManual').style.display = tab === 'manual' ? 'block' : 'none';
+}
+
+// Save Meta Ads settings
+function saveMetaAdsSettings() {
+    // Check which tab is active
+    const apiTab = document.getElementById('metaTabApi');
+    
+    if (apiTab.style.display !== 'none') {
+        // API mode
+        const token = document.getElementById('metaAccessToken').value.trim();
+        const adAccountId = document.getElementById('metaAdAccountId').value.trim();
+        
+        if (token) localStorage.setItem('metaAccessToken', token);
+        if (adAccountId) localStorage.setItem('metaAdAccountId', adAccountId);
+        
+        closeModal();
+        
+        if (token && adAccountId) {
+            refreshMetaAds();
+        }
+    } else {
+        // Manual mode
+        const spend = parseFloat(document.getElementById('metaManualSpend').value) || 0;
+        const leads = parseInt(document.getElementById('metaManualLeads').value) || 0;
+        const revenue = parseFloat(document.getElementById('metaManualRevenue').value) || 0;
+        const impressions = parseInt(document.getElementById('metaManualImpressions').value) || 0;
+        const campaignsText = document.getElementById('metaManualCampaigns').value;
+        
+        metaAdsData.summary = {
+            spend,
+            leads,
+            cpl: leads > 0 ? spend / leads : 0,
+            roas: spend > 0 ? revenue / spend : 0,
+            impressions,
+            revenue
+        };
+        
+        // Parse campaigns
+        if (campaignsText) {
+            metaAdsData.campaigns = campaignsText.split('\n')
+                .filter(line => line.trim())
+                .map(line => {
+                    const parts = line.split(',').map(p => p.trim());
+                    return {
+                        name: parts[0] || 'Campaign',
+                        spend: parseFloat(parts[1]) || 0,
+                        leads: parseInt(parts[2]) || 0
+                    };
+                });
+        }
+        
+        metaAdsData.lastUpdated = new Date().toISOString();
+        saveMetaAds();
+        renderMetaAds();
+        closeModal();
+    }
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+    initResizableCards();
+    loadMetaAds();
+});
+
+// Export functions
+window.initResizableCards = initResizableCards;
+window.loadGridLayout = loadGridLayout;
+window.saveGridLayout = saveGridLayout;
+window.loadMetaAds = loadMetaAds;
+window.refreshMetaAds = refreshMetaAds;
+window.openMetaAdsSettings = openMetaAdsSettings;
+window.switchMetaTab = switchMetaTab;
+window.saveMetaAdsSettings = saveMetaAdsSettings;

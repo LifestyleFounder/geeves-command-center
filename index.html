@@ -176,12 +176,16 @@
                     </div>
                     
                     <!-- Calendar & Pipeline Row -->
-                    <div class="business-grid">
+                    <div class="business-grid resizable-grid" id="businessGrid">
                         <!-- Calendar Embed -->
-                        <div class="card calendar-card">
+                        <div class="card calendar-card resizable-card" data-card="calendar">
                             <div class="card-header">
                                 <h2>📅 Schedule</h2>
+                                <button class="btn-icon btn-drag" title="Drag to reorder">⋮⋮</button>
                             </div>
+                            <div class="resize-handle resize-handle-e"></div>
+                            <div class="resize-handle resize-handle-s"></div>
+                            <div class="resize-handle resize-handle-se"></div>
                             <div class="calendar-embed">
                                 <iframe 
                                     src="https://calendar.google.com/calendar/embed?src=dan%40quantumcollective.com&ctz=America%2FVancouver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&showDate=1"
@@ -193,10 +197,14 @@
                         </div>
 
                         <!-- Client Health -->
-                        <div class="card clients-card">
+                        <div class="card clients-card resizable-card" data-card="clients">
                             <div class="card-header">
                                 <h2>👥 Client Health</h2>
+                                <button class="btn-icon btn-drag" title="Drag to reorder">⋮⋮</button>
                             </div>
+                            <div class="resize-handle resize-handle-e"></div>
+                            <div class="resize-handle resize-handle-s"></div>
+                            <div class="resize-handle resize-handle-se"></div>
                             <div class="client-summary">
                                 <div class="health-stat healthy clickable" onclick="toggleClientList('healthy')">
                                     <span class="health-count" id="clientsHealthy">28</span>
@@ -237,10 +245,14 @@
                         </div>
 
                         <!-- Pipeline Metrics -->
-                        <div class="card pipeline-card">
+                        <div class="card pipeline-card resizable-card" data-card="pipeline">
                             <div class="card-header">
                                 <h2>🔥 Pipeline (This Week)</h2>
+                                <button class="btn-icon btn-drag" title="Drag to reorder">⋮⋮</button>
                             </div>
+                            <div class="resize-handle resize-handle-e"></div>
+                            <div class="resize-handle resize-handle-s"></div>
+                            <div class="resize-handle resize-handle-se"></div>
                             <div class="pipeline-metrics-grid">
                                 <!-- Free Community -->
                                 <div class="metric-card free-card">
@@ -315,6 +327,56 @@
                                         <span class="metric-current" id="appsTotal">0</span>
                                     </div>
                                     <div class="metric-sub">this week</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Meta Ads Performance -->
+                        <div class="card meta-ads-card resizable-card" data-card="meta-ads">
+                            <div class="card-header">
+                                <h2>📣 Meta Ads</h2>
+                                <div class="card-header-actions">
+                                    <button class="btn-icon" onclick="refreshMetaAds()" title="Refresh">🔄</button>
+                                    <button class="btn-icon" onclick="openMetaAdsSettings()" title="Settings">⚙️</button>
+                                    <button class="btn-icon btn-drag" title="Drag to reorder">⋮⋮</button>
+                                </div>
+                            </div>
+                            <div class="resize-handle resize-handle-e"></div>
+                            <div class="resize-handle resize-handle-s"></div>
+                            <div class="resize-handle resize-handle-se"></div>
+                            <div class="meta-ads-content" id="metaAdsContent">
+                                <div class="meta-ads-summary">
+                                    <div class="meta-stat">
+                                        <span class="meta-stat-value" id="metaSpend">$0</span>
+                                        <span class="meta-stat-label">Spend (7d)</span>
+                                    </div>
+                                    <div class="meta-stat">
+                                        <span class="meta-stat-value" id="metaLeads">0</span>
+                                        <span class="meta-stat-label">Leads</span>
+                                    </div>
+                                    <div class="meta-stat">
+                                        <span class="meta-stat-value" id="metaCPL">$0</span>
+                                        <span class="meta-stat-label">Cost/Lead</span>
+                                    </div>
+                                    <div class="meta-stat">
+                                        <span class="meta-stat-value" id="metaROAS">0x</span>
+                                        <span class="meta-stat-label">ROAS</span>
+                                    </div>
+                                </div>
+                                <div class="meta-ads-campaigns" id="metaAdsCampaigns">
+                                    <div class="campaign-row header">
+                                        <span>Campaign</span>
+                                        <span>Spend</span>
+                                        <span>Leads</span>
+                                        <span>CPL</span>
+                                    </div>
+                                    <div class="meta-ads-empty" id="metaAdsEmpty">
+                                        <p>No ads data yet</p>
+                                        <button class="btn btn-sm btn-secondary" onclick="openMetaAdsSettings()">Connect Meta Ads</button>
+                                    </div>
+                                </div>
+                                <div class="meta-ads-footer">
+                                    <span class="meta-last-updated" id="metaLastUpdated">Last updated: --</span>
                                 </div>
                             </div>
                         </div>
@@ -961,6 +1023,84 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                 <button class="btn btn-primary" onclick="saveUploadedDocument()">Save Document</button>
+            </div>
+        </div>
+
+        <!-- Meta Ads Settings Modal -->
+        <div class="modal" id="metaAdsSettingsModal">
+            <div class="modal-header">
+                <h2>Meta Ads Settings</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs-mini">
+                    <button class="tab-mini active" onclick="switchMetaTab('api')">API Connection</button>
+                    <button class="tab-mini" onclick="switchMetaTab('manual')">Manual Entry</button>
+                </div>
+                
+                <div class="meta-tab-content" id="metaTabApi">
+                    <div class="form-group">
+                        <label>Meta Access Token</label>
+                        <input type="password" id="metaAccessToken" placeholder="EAAxxxxxxx...">
+                        <small>Long-lived token from <a href="https://developers.facebook.com/tools/explorer/" target="_blank">Graph API Explorer</a></small>
+                    </div>
+                    <div class="form-group">
+                        <label>Ad Account ID</label>
+                        <input type="text" id="metaAdAccountId" placeholder="act_123456789">
+                        <small>Found in Meta Business Suite → Ad Account Settings</small>
+                    </div>
+                    <div class="info-box">
+                        <strong>Setup Instructions:</strong>
+                        <ol>
+                            <li>Go to Meta Business Suite → Settings → Ad Account</li>
+                            <li>Copy your Ad Account ID (starts with "act_")</li>
+                            <li>Use Graph API Explorer to generate a token with ads_read permission</li>
+                            <li>Convert to long-lived token (60 days)</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="meta-tab-content" id="metaTabManual" style="display: none;">
+                    <div class="form-group">
+                        <label>Date Range</label>
+                        <select id="metaManualRange">
+                            <option value="7">Last 7 days</option>
+                            <option value="14">Last 14 days</option>
+                            <option value="30">Last 30 days</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Total Spend</label>
+                            <input type="number" id="metaManualSpend" placeholder="500.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Total Leads</label>
+                            <input type="number" id="metaManualLeads" placeholder="25">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Revenue Generated</label>
+                            <input type="number" id="metaManualRevenue" placeholder="2500.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Impressions</label>
+                            <input type="number" id="metaManualImpressions" placeholder="50000">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Campaign Breakdown (optional)</label>
+                        <textarea id="metaManualCampaigns" placeholder="Campaign Name, Spend, Leads
+Workshop Funnel, 200, 12
+Retargeting, 150, 8" rows="4"></textarea>
+                        <small>One campaign per line: Name, Spend, Leads</small>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveMetaAdsSettings()">Save & Sync</button>
             </div>
         </div>
 

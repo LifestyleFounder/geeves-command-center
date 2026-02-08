@@ -3388,3 +3388,292 @@ body {
         opacity: 1;
     }
 }
+
+/* ===========================================
+   RESIZABLE GRID CARDS
+   =========================================== */
+
+.resizable-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-lg);
+    grid-auto-rows: minmax(200px, auto);
+}
+
+.resizable-card {
+    position: relative;
+    min-height: 200px;
+    overflow: hidden;
+}
+
+/* Default card sizes */
+.resizable-card[data-card="calendar"] {
+    grid-column: span 4;
+    grid-row: span 2;
+}
+
+.resizable-card[data-card="clients"] {
+    grid-column: span 4;
+    grid-row: span 2;
+}
+
+.resizable-card[data-card="pipeline"] {
+    grid-column: span 4;
+    grid-row: span 2;
+}
+
+.resizable-card[data-card="meta-ads"] {
+    grid-column: span 6;
+    grid-row: span 1;
+}
+
+/* Resize handles */
+.resize-handle {
+    position: absolute;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.resizable-card:hover .resize-handle {
+    opacity: 1;
+}
+
+.resize-handle-e {
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 100%;
+    cursor: ew-resize;
+    background: linear-gradient(to right, transparent, var(--forest-green));
+}
+
+.resize-handle-s {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    cursor: ns-resize;
+    background: linear-gradient(to bottom, transparent, var(--forest-green));
+}
+
+.resize-handle-se {
+    bottom: 0;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    cursor: nwse-resize;
+    background: var(--forest-green);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+/* Drag handle */
+.btn-drag {
+    cursor: grab;
+    opacity: 0.5;
+    font-size: 12px;
+    letter-spacing: -2px;
+    padding: 4px;
+}
+
+.btn-drag:hover {
+    opacity: 1;
+}
+
+.btn-drag:active {
+    cursor: grabbing;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header-actions {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: center;
+}
+
+/* Card being dragged */
+.resizable-card.dragging {
+    opacity: 0.7;
+    box-shadow: var(--shadow-xl);
+    z-index: 100;
+}
+
+/* Drop zone highlight */
+.resizable-card.drop-target {
+    outline: 2px dashed var(--forest-green);
+    outline-offset: 4px;
+}
+
+/* ===========================================
+   META ADS CARD
+   =========================================== */
+
+.meta-ads-card {
+    grid-column: span 6;
+}
+
+.meta-ads-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding-top: var(--space-md);
+}
+
+.meta-ads-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+}
+
+.meta-stat {
+    text-align: center;
+    padding: var(--space-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+}
+
+.meta-stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--forest-green);
+}
+
+.meta-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+}
+
+.meta-ads-campaigns {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 200px;
+}
+
+.campaign-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--border-light);
+    font-size: 0.875rem;
+}
+
+.campaign-row.header {
+    background: var(--bg-tertiary);
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    border-radius: var(--radius-sm);
+}
+
+.campaign-row:not(.header):hover {
+    background: var(--bg-tertiary);
+}
+
+.meta-ads-empty {
+    text-align: center;
+    padding: var(--space-xl);
+    color: var(--text-tertiary);
+}
+
+.meta-ads-empty p {
+    margin-bottom: var(--space-md);
+}
+
+.meta-ads-footer {
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--border-light);
+}
+
+.meta-last-updated {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+}
+
+/* ===========================================
+   MINI TABS (for modals)
+   =========================================== */
+
+.tabs-mini {
+    display: flex;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-lg);
+    padding: var(--space-xs);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+}
+
+.tab-mini {
+    flex: 1;
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.tab-mini:hover {
+    background: var(--bg-secondary);
+}
+
+.tab-mini.active {
+    background: var(--forest-green);
+    color: white;
+}
+
+.meta-tab-content {
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ===========================================
+   RESPONSIVE GRID
+   =========================================== */
+
+@media (max-width: 1200px) {
+    .resizable-card[data-card="calendar"],
+    .resizable-card[data-card="clients"],
+    .resizable-card[data-card="pipeline"] {
+        grid-column: span 6;
+    }
+    
+    .resizable-card[data-card="meta-ads"] {
+        grid-column: span 12;
+    }
+}
+
+@media (max-width: 768px) {
+    .resizable-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .resizable-card,
+    .resizable-card[data-card="calendar"],
+    .resizable-card[data-card="clients"],
+    .resizable-card[data-card="pipeline"],
+    .resizable-card[data-card="meta-ads"] {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+    }
+    
+    .meta-ads-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .resize-handle {
+        display: none;
+    }
+}
