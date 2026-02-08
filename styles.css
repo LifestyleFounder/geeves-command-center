@@ -4171,3 +4171,135 @@ body {
         min-width: 120px;
     }
 }
+
+/* ===========================================
+   SWIPE DETAIL MODAL
+   =========================================== */
+
+.modal-lg {
+    max-width: 700px;
+}
+
+.swipe-detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.swipe-detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+.swipe-detail-advertiser {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.swipe-detail-badge {
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+.swipe-detail-section {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+}
+
+.swipe-detail-section h4 {
+    margin: 0 0 var(--space-sm) 0;
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.swipe-detail-section.highlight {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(59, 130, 246, 0.08));
+    border: 1px solid rgba(79, 70, 229, 0.2);
+}
+
+.swipe-detail-headline {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.swipe-detail-text {
+    white-space: pre-wrap;
+    line-height: 1.7;
+    color: var(--text-primary);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.swipe-detail-cta {
+    display: inline-block;
+    padding: 8px 16px;
+    background: var(--accent-primary);
+    color: white;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+}
+
+.swipe-detail-analysis {
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+.swipe-detail-notes {
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.swipe-detail-transcript {
+    white-space: pre-wrap;
+    line-height: 1.7;
+    color: var(--text-primary);
+    max-height: 400px;
+    overflow-y: auto;
+    background: var(--bg-tertiary);
+    padding: var(--space-md);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent-primary);
+    font-size: 0.95rem;
+}
+
+
+/* ===========================================
+   TOAST NOTIFICATIONS
+   =========================================== */
+
+.toast-notification {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-light);
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 90%;
+    text-align: center;
+}
+
+.toast-notification.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}

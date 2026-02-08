@@ -1269,7 +1269,7 @@ Retargeting, 150, 8" rows="4"></textarea>
                 <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <p class="modal-description">I'll research these competitors weekly in the Meta Ads Library and pull inspiring ads into your swipe file.</p>
+                <p class="modal-description">Add competitors to watch. When you save, it'll copy to clipboard — paste to Geeves so I can update the file and research their ads.</p>
                 <div class="form-group">
                     <label>Competitors (one per line)</label>
                     <textarea id="competitorList" rows="10" placeholder="Skool
@@ -1289,6 +1289,57 @@ Sam Ovens
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                 <button class="btn btn-primary" onclick="saveCompetitors()">Save</button>
+            </div>
+        </div>
+
+        <!-- Swipe Detail Modal -->
+        <div class="modal modal-lg" id="swipeDetailModal">
+            <div class="modal-header">
+                <h2 id="swipeDetailTitle">Ad Details</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="swipe-detail-content">
+                    <div class="swipe-detail-meta">
+                        <span class="swipe-detail-advertiser" id="swipeDetailAdvertiser"></span>
+                        <span class="swipe-detail-badge" id="swipeDetailType"></span>
+                        <span class="swipe-detail-badge" id="swipeDetailCategory"></span>
+                    </div>
+                    
+                    <div class="swipe-detail-section">
+                        <h4>📣 Headline</h4>
+                        <div class="swipe-detail-headline" id="swipeDetailHeadline"></div>
+                    </div>
+                    
+                    <div class="swipe-detail-section">
+                        <h4>📝 Primary Text</h4>
+                        <div class="swipe-detail-text" id="swipeDetailText"></div>
+                    </div>
+                    
+                    <div class="swipe-detail-section" id="swipeTranscriptSection" style="display: none;">
+                        <h4>🎬 Video Script (Transcript)</h4>
+                        <div class="swipe-detail-transcript" id="swipeDetailTranscript"></div>
+                    </div>
+                    
+                    <div class="swipe-detail-section">
+                        <h4>🔘 Call to Action</h4>
+                        <div class="swipe-detail-cta" id="swipeDetailCta"></div>
+                    </div>
+                    
+                    <div class="swipe-detail-section highlight">
+                        <h4>💡 Why It Works</h4>
+                        <div class="swipe-detail-analysis" id="swipeDetailWhy"></div>
+                    </div>
+                    
+                    <div class="swipe-detail-section">
+                        <h4>📋 My Notes</h4>
+                        <div class="swipe-detail-notes" id="swipeDetailNotes"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <a id="swipeDetailLink" href="#" target="_blank" class="btn btn-primary">View in Meta Ads Library</a>
             </div>
         </div>
 

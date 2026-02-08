@@ -3934,6 +3934,16 @@ function openSwipeDetail(swipeId) {
     document.getElementById('swipeDetailWhy').textContent = swipe.whyItWorks || 'Analysis coming soon...';
     document.getElementById('swipeDetailNotes').textContent = swipe.notes || 'No notes yet';
     
+    // Show transcript if available (video ads)
+    const transcriptSection = document.getElementById('swipeTranscriptSection');
+    const transcriptEl = document.getElementById('swipeDetailTranscript');
+    if (swipe.transcript && swipe.transcript.trim()) {
+        transcriptEl.textContent = swipe.transcript;
+        transcriptSection.style.display = 'block';
+    } else {
+        transcriptSection.style.display = 'none';
+    }
+    
     // Set link
     const link = document.getElementById('swipeDetailLink');
     if (swipe.adsLibraryUrl) {
