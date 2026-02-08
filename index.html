@@ -101,6 +101,13 @@
                         </svg>
                         <span>Activity</span>
                     </li>
+                    <li class="nav-item" data-tab="knowledge">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        </svg>
+                        <span>Knowledge</span>
+                    </li>
                     <li class="nav-item" data-tab="docs">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -407,6 +414,50 @@
                     </div>
                     <div class="activity-list" id="activityList">
                         <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Knowledge Base Tab -->
+                <section class="tab-content" id="knowledge">
+                    <div class="tab-header">
+                        <h1>📚 Knowledge Base</h1>
+                        <div class="tab-actions">
+                            <button class="btn btn-secondary" onclick="syncFromNotion()" id="notionSyncBtn">
+                                🔄 Sync from Notion
+                            </button>
+                            <button class="btn btn-secondary" onclick="openNotionSettings()" title="Notion Settings">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                </svg>
+                            </button>
+                            <button class="btn btn-primary" onclick="openUploadDocModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/>
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                Add Document
+                            </button>
+                        </div>
+                    </div>
+                    <div class="knowledge-header-info">
+                        <p>📝 Use <code>@doc:name</code> or <code>@notion:name</code> in chat to reference documents. <code>@metrics</code>, <code>@tasks</code>, <code>@pipeline</code> for live data.</p>
+                        <span class="sync-status" id="notionSyncStatus"></span>
+                    </div>
+                    <div class="knowledge-container">
+                        <div class="knowledge-list" id="knowledgeList">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div class="knowledge-preview" id="knowledgePreview">
+                            <div class="empty-state">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                </svg>
+                                <p>Select a document to preview</p>
+                                <small>Or add documents to use as context in AI chats</small>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -873,6 +924,76 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                 <button class="btn btn-primary" onclick="saveChatSettings()">Save</button>
+            </div>
+        </div>
+
+        <!-- Upload Document Modal -->
+        <div class="modal" id="uploadDocModal">
+            <div class="modal-header">
+                <h2>Add Document</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Document Name</label>
+                    <input type="text" id="docName" placeholder="e.g., Brand Voice Guide">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="docCategory">
+                        <option value="brand">🎨 Brand</option>
+                        <option value="strategy">🎯 Strategy</option>
+                        <option value="content">📝 Content</option>
+                        <option value="sales">💰 Sales</option>
+                        <option value="operations">⚙️ Operations</option>
+                        <option value="uncategorized">📄 Uncategorized</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea id="docContent" placeholder="Paste your document content here... Markdown supported." rows="12"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Tags (comma separated)</label>
+                    <input type="text" id="docTags" placeholder="brand, voice, messaging">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveUploadedDocument()">Save Document</button>
+            </div>
+        </div>
+
+        <!-- Notion Settings Modal -->
+        <div class="modal" id="notionSettingsModal">
+            <div class="modal-header">
+                <h2>Notion Settings</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Notion API Key (Internal Integration)</label>
+                    <input type="password" id="notionApiKeyInput" placeholder="secret_...">
+                    <small>Create at <a href="https://www.notion.so/my-integrations" target="_blank">notion.so/my-integrations</a></small>
+                </div>
+                <div class="form-group">
+                    <label>Database ID</label>
+                    <input type="text" id="notionDatabaseId" placeholder="1b3ff8c6-2c63-4941-bad2-1876bd405333">
+                    <small>The ID from your Notion database URL</small>
+                </div>
+                <div class="info-box">
+                    <strong>Setup Instructions:</strong>
+                    <ol>
+                        <li>Create an internal integration at notion.so/my-integrations</li>
+                        <li>Copy the API key (starts with "secret_")</li>
+                        <li>Share your database with the integration</li>
+                        <li>Copy the database ID from the URL</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveNotionSettings()">Save Settings</button>
             </div>
         </div>
     </div>

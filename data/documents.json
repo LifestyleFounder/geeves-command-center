@@ -1,0 +1,41 @@
+{
+  "lastUpdated": "2026-02-07T16:00:00Z",
+  "notionSync": {
+    "enabled": false,
+    "lastSync": null,
+    "databaseId": "1b3ff8c6-2c63-4941-bad2-1876bd405333"
+  },
+  "documents": [
+    {
+      "id": "doc-1",
+      "name": "LFG Offer Stack",
+      "type": "local",
+      "category": "brand",
+      "content": "# LFG Offer Stack\n\n## Free Community\n- Top of funnel\n- Free Skool access\n- Community-driven growth\n\n## Premium ($100/mo)\n- Weekly group calls\n- Playbooks & templates\n- BackPak CRM access\n- Monthly workshops\n\n## VIP ($1,000/mo)\n- 100-day accelerator\n- 2x/week coaching calls\n- 1:1 Slack access to Dan\n- Quarterly retreats\n\n## 12-Month Program ($12K)\n- Daily coaching Mon-Sat\n- Full system build\n- All retreats included\n- White-glove onboarding",
+      "tags": ["offers", "pricing", "tiers"],
+      "createdAt": "2026-02-07T16:00:00Z",
+      "updatedAt": "2026-02-07T16:00:00Z"
+    },
+    {
+      "id": "doc-2",
+      "name": "Brand Voice Guide",
+      "type": "local",
+      "category": "brand",
+      "content": "# LFG Brand Voice\n\n## Tone\n- Direct but warm\n- Confident, not arrogant\n- Anti-bro marketing\n- Slightly contrarian\n- Fun, not corporate\n\n## We Say\n- \"Simple systems that work\"\n- \"Build once, profit forever\"\n- \"Community over courses\"\n- \"Lifestyle first, revenue follows\"\n\n## We Never Say\n- \"Limited spots remaining\" (fake scarcity)\n- \"This is your last chance\"\n- \"Crushing it\" / \"Killing it\"\n- \"6-figure\" / \"7-figure\" hype\n\n## Writing Style\n- Short sentences\n- One idea per paragraph\n- Stories over stats\n- Show, don't tell",
+      "tags": ["brand", "voice", "messaging"],
+      "createdAt": "2026-02-07T16:00:00Z",
+      "updatedAt": "2026-02-07T16:00:00Z"
+    },
+    {
+      "id": "doc-3",
+      "name": "Ideal Client Avatar",
+      "type": "local",
+      "category": "strategy",
+      "content": "# LFG Ideal Client\n\n## Demographics\n- Age: 35-52\n- Current revenue: $5K-$40K/month\n- Experience: Established coach/consultant\n- Platform: Primarily Instagram, some YouTube\n\n## Psychographics\n- Tired of the hustle\n- Values freedom over status\n- Wants systems that work without them\n- Anti-bro marketing mindset\n- Family/lifestyle focused\n\n## Pain Points\n- Trading time for money\n- Launch fatigue\n- Client acquisition rollercoaster\n- Tech overwhelm\n- Inconsistent revenue\n\n## Desires\n- Predictable monthly revenue\n- 4-day workweeks\n- Community-based business model\n- Simple, elegant systems\n- Impact + income",
+      "tags": ["avatar", "strategy", "targeting"],
+      "createdAt": "2026-02-07T16:00:00Z",
+      "updatedAt": "2026-02-07T16:00:00Z"
+    }
+  ],
+  "notionDocs": []
+}
