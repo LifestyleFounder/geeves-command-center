@@ -68,8 +68,7 @@ function switchTab(tabName) {
         youtube: 'YouTube',
         instagram: 'Instagram',
         schedules: 'Schedules',
-        'meta-ads': 'Meta Ads',
-        'ad-swipes': 'Ad Swipes'
+        'meta-ads': 'Meta Ads'
     };
     document.getElementById('mobileTitle').textContent = titles[tabName] || tabName;
     
@@ -87,6 +86,42 @@ function setDefaultDates() {
         if (el) el.value = today;
     });
 }
+
+// ===========================================
+// TOGGLE SECTIONS
+// ===========================================
+
+function toggleSection(sectionId) {
+    const content = document.getElementById(sectionId + 'Content');
+    const icon = document.getElementById(sectionId + 'Icon');
+    const section = content?.parentElement;
+    
+    if (!section) return;
+    
+    section.classList.toggle('collapsed');
+    
+    // Save state to localStorage
+    const toggleStates = JSON.parse(localStorage.getItem('toggleStates') || '{}');
+    toggleStates[sectionId] = section.classList.contains('collapsed');
+    localStorage.setItem('toggleStates', JSON.stringify(toggleStates));
+}
+
+function initToggleSections() {
+    // Restore saved toggle states
+    const toggleStates = JSON.parse(localStorage.getItem('toggleStates') || '{}');
+    Object.entries(toggleStates).forEach(([sectionId, isCollapsed]) => {
+        if (isCollapsed) {
+            const content = document.getElementById(sectionId + 'Content');
+            const section = content?.parentElement;
+            if (section) {
+                section.classList.add('collapsed');
+            }
+        }
+    });
+}
+
+// Initialize toggle sections on load
+document.addEventListener('DOMContentLoaded', initToggleSections);
 
 // ===========================================
 // DATA LOADING
@@ -3968,6 +4003,7 @@ window.filterSwipes = filterSwipes;
 window.openCompetitorSettings = openCompetitorSettings;
 window.saveCompetitors = saveCompetitors;
 window.openSwipeDetail = openSwipeDetail;
+window.toggleSection = toggleSection;
 window.initSortableSidebar = initSortableSidebar;
 window.loadSidebarOrder = loadSidebarOrder;
 window.saveSidebarOrder = saveSidebarOrder;
