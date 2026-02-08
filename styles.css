@@ -3865,7 +3865,7 @@ body {
 }
 
 .yt-video-list {
-    max-height: 400px;
+    max-height: 600px;
     overflow-y: auto;
 }
 
@@ -3892,4 +3892,86 @@ body {
 
 .yt-video-item:hover .yt-stat {
     color: var(--text-primary);
+}
+
+/* ===========================================
+   META ADS TAB (Full Page)
+   =========================================== */
+
+.meta-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.stat-icon.meta {
+    background: linear-gradient(135deg, #0668E1, #00C6FF);
+    font-size: 1.5rem;
+}
+
+.meta-campaigns-table,
+.meta-adsets-table {
+    overflow-x: auto;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.active {
+    background: var(--success);
+    color: white;
+}
+
+.status-badge.paused {
+    background: var(--text-tertiary);
+    color: white;
+}
+
+.meta-quick-add {
+    padding: var(--space-md);
+}
+
+.meta-quick-add p {
+    margin-bottom: var(--space-md);
+    color: var(--text-secondary);
+}
+
+.quick-add-form .form-row {
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-end;
+}
+
+.quick-add-form .form-group {
+    flex: 1;
+}
+
+.quick-add-form .form-group:last-child {
+    flex: 0;
+}
+
+@media (max-width: 1200px) {
+    .meta-stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .meta-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .quick-add-form .form-row {
+        flex-wrap: wrap;
+    }
+    
+    .quick-add-form .form-group {
+        min-width: 120px;
+    }
 }

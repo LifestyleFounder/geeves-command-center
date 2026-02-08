@@ -67,7 +67,8 @@ function switchTab(tabName) {
         content: 'Content Intel',
         youtube: 'YouTube',
         instagram: 'Instagram',
-        schedules: 'Schedules'
+        schedules: 'Schedules',
+        'meta-ads': 'Meta Ads'
     };
     document.getElementById('mobileTitle').textContent = titles[tabName] || tabName;
     
@@ -3319,46 +3320,99 @@ function saveMetaAds() {
 
 // Render Meta Ads data
 function renderMetaAds() {
-    const { summary, campaigns, lastUpdated } = metaAdsData;
+    const { summary, campaigns, adSets, lastUpdated } = metaAdsData;
     
     // Update summary stats
-    document.getElementById('metaSpend').textContent = '$' + (summary.spend || 0).toLocaleString();
-    document.getElementById('metaLeads').textContent = (summary.leads || 0).toLocaleString();
-    document.getElementById('metaCPL').textContent = '$' + (summary.cpl || 0).toFixed(2);
-    document.getElementById('metaROAS').textContent = (summary.roas || 0).toFixed(1) + 'x';
+    const updateStat = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    };
+    
+    updateStat('metaSpend', '$' + (summary.spend || 0).toLocaleString());
+    updateStat('metaLeads', (summary.leads || 0).toLocaleString());
+    updateStat('metaCPL', '$' + (summary.cpl || 0).toFixed(2));
+    updateStat('metaROAS', (summary.roas || 0).toFixed(1) + 'x');
+    updateStat('metaImpressions', formatCompactNumber(summary.impressions || 0));
+    updateStat('metaRevenue', '$' + (summary.revenue || 0).toLocaleString());
     
     // Update last updated
     const lastUpdatedEl = document.getElementById('metaLastUpdated');
-    if (lastUpdated) {
+    if (lastUpdatedEl && lastUpdated) {
         lastUpdatedEl.textContent = 'Last updated: ' + formatRelativeTime(lastUpdated);
     }
     
-    // Update campaigns
-    const campaignsContainer = document.getElementById('metaAdsCampaigns');
-    const emptyState = document.getElementById('metaAdsEmpty');
-    
-    if (campaigns && campaigns.length > 0) {
-        if (emptyState) emptyState.style.display = 'none';
-        
-        // Keep header row, remove other rows
-        const header = campaignsContainer.querySelector('.campaign-row.header');
-        campaignsContainer.innerHTML = '';
-        if (header) campaignsContainer.appendChild(header);
-        
-        campaigns.forEach(campaign => {
-            const row = document.createElement('div');
-            row.className = 'campaign-row';
-            row.innerHTML = `
-                <span>${escapeHtml(campaign.name)}</span>
-                <span>$${(campaign.spend || 0).toLocaleString()}</span>
-                <span>${campaign.leads || 0}</span>
-                <span>$${campaign.leads ? (campaign.spend / campaign.leads).toFixed(2) : '—'}</span>
-            `;
-            campaignsContainer.appendChild(row);
-        });
-    } else {
-        if (emptyState) emptyState.style.display = 'block';
+    // Update campaigns table
+    const campaignsBody = document.getElementById('metaCampaignsBody');
+    if (campaignsBody) {
+        if (campaigns && campaigns.length > 0) {
+            campaignsBody.innerHTML = campaigns.map(c => `
+                <tr>
+                    <td><strong>${escapeHtml(c.name)}</strong></td>
+                    <td><span class="status-badge ${c.status === 'ACTIVE' ? 'active' : 'paused'}">${c.status || 'Unknown'}</span></td>
+                    <td>$${(c.spend || 0).toLocaleString()}</td>
+                    <td>${formatCompactNumber(c.impressions || 0)}</td>
+                    <td>${c.clicks || 0}</td>
+                    <td>${c.impressions ? ((c.clicks / c.impressions) * 100).toFixed(2) + '%' : '—'}</td>
+                    <td>${c.leads || 0}</td>
+                    <td>$${c.leads ? (c.spend / c.leads).toFixed(2) : '—'}</td>
+                </tr>
+            `).join('');
+        } else {
+            campaignsBody.innerHTML = '<tr><td colspan="8" class="empty">No campaigns yet — connect Meta Ads or add data manually</td></tr>';
+        }
     }
+    
+    // Update ad sets table
+    const adSetsBody = document.getElementById('metaAdSetsBody');
+    if (adSetsBody) {
+        if (adSets && adSets.length > 0) {
+            adSetsBody.innerHTML = adSets.map(a => `
+                <tr>
+                    <td>${escapeHtml(a.name)}</td>
+                    <td>${escapeHtml(a.campaign || '')}</td>
+                    <td>$${(a.spend || 0).toLocaleString()}</td>
+                    <td>${a.leads || 0}</td>
+                    <td>$${a.leads ? (a.spend / a.leads).toFixed(2) : '—'}</td>
+                </tr>
+            `).join('');
+        } else {
+            adSetsBody.innerHTML = '<tr><td colspan="5" class="empty">No ad set data</td></tr>';
+        }
+    }
+}
+
+// Quick add Meta data
+function quickAddMetaData() {
+    const spend = parseFloat(document.getElementById('quickAddSpend')?.value) || 0;
+    const leads = parseInt(document.getElementById('quickAddLeads')?.value) || 0;
+    const revenue = parseFloat(document.getElementById('quickAddRevenue')?.value) || 0;
+    
+    if (spend === 0 && leads === 0 && revenue === 0) {
+        alert('Please enter at least one value');
+        return;
+    }
+    
+    // Add to existing totals
+    metaAdsData.summary.spend = (metaAdsData.summary.spend || 0) + spend;
+    metaAdsData.summary.leads = (metaAdsData.summary.leads || 0) + leads;
+    metaAdsData.summary.revenue = (metaAdsData.summary.revenue || 0) + revenue;
+    metaAdsData.summary.cpl = metaAdsData.summary.leads > 0 
+        ? metaAdsData.summary.spend / metaAdsData.summary.leads 
+        : 0;
+    metaAdsData.summary.roas = metaAdsData.summary.spend > 0 
+        ? metaAdsData.summary.revenue / metaAdsData.summary.spend 
+        : 0;
+    
+    metaAdsData.lastUpdated = new Date().toISOString();
+    saveMetaAds();
+    renderMetaAds();
+    
+    // Clear inputs
+    document.getElementById('quickAddSpend').value = '';
+    document.getElementById('quickAddLeads').value = '';
+    document.getElementById('quickAddRevenue').value = '';
+    
+    addActivity('system', 'Added Meta Ads data', `Spend: $${spend}, Leads: ${leads}, Revenue: $${revenue}`);
 }
 
 // Refresh Meta Ads (from API)
@@ -3663,6 +3717,7 @@ window.refreshMetaAds = refreshMetaAds;
 window.openMetaAdsSettings = openMetaAdsSettings;
 window.switchMetaTab = switchMetaTab;
 window.saveMetaAdsSettings = saveMetaAdsSettings;
+window.quickAddMetaData = quickAddMetaData;
 window.initSortableSidebar = initSortableSidebar;
 window.loadSidebarOrder = loadSidebarOrder;
 window.saveSidebarOrder = saveSidebarOrder;

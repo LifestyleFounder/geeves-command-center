@@ -140,6 +140,13 @@
                         </svg>
                         <span>Schedules</span>
                     </li>
+                    <li class="nav-item" data-tab="meta-ads" draggable="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M8 12h8M12 8v8"/>
+                        </svg>
+                        <span>Meta Ads</span>
+                    </li>
                 </ul>
                 <div class="sidebar-footer">
                     <span class="version">Command Center v1.0</span>
@@ -327,56 +334,6 @@
                                         <span class="metric-current" id="appsTotal">0</span>
                                     </div>
                                     <div class="metric-sub">this week</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Meta Ads Performance -->
-                        <div class="card meta-ads-card resizable-card" data-card="meta-ads">
-                            <div class="card-header">
-                                <h2>📣 Meta Ads</h2>
-                                <div class="card-header-actions">
-                                    <button class="btn-icon" onclick="refreshMetaAds()" title="Refresh">🔄</button>
-                                    <button class="btn-icon" onclick="openMetaAdsSettings()" title="Settings">⚙️</button>
-                                    <button class="btn-icon btn-drag" title="Drag to reorder">⋮⋮</button>
-                                </div>
-                            </div>
-                            <div class="resize-handle resize-handle-e"></div>
-                            <div class="resize-handle resize-handle-s"></div>
-                            <div class="resize-handle resize-handle-se"></div>
-                            <div class="meta-ads-content" id="metaAdsContent">
-                                <div class="meta-ads-summary">
-                                    <div class="meta-stat">
-                                        <span class="meta-stat-value" id="metaSpend">$0</span>
-                                        <span class="meta-stat-label">Spend (7d)</span>
-                                    </div>
-                                    <div class="meta-stat">
-                                        <span class="meta-stat-value" id="metaLeads">0</span>
-                                        <span class="meta-stat-label">Leads</span>
-                                    </div>
-                                    <div class="meta-stat">
-                                        <span class="meta-stat-value" id="metaCPL">$0</span>
-                                        <span class="meta-stat-label">Cost/Lead</span>
-                                    </div>
-                                    <div class="meta-stat">
-                                        <span class="meta-stat-value" id="metaROAS">0x</span>
-                                        <span class="meta-stat-label">ROAS</span>
-                                    </div>
-                                </div>
-                                <div class="meta-ads-campaigns" id="metaAdsCampaigns">
-                                    <div class="campaign-row header">
-                                        <span>Campaign</span>
-                                        <span>Spend</span>
-                                        <span>Leads</span>
-                                        <span>CPL</span>
-                                    </div>
-                                    <div class="meta-ads-empty" id="metaAdsEmpty">
-                                        <p>No ads data yet</p>
-                                        <button class="btn btn-sm btn-secondary" onclick="openMetaAdsSettings()">Connect Meta Ads</button>
-                                    </div>
-                                </div>
-                                <div class="meta-ads-footer">
-                                    <span class="meta-last-updated" id="metaLastUpdated">Last updated: --</span>
                                 </div>
                             </div>
                         </div>
@@ -817,6 +774,146 @@
                     </div>
                     <div class="schedules-grid" id="schedulesList">
                         <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Meta Ads Tab -->
+                <section class="tab-content" id="meta-ads">
+                    <div class="tab-header">
+                        <h1>📣 Meta Ads</h1>
+                        <div class="tab-actions">
+                            <button class="btn btn-primary" onclick="refreshMetaAds()">
+                                🔄 Refresh Data
+                            </button>
+                            <button class="btn btn-secondary" onclick="openMetaAdsSettings()">
+                                ⚙️ Settings
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Summary Stats -->
+                    <div class="meta-stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon meta">💰</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Ad Spend (7d)</span>
+                                <span class="stat-value" id="metaSpend">$0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon meta">🎯</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Leads</span>
+                                <span class="stat-value" id="metaLeads">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon meta">📊</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Cost Per Lead</span>
+                                <span class="stat-value" id="metaCPL">$0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon meta">📈</div>
+                            <div class="stat-content">
+                                <span class="stat-label">ROAS</span>
+                                <span class="stat-value" id="metaROAS">0x</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon meta">👁</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Impressions</span>
+                                <span class="stat-value" id="metaImpressions">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon meta">💵</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Revenue</span>
+                                <span class="stat-value" id="metaRevenue">$0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campaigns Table -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Campaign Performance</h2>
+                            <span class="meta-last-updated" id="metaLastUpdated">Last updated: --</span>
+                        </div>
+                        <div class="meta-campaigns-table">
+                            <table class="data-table" id="metaCampaignsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Campaign</th>
+                                        <th>Status</th>
+                                        <th>Spend</th>
+                                        <th>Impressions</th>
+                                        <th>Clicks</th>
+                                        <th>CTR</th>
+                                        <th>Leads</th>
+                                        <th>CPL</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="metaCampaignsBody">
+                                    <tr><td colspan="8" class="empty">No campaigns yet — connect Meta Ads or add data manually</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Ad Sets Section -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Ad Sets</h2>
+                        </div>
+                        <div class="meta-adsets-table">
+                            <table class="data-table" id="metaAdSetsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Ad Set</th>
+                                        <th>Campaign</th>
+                                        <th>Spend</th>
+                                        <th>Leads</th>
+                                        <th>CPL</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="metaAdSetsBody">
+                                    <tr><td colspan="5" class="empty">No ad set data</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Quick Add Section -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Quick Add Data</h2>
+                        </div>
+                        <div class="meta-quick-add">
+                            <p>Manually add today's ad performance:</p>
+                            <div class="quick-add-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Spend</label>
+                                        <input type="number" id="quickAddSpend" placeholder="0.00" step="0.01">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Leads</label>
+                                        <input type="number" id="quickAddLeads" placeholder="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Revenue</label>
+                                        <input type="number" id="quickAddRevenue" placeholder="0.00" step="0.01">
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" onclick="quickAddMetaData()">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </main>
