@@ -3327,10 +3327,144 @@ function saveMetaAdsSettings() {
     }
 }
 
+// ===========================================
+// SORTABLE SIDEBAR NAVIGATION
+// ===========================================
+
+let sidebarOrder = [];
+
+// Load saved sidebar order
+function loadSidebarOrder() {
+    const saved = localStorage.getItem('geeves-sidebar-order');
+    if (saved) {
+        try {
+            sidebarOrder = JSON.parse(saved);
+            applySidebarOrder();
+        } catch (e) {
+            console.error('Failed to load sidebar order:', e);
+        }
+    }
+}
+
+// Save sidebar order
+function saveSidebarOrder() {
+    const navList = document.getElementById('navList');
+    if (!navList) return;
+    
+    sidebarOrder = Array.from(navList.querySelectorAll('.nav-item'))
+        .map(item => item.dataset.tab);
+    
+    localStorage.setItem('geeves-sidebar-order', JSON.stringify(sidebarOrder));
+}
+
+// Apply saved order to sidebar
+function applySidebarOrder() {
+    const navList = document.getElementById('navList');
+    if (!navList || sidebarOrder.length === 0) return;
+    
+    const items = Array.from(navList.querySelectorAll('.nav-item'));
+    const itemMap = {};
+    items.forEach(item => {
+        itemMap[item.dataset.tab] = item;
+    });
+    
+    // Reorder based on saved order
+    sidebarOrder.forEach(tabId => {
+        if (itemMap[tabId]) {
+            navList.appendChild(itemMap[tabId]);
+        }
+    });
+}
+
+// Initialize sortable sidebar
+function initSortableSidebar() {
+    const navList = document.getElementById('navList');
+    if (!navList) return;
+    
+    let draggedItem = null;
+    
+    navList.addEventListener('dragstart', (e) => {
+        if (!e.target.classList.contains('nav-item')) return;
+        
+        draggedItem = e.target;
+        e.target.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', e.target.dataset.tab);
+    });
+    
+    navList.addEventListener('dragend', (e) => {
+        if (!e.target.classList.contains('nav-item')) return;
+        
+        e.target.classList.remove('dragging');
+        document.querySelectorAll('.nav-item.drag-over, .nav-item.drag-over-below')
+            .forEach(item => {
+                item.classList.remove('drag-over', 'drag-over-below');
+            });
+        
+        draggedItem = null;
+        saveSidebarOrder();
+    });
+    
+    navList.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        
+        const target = e.target.closest('.nav-item');
+        if (!target || target === draggedItem) return;
+        
+        // Clear previous indicators
+        document.querySelectorAll('.nav-item.drag-over, .nav-item.drag-over-below')
+            .forEach(item => {
+                item.classList.remove('drag-over', 'drag-over-below');
+            });
+        
+        // Determine if dropping above or below
+        const rect = target.getBoundingClientRect();
+        const midpoint = rect.top + rect.height / 2;
+        
+        if (e.clientY < midpoint) {
+            target.classList.add('drag-over');
+        } else {
+            target.classList.add('drag-over-below');
+        }
+    });
+    
+    navList.addEventListener('dragleave', (e) => {
+        const target = e.target.closest('.nav-item');
+        if (target) {
+            target.classList.remove('drag-over', 'drag-over-below');
+        }
+    });
+    
+    navList.addEventListener('drop', (e) => {
+        e.preventDefault();
+        
+        const target = e.target.closest('.nav-item');
+        if (!target || !draggedItem || target === draggedItem) return;
+        
+        const rect = target.getBoundingClientRect();
+        const midpoint = rect.top + rect.height / 2;
+        
+        if (e.clientY < midpoint) {
+            // Insert before target
+            target.parentNode.insertBefore(draggedItem, target);
+        } else {
+            // Insert after target
+            target.parentNode.insertBefore(draggedItem, target.nextSibling);
+        }
+        
+        target.classList.remove('drag-over', 'drag-over-below');
+    });
+    
+    // Load saved order
+    loadSidebarOrder();
+}
+
 // Initialize on load
 document.addEventListener('DOMContentLoaded', () => {
     initResizableCards();
     loadMetaAds();
+    initSortableSidebar();
 });
 
 // Export functions
@@ -3342,3 +3476,6 @@ window.refreshMetaAds = refreshMetaAds;
 window.openMetaAdsSettings = openMetaAdsSettings;
 window.switchMetaTab = switchMetaTab;
 window.saveMetaAdsSettings = saveMetaAdsSettings;
+window.initSortableSidebar = initSortableSidebar;
+window.loadSidebarOrder = loadSidebarOrder;
+window.saveSidebarOrder = saveSidebarOrder;

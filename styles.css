@@ -3677,3 +3677,64 @@ body {
         display: none;
     }
 }
+
+/* ===========================================
+   SORTABLE SIDEBAR NAVIGATION
+   =========================================== */
+
+.sortable-nav {
+    position: relative;
+}
+
+.sortable-nav .nav-item {
+    cursor: grab;
+    transition: all 0.15s ease;
+    position: relative;
+}
+
+.sortable-nav .nav-item:active {
+    cursor: grabbing;
+}
+
+.sortable-nav .nav-item.dragging {
+    opacity: 0.5;
+    background: var(--forest-green);
+    color: white;
+}
+
+.sortable-nav .nav-item.drag-over {
+    border-top: 2px solid var(--gold);
+    margin-top: -2px;
+}
+
+.sortable-nav .nav-item.drag-over-below {
+    border-bottom: 2px solid var(--gold);
+    margin-bottom: -2px;
+}
+
+/* Drag indicator on hover */
+.sortable-nav .nav-item::before {
+    content: '⋮⋮';
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    color: var(--text-tertiary);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    letter-spacing: -2px;
+}
+
+.sortable-nav .nav-item:hover::before {
+    opacity: 0.5;
+}
+
+/* Adjust nav item padding to make room for drag handle */
+.sortable-nav .nav-item {
+    padding-left: 24px;
+}
+
+.sortable-nav .nav-item svg {
+    margin-left: 0;
+}
