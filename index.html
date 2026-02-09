@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geeves Command Center</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=20250209">
 </head>
 <body>
     <div class="app">
@@ -840,10 +840,10 @@
                     <!-- Toggle Section: Campaign Performance -->
                     <div class="toggle-section">
                         <div class="toggle-header" onclick="toggleSection('campaignPerformance')">
+                            <span class="toggle-icon" id="campaignPerformanceIcon">▼</span>
                             <h2>📊 Campaign Performance</h2>
                             <div class="toggle-header-right">
                                 <span class="meta-last-updated" id="metaLastUpdated">Last updated: --</span>
-                                <span class="toggle-icon" id="campaignPerformanceIcon">▼</span>
                             </div>
                         </div>
                         <div class="toggle-content" id="campaignPerformanceContent">
@@ -921,13 +921,13 @@
                     <!-- Toggle Section: Ad Swipes -->
                     <div class="toggle-section">
                         <div class="toggle-header" onclick="toggleSection('adSwipes')">
+                            <span class="toggle-icon" id="adSwipesIcon">▼</span>
                             <h2>🎯 Ad Swipe File</h2>
                             <div class="toggle-header-right">
                                 <span class="last-research" id="lastResearchDate">Last research: --</span>
                                 <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); openCompetitorSettings()">
                                     👥 Competitors
                                 </button>
-                                <span class="toggle-icon" id="adSwipesIcon">▼</span>
                             </div>
                         </div>
                         <div class="toggle-content" id="adSwipesContent">
@@ -1482,6 +1482,6 @@ Sam Ovens
     </div>
     <div class="chat-overlay" id="chatOverlay" onclick="toggleChat()"></div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=20250209"></script>
 </body>
 </html>

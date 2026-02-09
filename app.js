@@ -1133,8 +1133,17 @@ async function loadYouTube() {
     const data = await loadJSON('youtube');
     if (data) {
         state.youtube = data;
-        renderYouTube();
     }
+    
+    // Restore API key from separate storage (survives file overwrites)
+    const savedApiKey = localStorage.getItem('geeves-youtube-apikey');
+    if (savedApiKey) {
+        if (!state.youtube) state.youtube = {};
+        if (!state.youtube.config) state.youtube.config = {};
+        state.youtube.config.apiKey = savedApiKey;
+    }
+    
+    renderYouTube();
 }
 
 function renderYouTube() {
@@ -1150,6 +1159,7 @@ function renderYouTube() {
     // Populate config if exists
     if (state.youtube.config) {
         document.getElementById('ytChannelId').value = state.youtube.config.channelId || '';
+        document.getElementById('ytApiKey').value = state.youtube.config.apiKey || '';
     }
     
     // Render recent videos
@@ -1211,6 +1221,9 @@ function saveYouTubeConfig() {
         apiKey: apiKey,
         channelId: channelId
     };
+    
+    // Store API key separately so it survives file overwrites
+    localStorage.setItem('geeves-youtube-apikey', apiKey);
     
     saveJSON('youtube', state.youtube);
     closeModal();

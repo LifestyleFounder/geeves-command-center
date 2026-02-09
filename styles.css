@@ -3989,12 +3989,12 @@ body {
 
 .toggle-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: var(--space-md) var(--space-lg);
     cursor: pointer;
     user-select: none;
     transition: background 0.2s;
+    gap: var(--space-sm);
 }
 
 .toggle-header:hover {
@@ -4006,6 +4006,7 @@ body {
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--text-primary);
+    flex: 1;
 }
 
 .toggle-header-right {
