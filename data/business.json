@@ -1,26 +1,45 @@
 {
   "free": {
-    "total": 0,
-    "last30Days": 0
+    "total": 10200,
+    "last30Days": 150
   },
   "workshop": {
     "sales": 0,
     "cashCollected": 0
   },
   "premium": {
-    "total": 0,
-    "lastMonth": 0
+    "total": 85,
+    "lastMonth": 12
   },
   "vip": {
-    "total": 0,
-    "lastMonth": 0
+    "total": 43,
+    "lastMonth": 3
   },
   "oneone": {
-    "total": 0,
+    "total": 8,
     "cap": 12
   },
   "applications": {
-    "thisWeek": 0
+    "thisWeek": 1
   },
-  "lastUpdated": "2026-02-07"
+  "clients": {
+    "healthy": [
+      {"name": "Nick Hough", "type": "VIP", "note": "Just joined, very engaged"},
+      {"name": "Pat Smith", "type": "VIP", "note": "$10K Skool Engine sale"},
+      {"name": "Andres Mego", "type": "VIP", "note": "$6.5K week via DMs"},
+      {"name": "Phil Clark", "type": "Premium", "note": "Hit $537 MRR milestone"},
+      {"name": "Cameron Watt", "type": "VIP", "note": "Active in community"}
+    ],
+    "warning": [
+      {"name": "Drew T.", "type": "VIP", "note": "Low engagement (4 days)"}
+    ],
+    "atRisk": [
+      {"name": "Dave Morrow", "type": "Premium", "note": "VIP close overdue since Feb 3"}
+    ],
+    "alerts": [
+      {"type": "warning", "text": "Drew T. — Low engagement (4 days)"},
+      {"type": "success", "text": "Nick H. — New VIP, posted first win!"}
+    ]
+  },
+  "lastUpdated": "2026-02-09"
 }
