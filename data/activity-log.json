@@ -1,6 +1,22 @@
 {
-  "lastUpdated": "2026-02-06T22:30:00Z",
+  "lastUpdated": "2026-02-13T12:00:00Z",
   "entries": [
+    {
+      "id": "act-014",
+      "timestamp": "2026-02-13T12:00:00Z",
+      "type": "scheduled",
+      "action": "Delivered Daily Brief",
+      "details": "Friday Feb 13 daily brief delivered via cron job. Key highlights: 784 workshop DMs sent (12 replies), Dave Morrow VIP close overdue, model cost optimization completed ($15-20/day savings), 43 VIPs current vs 72 target.",
+      "session": "cron:daily-brief-1b48d5d1"
+    },
+    {
+      "id": "act-013",
+      "timestamp": "2026-02-12T14:13:00Z",
+      "type": "scheduled",
+      "action": "Delivered Daily Brief",
+      "details": "Daily brief for Thursday Feb 12 sent via Telegram to user 1974104708. Compiled metrics from business.json, tasks.json, and recent activity. Highlighted urgent items: Dave Morrow VIP close, Drew T. engagement, automation tasks.",
+      "session": "subagent:daily-brief-catchup"
+    },
     {
       "id": "act-001",
       "timestamp": "2026-02-06T22:30:00Z",

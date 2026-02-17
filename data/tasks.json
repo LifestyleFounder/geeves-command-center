@@ -10,7 +10,11 @@
       "status": "todo",
       "due": "",
       "createdAt": "2026-02-07T14:00:00Z",
-      "tags": ["geeves", "system", "api"]
+      "tags": [
+        "geeves",
+        "system",
+        "api"
+      ]
     },
     {
       "id": "ctx-backup-system",
@@ -21,7 +25,10 @@
       "due": "2026-02-02",
       "createdAt": "2026-02-02T15:40:00Z",
       "completedAt": "2026-02-02T15:45:00Z",
-      "tags": ["geeves", "system"]
+      "tags": [
+        "geeves",
+        "system"
+      ]
     },
     {
       "id": "kanban-rebuild",
@@ -32,7 +39,10 @@
       "due": "2026-02-02",
       "createdAt": "2026-02-02T15:40:00Z",
       "completedAt": "2026-02-06T22:30:00Z",
-      "tags": ["geeves", "system"]
+      "tags": [
+        "geeves",
+        "system"
+      ]
     },
     {
       "id": "command-center-build",
@@ -43,7 +53,10 @@
       "due": "2026-02-06",
       "createdAt": "2026-02-06T21:00:00Z",
       "completedAt": "2026-02-07T06:50:00Z",
-      "tags": ["geeves", "system"]
+      "tags": [
+        "geeves",
+        "system"
+      ]
     },
     {
       "id": "skool-ghl-middleware",
@@ -53,7 +66,10 @@
       "status": "todo",
       "due": "",
       "createdAt": "2026-02-01T12:00:00Z",
-      "tags": ["geeves", "integration"]
+      "tags": [
+        "geeves",
+        "integration"
+      ]
     },
     {
       "id": "daily-metrics-automation",
@@ -63,7 +79,10 @@
       "status": "todo",
       "due": "",
       "createdAt": "2026-01-30T08:00:00Z",
-      "tags": ["geeves", "automation"]
+      "tags": [
+        "geeves",
+        "automation"
+      ]
     },
     {
       "id": "dave-morrow-close",
@@ -73,7 +92,10 @@
       "status": "todo",
       "due": "2026-02-03",
       "createdAt": "2026-02-01T12:00:00Z",
-      "tags": ["lfg", "sales"]
+      "tags": [
+        "lfg",
+        "sales"
+      ]
     },
     {
       "id": "instagram-launch",
@@ -83,7 +105,10 @@
       "status": "todo",
       "due": "2026-02-03",
       "createdAt": "2026-01-30T08:00:00Z",
-      "tags": ["lfg", "content"]
+      "tags": [
+        "lfg",
+        "content"
+      ]
     },
     {
       "id": "multi-agent-setup",
@@ -93,17 +118,25 @@
       "status": "todo",
       "due": "",
       "createdAt": "2026-02-07T06:50:00Z",
-      "tags": ["geeves", "system"]
+      "tags": [
+        "geeves",
+        "system"
+      ]
     },
     {
       "id": "token-optimization",
       "title": "Implement Token Saving Strategy",
-      "description": "Review and implement optimizations from ScaleUP Media guide: 1) Route heartbeats to Haiku/Sonnet instead of Opus, 2) Skip MEMORY.md on heartbeats, 3) Consider Ollama for heartbeats, 4) Set budget limits. Biggest win: model routing for heartbeats (50-80% savings).",
+      "description": "Implemented: 1) Daily Brief cron → Sonnet 4 (was Opus), 2) Weekly Review cron → Sonnet 4 (was Opus), 3) Gabby cron already on Sonnet. Heartbeat still runs on main session Opus but fires only every 30min. Estimated savings: $15-20/day.",
       "priority": "medium",
-      "status": "inbox",
+      "status": "done",
       "due": "",
       "createdAt": "2026-02-07T07:05:00Z",
-      "tags": ["geeves", "system", "cost"]
+      "tags": [
+        "geeves",
+        "system",
+        "cost"
+      ],
+      "completedAt": "2026-02-12T06:10:00Z"
     },
     {
       "id": "client-progress-system",
@@ -113,7 +146,10 @@
       "status": "inbox",
       "due": "",
       "createdAt": "2026-01-30T08:00:00Z",
-      "tags": ["geeves", "system"]
+      "tags": [
+        "geeves",
+        "system"
+      ]
     },
     {
       "id": "youtube-api-setup",
@@ -123,7 +159,10 @@
       "status": "inbox",
       "due": "",
       "createdAt": "2026-02-06T20:00:00Z",
-      "tags": ["lfg", "analytics"]
+      "tags": [
+        "lfg",
+        "analytics"
+      ]
     },
     {
       "id": "command-center-client-product",
@@ -133,7 +172,11 @@
       "status": "inbox",
       "due": "",
       "createdAt": "2026-02-07T06:55:00Z",
-      "tags": ["lfg", "product", "future"]
+      "tags": [
+        "lfg",
+        "product",
+        "future"
+      ]
     }
   ]
 }
