@@ -4515,3 +4515,74 @@ body {
     color: var(--error);
     background: rgba(239,68,68,0.15);
 }
+
+/* ── Reports Tab ─────────────────────────── */
+
+.reports-subtabs {
+    display: flex;
+    gap: 4px;
+    padding: 0 var(--space-lg);
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid var(--border);
+}
+
+.reports-subtab {
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-bottom: -1px;
+}
+
+.reports-subtab:hover {
+    color: var(--text-primary);
+}
+
+.reports-subtab.active {
+    color: var(--forest-green);
+    border-bottom-color: var(--forest-green);
+}
+
+.reports-panel {
+    display: none;
+    padding: 0 var(--space-lg);
+}
+
+.reports-panel.active {
+    display: block;
+}
+
+.reports-doc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.reports-doc-item:hover {
+    background: var(--bg-secondary);
+    border-color: var(--forest-green);
+}
+
+.reports-doc-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.reports-doc-date {
+    font-size: 11px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    margin-left: 12px;
+}

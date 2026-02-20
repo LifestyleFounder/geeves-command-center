@@ -61,14 +61,14 @@ function switchTab(tabName) {
         business: 'Business',
         tracker: 'Performance',
         kanban: 'Projects',
-        activity: 'Activity',
+        reports: 'Reports',
         knowledge: 'Knowledge',
         docs: 'Docs Hub',
         content: 'Content Intel',
         youtube: 'YouTube',
         instagram: 'Instagram',
-        schedules: 'Schedules',
-        'meta-ads': 'Meta Ads'
+        'meta-ads': 'Meta Ads',
+        multiplier: 'Content Multiplier'
     };
     document.getElementById('mobileTitle').textContent = titles[tabName] || tabName;
     
@@ -505,12 +505,53 @@ function addActivity(type, action, details) {
 }
 
 // ===========================================
+// REPORTS TAB — sub-tab switching + doc lists
+// ===========================================
+
+function switchReportsSubtab(subtab) {
+    document.querySelectorAll('.reports-subtab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.subtab === subtab);
+    });
+    document.querySelectorAll('.reports-panel').forEach(panel => {
+        panel.classList.toggle('active', panel.id === 'reportPanel-' + subtab);
+    });
+    // Render doc lists on first open
+    if (subtab === 'memory') renderReportsDocs('memory', 'memoryDocList');
+    if (subtab === 'report-docs') renderReportsDocs('reports', 'reportDocList');
+}
+
+function renderReportsDocs(category, containerId) {
+    const container = document.getElementById(containerId);
+    const docs = state.docs.filter(d => d.category === category);
+
+    if (docs.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No documents found</p></div>';
+        return;
+    }
+
+    docs.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+    container.innerHTML = docs.map(doc => `
+        <div class="reports-doc-item" onclick="openReportDoc('${doc.path}')">
+            <div class="reports-doc-title">${escapeHtml(doc.title)}</div>
+            <div class="reports-doc-date">${doc.date || ''}</div>
+        </div>
+    `).join('');
+}
+
+function openReportDoc(path) {
+    // Switch to Docs Hub and select the doc
+    switchTab('docs');
+    selectDoc(path);
+}
+
+// ===========================================
 // DOCS HUB
 // ===========================================
 
 let docFolderState = {
     selectedFolder: null,
-    expandedFolders: new Set(['notes', 'research', 'memory', 'reports'])
+    expandedFolders: new Set(['notes', 'research'])
 };
 
 async function loadDocs() {
@@ -589,7 +630,7 @@ function renderDocsTree() {
     const tree = buildFolderTree(filteredDocs);
     
     // Define folder order (notes first)
-    const folderOrder = ['notes', 'research', 'memory', 'reports', 'root'];
+    const folderOrder = ['notes', 'research', 'root'];
     const sortedFolders = Object.keys(tree).sort((a, b) => {
         const aIdx = folderOrder.indexOf(a);
         const bIdx = folderOrder.indexOf(b);
@@ -2547,6 +2588,8 @@ window.updateTaskStatus = updateTaskStatus;
 window.updateTaskPriority = updateTaskPriority;
 window.deleteTask = deleteTask;
 window.filterActivity = filterActivity;
+window.switchReportsSubtab = switchReportsSubtab;
+window.openReportDoc = openReportDoc;
 window.filterDocs = filterDocs;
 window.selectDoc = selectDoc;
 window.selectFolder = selectFolder;

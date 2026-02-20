@@ -95,11 +95,14 @@
                         </svg>
                         <span>Projects</span>
                     </li>
-                    <li class="nav-item" data-tab="activity" draggable="true">
+                    <li class="nav-item" data-tab="reports" draggable="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
                         </svg>
-                        <span>Activity</span>
+                        <span>Reports</span>
                     </li>
                     <li class="nav-item" data-tab="knowledge" draggable="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -132,13 +135,6 @@
                             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                         </svg>
                         <span>Instagram</span>
-                    </li>
-                    <li class="nav-item" data-tab="schedules" draggable="true">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <polyline points="12 6 12 12 16 14"/>
-                        </svg>
-                        <span>Schedules</span>
                     </li>
                     <li class="nav-item" data-tab="meta-ads" draggable="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -421,11 +417,21 @@
                     </div>
                 </section>
 
-                <!-- Activity Tab -->
-                <section class="tab-content" id="activity">
+                <!-- Reports Tab (Activity + Schedules + Memory + Reports) -->
+                <section class="tab-content" id="reports">
                     <div class="tab-header">
-                        <h1>📜 Activity Log</h1>
-                        <div class="tab-actions">
+                        <h1>📊 Reports</h1>
+                    </div>
+                    <div class="reports-subtabs">
+                        <button class="reports-subtab active" data-subtab="activity" onclick="switchReportsSubtab('activity')">Activity</button>
+                        <button class="reports-subtab" data-subtab="schedules" onclick="switchReportsSubtab('schedules')">Schedules</button>
+                        <button class="reports-subtab" data-subtab="memory" onclick="switchReportsSubtab('memory')">Memory</button>
+                        <button class="reports-subtab" data-subtab="report-docs" onclick="switchReportsSubtab('report-docs')">Reports</button>
+                    </div>
+
+                    <!-- Activity sub-tab -->
+                    <div class="reports-panel active" id="reportPanel-activity">
+                        <div class="tab-actions" style="margin-bottom: 12px;">
                             <input type="text" class="search-input" id="activitySearch" placeholder="Search activities..." oninput="filterActivity()">
                             <select class="filter-select" id="activityFilter" onchange="filterActivity()">
                                 <option value="all">All Types</option>
@@ -436,9 +442,25 @@
                                 <option value="system">System</option>
                             </select>
                         </div>
+                        <div class="activity-list" id="activityList"></div>
                     </div>
-                    <div class="activity-list" id="activityList">
-                        <!-- Populated by JS -->
+
+                    <!-- Schedules sub-tab -->
+                    <div class="reports-panel" id="reportPanel-schedules">
+                        <div style="margin-bottom: 12px;">
+                            <span class="last-updated" id="schedulesLastUpdated">Last updated: --</span>
+                        </div>
+                        <div class="schedules-grid" id="schedulesList"></div>
+                    </div>
+
+                    <!-- Memory sub-tab -->
+                    <div class="reports-panel" id="reportPanel-memory">
+                        <div class="reports-doc-list" id="memoryDocList"></div>
+                    </div>
+
+                    <!-- Reports sub-tab -->
+                    <div class="reports-panel" id="reportPanel-report-docs">
+                        <div class="reports-doc-list" id="reportDocList"></div>
                     </div>
                 </section>
 
@@ -771,17 +793,6 @@
                 </section>
 
                 <!-- Schedules Tab -->
-                <section class="tab-content" id="schedules">
-                    <div class="tab-header">
-                        <h1>⏰ Scheduled Tasks</h1>
-                        <div class="tab-actions">
-                            <span class="last-updated" id="schedulesLastUpdated">Last updated: --</span>
-                        </div>
-                    </div>
-                    <div class="schedules-grid" id="schedulesList">
-                        <!-- Populated by JS -->
-                    </div>
-                </section>
 
                 <!-- Meta Ads Tab (Combined with Ad Swipes) -->
                 <section class="tab-content" id="meta-ads">
