@@ -3,7 +3,7 @@
  * Loaded before app.js. Exposes global `NotionNotes` object.
  */
 const NotionNotes = (function () {
-    const PROXY_URL = 'https://anthropic-proxy.geeves.workers.dev/notion-notes';
+    const PROXY_URL = 'https://anthropic-proxy.dan-a14.workers.dev/notion-notes';
 
     async function list() {
         try {

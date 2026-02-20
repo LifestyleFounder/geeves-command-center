@@ -2115,7 +2115,7 @@ async function callOpenAI(messages, model, apiKey) {
 
 async function callAnthropicProxy(messages, model) {
     // Uses Cloudflare Worker proxy to call Anthropic API
-    const PROXY_URL = 'https://anthropic-proxy.geeves.workers.dev';
+    const PROXY_URL = 'https://anthropic-proxy.dan-a14.workers.dev';
     
     const systemMessage = messages.find(m => m.role === 'system');
     const otherMessages = messages.filter(m => m.role !== 'system');
@@ -3127,7 +3127,7 @@ async function syncFromNotion() {
     
     try {
         // Use proxy to avoid CORS
-        const PROXY_URL = 'https://anthropic-proxy.geeves.workers.dev/notion';
+        const PROXY_URL = 'https://anthropic-proxy.dan-a14.workers.dev/notion';
         
         const response = await fetch(`${PROXY_URL}/databases/${databaseId}/query`, {
             method: 'POST',
