@@ -934,21 +934,31 @@ function getNotesForTree() {
     }));
 }
 
-function selectDoc(path) {
+async function selectDoc(path) {
     // Check if it's a local note
     const note = notesState.notes.find(n => n.id === path);
     if (note) {
         state.selectedDoc = { id: note.id, title: note.title, category: 'notes', date: note.updatedAt.split('T')[0], isNote: true };
         renderDocsTree();
         renderDocs();
-        
+
         // Show note in preview (read-only view with edit button)
         const preview = document.getElementById('docsPreview');
         const editor = document.getElementById('noteEditor');
-        
+
         editor.style.display = 'none';
         preview.style.display = 'block';
-        
+
+        // Fetch content from Notion if not yet loaded
+        if (note.source === 'notion' && !note._contentLoaded) {
+            preview.innerHTML = `<div class="markdown-content"><p><em>Loading note from Notion...</em></p></div>`;
+            const full = await NotionNotes.get(note.id);
+            if (full) {
+                note.content = NotionNotes.textToHtml(full.content);
+                note._contentLoaded = true;
+            }
+        }
+
         preview.innerHTML = `
             <div class="markdown-content">
                 <div class="note-preview-header">
@@ -2240,11 +2250,12 @@ function updateChatUI() {
         description: 'AI Assistant'
     };
     
-    // Update agent info
-    document.getElementById('chatAgentInfo').innerHTML = `
-        <span class="agent-name">${agent.name}</span>
-        <span class="agent-desc">${agent.description}</span>
-    `;
+    // Update agent info (preserve thread controls)
+    const agentInfoEl = document.getElementById('chatAgentInfo');
+    const nameEl = agentInfoEl.querySelector('.agent-name');
+    const descEl = agentInfoEl.querySelector('.agent-desc');
+    if (nameEl) nameEl.textContent = agent.name;
+    if (descEl) descEl.textContent = agent.description;
     
     // Update welcome screen
     const welcomeIcon = document.getElementById('welcomeIcon');
