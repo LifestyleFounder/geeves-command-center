@@ -1,4 +1,4 @@
-// Cloudflare Worker — Anthropic Proxy + Notion Notes CRUD
+// Cloudflare Worker — Anthropic Proxy + Notion Notes CRUD + User Settings KV
 // Routes:
 //   POST /                → Anthropic messages API proxy
 //   GET  /notion-notes    → List all notes from Notion DB
@@ -6,6 +6,10 @@
 //   POST /notion-notes    → Create note
 //   PATCH /notion-notes/:id → Update note
 //   DELETE /notion-notes/:id → Archive note
+//   GET  /settings        → Get all user settings
+//   GET  /settings/:key   → Get single setting
+//   PUT  /settings/:key   → Upsert setting (body: { value: ... })
+//   DELETE /settings/:key → Delete setting
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const NOTION_API = 'https://api.notion.com/v1';
@@ -14,7 +18,7 @@ const NOTION_DB_ID = '1b3ff8c6-2c63-4941-bad2-1876bd405333';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, x-api-key, anthropic-version',
   'Access-Control-Max-Age': '86400',
 };
@@ -224,6 +228,51 @@ export default {
 
         return json({ error: 'Not found' }, 404);
 
+      } catch (error) {
+        return json({ error: error.message }, 500);
+      }
+    }
+
+    // ── User Settings routes (Cloudflare KV) ─────────
+    if (path.startsWith('/settings')) {
+      const kv = env.USER_SETTINGS;
+      if (!kv) return json({ error: 'USER_SETTINGS KV not configured' }, 500);
+
+      const keyMatch = path.match(/^\/settings\/(.+)$/);
+
+      try {
+        // GET all settings
+        if (request.method === 'GET' && !keyMatch) {
+          const list = await kv.list();
+          const settings = {};
+          await Promise.all(list.keys.map(async (k) => {
+            const val = await kv.get(k.name, 'json');
+            settings[k.name] = val;
+          }));
+          return json({ settings });
+        }
+
+        // GET single setting
+        if (request.method === 'GET' && keyMatch) {
+          const val = await kv.get(keyMatch[1], 'json');
+          if (val === null) return json({ error: 'Not found' }, 404);
+          return json({ key: keyMatch[1], value: val });
+        }
+
+        // PUT (upsert) setting
+        if (request.method === 'PUT' && keyMatch) {
+          const { value } = await request.json();
+          await kv.put(keyMatch[1], JSON.stringify(value));
+          return json({ ok: true });
+        }
+
+        // DELETE setting
+        if (request.method === 'DELETE' && keyMatch) {
+          await kv.delete(keyMatch[1]);
+          return json({ ok: true });
+        }
+
+        return json({ error: 'Not found' }, 404);
       } catch (error) {
         return json({ error: error.message }, 500);
       }

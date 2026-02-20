@@ -28,7 +28,9 @@ const state = {
 // INITIALIZATION
 // ===========================================
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Load cross-device settings from KV before anything else
+    await UserSettings.loadAll();
     initNavigation();
     loadAllData();
     initDragAndDrop();
@@ -641,15 +643,15 @@ function saveFolderFromModal() {
     const emoji = selectedEmoji ? selectedEmoji.dataset.emoji : '📁';
 
     // Persist folder
-    let customFolders = JSON.parse(localStorage.getItem('customFolders') || '[]');
+    let customFolders = UserSettings.get('customFolders', []);
     if (!customFolders.includes(key)) {
         customFolders.push(key);
-        localStorage.setItem('customFolders', JSON.stringify(customFolders));
+        UserSettings.set('customFolders', customFolders);
     }
     // Persist icon
-    let customIcons = JSON.parse(localStorage.getItem('customFolderIcons') || '{}');
+    let customIcons = UserSettings.get('customFolderIcons', {});
     customIcons[key] = emoji;
-    localStorage.setItem('customFolderIcons', JSON.stringify(customIcons));
+    UserSettings.set('customFolderIcons', customIcons);
 
     docFolderState.expandedFolders.add(key);
     closeFolderModal();
@@ -660,7 +662,7 @@ function saveFolderFromModal() {
 // Change emoji on existing folder
 function changeFolderEmoji(folderKey) {
     const emojis = ['📁','📂','📝','📚','🔬','💡','🎯','💰','⚙️','🎨','📊','🗂️','📋','🏷️','🔖','💼','🧠','⭐','🔥','📎','🏠','🎵','📸','🌍','🔒','❤️','🚀','🎮','📱','💻'];
-    const currentIcons = JSON.parse(localStorage.getItem('customFolderIcons') || '{}');
+    const currentIcons = UserSettings.get('customFolderIcons', {});
     const currentEmoji = currentIcons[folderKey] || getFolderIcon(folderKey);
 
     const overlay = document.createElement('div');
@@ -685,9 +687,9 @@ function saveChangedEmoji(folderKey) {
     const selectedEmoji = document.querySelector('.folder-emoji-btn.selected');
     if (!selectedEmoji) { closeFolderModal(); return; }
 
-    let customIcons = JSON.parse(localStorage.getItem('customFolderIcons') || '{}');
+    let customIcons = UserSettings.get('customFolderIcons', {});
     customIcons[folderKey] = selectedEmoji.dataset.emoji;
-    localStorage.setItem('customFolderIcons', JSON.stringify(customIcons));
+    UserSettings.set('customFolderIcons', customIcons);
 
     closeFolderModal();
     renderDocsTree();
@@ -716,7 +718,7 @@ function dropOnFolder(event, targetFolder) {
     const { docKey } = data;
     if (!docKey) return;
 
-    let assignments = JSON.parse(localStorage.getItem('docFolderAssignments') || '{}');
+    let assignments = UserSettings.get('docFolderAssignments', {});
 
     // If moving back to the doc's original folder, remove the override
     if (data.isNote && targetFolder === 'notes') {
@@ -739,7 +741,7 @@ function dropOnFolder(event, targetFolder) {
         assignments[docKey] = targetFolder;
     }
 
-    localStorage.setItem('docFolderAssignments', JSON.stringify(assignments));
+    UserSettings.set('docFolderAssignments', assignments);
 
     // Expand target folder
     docFolderState.expandedFolders.add(targetFolder);
@@ -782,7 +784,7 @@ async function loadDocs() {
 
 function buildFolderTree(docs) {
     const tree = {};
-    const assignments = JSON.parse(localStorage.getItem('docFolderAssignments') || '{}');
+    const assignments = UserSettings.get('docFolderAssignments', {});
 
     // Add local notes — each goes to its assigned folder (default: 'notes')
     const localNotes = getNotesForTree();
@@ -824,7 +826,7 @@ function buildFolderTree(docs) {
     }
 
     // Add custom (empty) folders so they always appear
-    const customFolders = JSON.parse(localStorage.getItem('customFolders') || '[]');
+    const customFolders = UserSettings.get('customFolders', []);
     customFolders.forEach(key => {
         if (!tree[key]) {
             tree[key] = { name: key, docs: [], icon: getFolderIcon(key) };
@@ -847,7 +849,7 @@ function getFolderIcon(folder) {
     };
     if (icons[folder]) return icons[folder];
     // Check custom folder icons
-    const customIcons = JSON.parse(localStorage.getItem('customFolderIcons') || '{}');
+    const customIcons = UserSettings.get('customFolderIcons', {});
     return customIcons[folder] || '📁';
 }
 
@@ -867,7 +869,7 @@ function renderDocsTree() {
     const tree = buildFolderTree(filteredDocs);
     
     // Define folder order (notes first, custom folders in middle, root last)
-    const customFolders = JSON.parse(localStorage.getItem('customFolders') || '[]');
+    const customFolders = UserSettings.get('customFolders', []);
     const folderOrder = ['notes', 'research', ...customFolders, 'root'];
     const sortedFolders = Object.keys(tree).sort((a, b) => {
         const aIdx = folderOrder.indexOf(a);
@@ -985,7 +987,7 @@ function renderDocs() {
 
     // Filter by selected folder
     if (docFolderState.selectedFolder) {
-        const assignments = JSON.parse(localStorage.getItem('docFolderAssignments') || '{}');
+        const assignments = UserSettings.get('docFolderAssignments', {});
         allDocs = allDocs.filter(d => {
             if (d.isNote) return d.category === docFolderState.selectedFolder;
             const override = assignments[d.path];
@@ -1058,7 +1060,7 @@ async function loadLocalNotes() {
     try {
         const notes = await NotionNotes.list();
         if (notes.length > 0) {
-            const hidden = JSON.parse(localStorage.getItem('hiddenNotionNotes') || '[]');
+            const hidden = UserSettings.get('hiddenNotionNotes', []);
             notesState.notes = notes
                 .filter(n => !hidden.includes(n.id))
                 .map(n => ({
@@ -1229,10 +1231,10 @@ async function deleteNote() {
 
     // Track hidden Notion notes so they don't reappear on next load
     if (isNotion) {
-        let hidden = JSON.parse(localStorage.getItem('hiddenNotionNotes') || '[]');
+        let hidden = UserSettings.get('hiddenNotionNotes', []);
         if (!hidden.includes(notesState.editingNote.id)) {
             hidden.push(notesState.editingNote.id);
-            localStorage.setItem('hiddenNotionNotes', JSON.stringify(hidden));
+            UserSettings.set('hiddenNotionNotes', hidden);
         }
     }
 
@@ -1256,10 +1258,10 @@ function deleteNoteFromPreview(noteId) {
     notesState.notes = notesState.notes.filter(n => n.id !== noteId);
 
     if (isNotion) {
-        let hidden = JSON.parse(localStorage.getItem('hiddenNotionNotes') || '[]');
+        let hidden = UserSettings.get('hiddenNotionNotes', []);
         if (!hidden.includes(noteId)) {
             hidden.push(noteId);
-            localStorage.setItem('hiddenNotionNotes', JSON.stringify(hidden));
+            UserSettings.set('hiddenNotionNotes', hidden);
         }
     }
 
@@ -1277,7 +1279,7 @@ function formatText(command, value = null) {
 
 // Add notes to the folder tree
 function getNotesForTree() {
-    const assignments = JSON.parse(localStorage.getItem('docFolderAssignments') || '{}');
+    const assignments = UserSettings.get('docFolderAssignments', {});
     return notesState.notes.map(note => ({
         id: note.id,
         path: note.id,
