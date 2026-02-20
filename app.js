@@ -741,6 +741,26 @@ let notesState = {
 };
 
 async function loadLocalNotes() {
+    // Try Notion first, fall back to localStorage
+    try {
+        const notes = await NotionNotes.list();
+        if (notes.length > 0) {
+            notesState.notes = notes.map(n => ({
+                id: n.id,
+                title: n.title,
+                content: '', // loaded on demand when editing
+                createdAt: n.createdAt,
+                updatedAt: n.updatedAt,
+                source: 'notion',
+                notionUrl: n.url,
+            }));
+            notesState.notionReady = true;
+            return;
+        }
+    } catch (e) {
+        console.warn('[Notes] Notion unavailable, using localStorage', e.message);
+    }
+    // Fallback to localStorage
     const data = await loadJSON('local-notes');
     if (data && data.notes) {
         notesState.notes = data.notes;
@@ -748,10 +768,14 @@ async function loadLocalNotes() {
 }
 
 function saveLocalNotes() {
-    saveJSON('local-notes', {
-        lastUpdated: new Date().toISOString(),
-        notes: notesState.notes
-    });
+    // Only save to localStorage as fallback for non-Notion notes
+    const localNotes = notesState.notes.filter(n => n.source !== 'notion');
+    if (localNotes.length > 0) {
+        saveJSON('local-notes', {
+            lastUpdated: new Date().toISOString(),
+            notes: localNotes,
+        });
+    }
 }
 
 function createNewNote() {
@@ -760,18 +784,34 @@ function createNewNote() {
         title: '',
         content: '',
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        source: 'notion',
     };
     notesState.isNew = true;
     showNoteEditor();
 }
 
-function editNote(noteId) {
+async function editNote(noteId) {
     const note = notesState.notes.find(n => n.id === noteId);
     if (!note) return;
-    
+
     notesState.editingNote = { ...note };
     notesState.isNew = false;
+
+    // Fetch full content from Notion if needed
+    if (note.source === 'notion' && !note._contentLoaded) {
+        const full = await NotionNotes.get(noteId);
+        if (full) {
+            notesState.editingNote.content = NotionNotes.textToHtml(full.content);
+            // Cache it on the note object
+            const idx = notesState.notes.findIndex(n => n.id === noteId);
+            if (idx !== -1) {
+                notesState.notes[idx]._contentLoaded = true;
+                notesState.notes[idx].content = notesState.editingNote.content;
+            }
+        }
+    }
+
     showNoteEditor();
 }
 
@@ -819,44 +859,58 @@ function cancelNoteEdit() {
     renderDocs();
 }
 
-function saveNote() {
+async function saveNote() {
     const titleInput = document.getElementById('noteTitleInput');
     const contentEditor = document.getElementById('noteContentEditor');
-    
+
     const title = titleInput.value.trim() || 'Untitled Note';
-    const content = contentEditor.innerHTML;
-    
+    const htmlContent = contentEditor.innerHTML;
+    const plainContent = NotionNotes.htmlToText(htmlContent);
+
     notesState.editingNote.title = title;
-    notesState.editingNote.content = content;
+    notesState.editingNote.content = htmlContent;
     notesState.editingNote.updatedAt = new Date().toISOString();
-    
+
+    // Save to Notion
     if (notesState.isNew) {
+        const created = await NotionNotes.create(title, plainContent);
+        if (created) {
+            notesState.editingNote.id = created.id;
+            notesState.editingNote.source = 'notion';
+            notesState.editingNote.notionUrl = created.url;
+        }
         notesState.notes.unshift(notesState.editingNote);
     } else {
+        if (notesState.editingNote.source === 'notion') {
+            await NotionNotes.update(notesState.editingNote.id, { title, content: plainContent });
+        }
         const idx = notesState.notes.findIndex(n => n.id === notesState.editingNote.id);
         if (idx !== -1) {
             notesState.notes[idx] = notesState.editingNote;
         }
     }
-    
+
     saveLocalNotes();
     hideNoteEditor();
-    
-    // Refresh the docs view
+
     renderDocsTree();
     renderDocs();
-    
-    // Select the saved note
+
     selectDoc(notesState.editingNote.id);
 }
 
-function deleteNote() {
+async function deleteNote() {
     if (!notesState.editingNote || notesState.isNew) return;
     if (!confirm('Delete this note?')) return;
-    
+
+    // Archive in Notion
+    if (notesState.editingNote.source === 'notion') {
+        await NotionNotes.remove(notesState.editingNote.id);
+    }
+
     notesState.notes = notesState.notes.filter(n => n.id !== notesState.editingNote.id);
     saveLocalNotes();
-    
+
     hideNoteEditor();
     state.selectedDoc = null;
     renderDocsTree();
