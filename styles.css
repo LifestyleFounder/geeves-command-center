@@ -4723,3 +4723,49 @@ body {
     justify-content: flex-end;
     gap: 8px;
 }
+
+/* Folder emoji change button */
+.folder-emoji-change {
+    opacity: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: var(--radius-sm);
+    color: inherit;
+    transition: opacity 0.15s, background 0.15s;
+    flex-shrink: 0;
+    line-height: 1;
+}
+.folder-header:hover .folder-emoji-change {
+    opacity: 0.5;
+}
+.folder-emoji-change:hover {
+    opacity: 1 !important;
+    background: rgba(0,0,0,0.1);
+}
+.folder-header.active .folder-emoji-change:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* Drag and drop */
+.folder-header.drop-target {
+    outline: 2px dashed var(--gold);
+    outline-offset: -2px;
+}
+.folder-header.drag-over {
+    background: rgba(196, 164, 95, 0.15) !important;
+    outline: 2px solid var(--gold) !important;
+    outline-offset: -2px;
+}
+.folder-header.active.drag-over {
+    background: rgba(196, 164, 95, 0.3) !important;
+}
+.doc-item[draggable="true"],
+.folder-doc[draggable="true"] {
+    cursor: grab;
+}
+.doc-item[draggable="true"]:active,
+.folder-doc[draggable="true"]:active {
+    cursor: grabbing;
+}

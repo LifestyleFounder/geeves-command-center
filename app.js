@@ -595,7 +595,7 @@ function switchKHSubtab(subtab) {
 // Create a new folder in Docs with emoji picker
 function createFolder() {
     // Show a small modal for folder name + icon
-    const emojis = ['📁','📂','📝','📚','🔬','💡','🎯','💰','⚙️','🎨','📊','🗂️','📋','🏷️','🔖','💼','🧠','⭐','🔥','📎'];
+    const emojis = ['📁','📂','📝','📚','🔬','💡','🎯','💰','⚙️','🎨','📊','🗂️','📋','🏷️','🔖','💼','🧠','⭐','🔥','📎','🏠','🎵','📸','🌍','🔒','❤️','🚀','🎮','📱','💻'];
     const overlay = document.createElement('div');
     overlay.className = 'folder-modal-overlay';
     overlay.innerHTML = `
@@ -657,6 +657,106 @@ function saveFolderFromModal() {
     renderDocs();
 }
 
+// Change emoji on existing folder
+function changeFolderEmoji(folderKey) {
+    const emojis = ['📁','📂','📝','📚','🔬','💡','🎯','💰','⚙️','🎨','📊','🗂️','📋','🏷️','🔖','💼','🧠','⭐','🔥','📎','🏠','🎵','📸','🌍','🔒','❤️','🚀','🎮','📱','💻'];
+    const currentIcons = JSON.parse(localStorage.getItem('customFolderIcons') || '{}');
+    const currentEmoji = currentIcons[folderKey] || getFolderIcon(folderKey);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'folder-modal-overlay';
+    overlay.innerHTML = `
+        <div class="folder-modal">
+            <h3>Change Icon for "${folderKey.charAt(0).toUpperCase() + folderKey.slice(1)}"</h3>
+            <div class="folder-emoji-grid">
+                ${emojis.map(e => `<button class="folder-emoji-btn ${e === currentEmoji ? 'selected' : ''}" data-emoji="${e}" onclick="pickFolderEmoji(this)">${e}</button>`).join('')}
+            </div>
+            <div class="folder-modal-actions">
+                <button class="btn btn-secondary btn-sm" onclick="closeFolderModal()">Cancel</button>
+                <button class="btn btn-primary btn-sm" onclick="saveChangedEmoji('${folderKey}')">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeFolderModal(); });
+}
+
+function saveChangedEmoji(folderKey) {
+    const selectedEmoji = document.querySelector('.folder-emoji-btn.selected');
+    if (!selectedEmoji) { closeFolderModal(); return; }
+
+    let customIcons = JSON.parse(localStorage.getItem('customFolderIcons') || '{}');
+    customIcons[folderKey] = selectedEmoji.dataset.emoji;
+    localStorage.setItem('customFolderIcons', JSON.stringify(customIcons));
+
+    closeFolderModal();
+    renderDocsTree();
+    renderDocs();
+}
+
+// Drag and drop between folders
+function startDocDrag(event, docKey, isNote) {
+    event.dataTransfer.setData('text/plain', JSON.stringify({ docKey, isNote }));
+    event.dataTransfer.effectAllowed = 'move';
+    // Highlight all folder headers as drop targets
+    setTimeout(() => {
+        document.querySelectorAll('.folder-header').forEach(el => el.classList.add('drop-target'));
+    }, 0);
+}
+
+function dropOnFolder(event, targetFolder) {
+    event.preventDefault();
+    document.querySelectorAll('.folder-header').forEach(el => {
+        el.classList.remove('drop-target');
+        el.classList.remove('drag-over');
+    });
+
+    let data;
+    try { data = JSON.parse(event.dataTransfer.getData('text/plain')); } catch { return; }
+    const { docKey } = data;
+    if (!docKey) return;
+
+    let assignments = JSON.parse(localStorage.getItem('docFolderAssignments') || '{}');
+
+    // If moving back to the doc's original folder, remove the override
+    if (data.isNote && targetFolder === 'notes') {
+        delete assignments[docKey];
+    } else if (!data.isNote) {
+        // Check if moving back to original folder
+        const doc = state.docs.find(d => d.path === docKey);
+        if (doc) {
+            const pathParts = doc.path.split('/').filter(Boolean);
+            const originalFolder = pathParts.length > 1 ? pathParts[0] : 'root';
+            if (targetFolder === originalFolder) {
+                delete assignments[docKey];
+            } else {
+                assignments[docKey] = targetFolder;
+            }
+        } else {
+            assignments[docKey] = targetFolder;
+        }
+    } else {
+        assignments[docKey] = targetFolder;
+    }
+
+    localStorage.setItem('docFolderAssignments', JSON.stringify(assignments));
+
+    // Expand target folder
+    docFolderState.expandedFolders.add(targetFolder);
+    docFolderState.selectedFolder = targetFolder;
+
+    renderDocsTree();
+    renderDocs();
+}
+
+// Clean up drag highlights when drag ends
+document.addEventListener('dragend', () => {
+    document.querySelectorAll('.folder-header').forEach(el => {
+        el.classList.remove('drop-target');
+        el.classList.remove('drag-over');
+    });
+});
+
 // ===========================================
 // DOCS HUB
 // ===========================================
@@ -682,21 +782,28 @@ async function loadDocs() {
 
 function buildFolderTree(docs) {
     const tree = {};
+    const assignments = JSON.parse(localStorage.getItem('docFolderAssignments') || '{}');
 
-    // Add local notes first
+    // Add local notes — each goes to its assigned folder (default: 'notes')
     const localNotes = getNotesForTree();
-    if (localNotes.length > 0) {
-        tree['notes'] = {
-            name: 'notes',
-            docs: localNotes,
-            icon: '📝'
-        };
-    }
+    localNotes.forEach(note => {
+        const folder = note.category; // already respects assignments
+        if (!tree[folder]) {
+            tree[folder] = { name: folder, docs: [], icon: getFolderIcon(folder) };
+        }
+        tree[folder].docs.push(note);
+    });
 
     docs.forEach(doc => {
-        // Extract folder from path (e.g., "/research/file.md" -> "research")
-        const pathParts = doc.path.split('/').filter(Boolean);
-        const folder = pathParts.length > 1 ? pathParts[0] : 'root';
+        // Check for manual folder override
+        const overrideFolder = assignments[doc.path];
+        let folder;
+        if (overrideFolder) {
+            folder = overrideFolder;
+        } else {
+            const pathParts = doc.path.split('/').filter(Boolean);
+            folder = pathParts.length > 1 ? pathParts[0] : 'root';
+        }
 
         // Memory and Reports live in the Reports tab, skip them here
         if (folder === 'memory' || folder === 'reports') return;
@@ -711,11 +818,16 @@ function buildFolderTree(docs) {
         tree[folder].docs.push(doc);
     });
 
+    // Ensure 'notes' folder always exists
+    if (!tree['notes']) {
+        tree['notes'] = { name: 'notes', docs: [], icon: getFolderIcon('notes') };
+    }
+
     // Add custom (empty) folders so they always appear
     const customFolders = JSON.parse(localStorage.getItem('customFolders') || '[]');
     customFolders.forEach(key => {
         if (!tree[key]) {
-            tree[key] = { name: key, docs: [], icon: '📁' };
+            tree[key] = { name: key, docs: [], icon: getFolderIcon(key) };
         }
     });
 
@@ -777,26 +889,41 @@ function renderDocsTree() {
         const isExpanded = docFolderState.expandedFolders.has(folderKey);
         const isSelected = docFolderState.selectedFolder === folderKey;
         const displayName = folderKey === 'root' ? 'Other' : folderKey.charAt(0).toUpperCase() + folderKey.slice(1);
-        
+
         return `
             <div class="folder-item ${isExpanded ? '' : 'collapsed'}">
-                <div class="folder-header ${isSelected ? 'active' : ''}" onclick="selectFolder('${folderKey}')">
+                <div class="folder-header ${isSelected ? 'active' : ''}"
+                     onclick="selectFolder('${folderKey}')"
+                     ondragover="event.preventDefault(); this.classList.add('drag-over')"
+                     ondragleave="this.classList.remove('drag-over')"
+                     ondrop="dropOnFolder(event, '${folderKey}'); this.classList.remove('drag-over')">
                     <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="6 9 12 15 18 9"/>
                     </svg>
                     <span class="folder-name">${folder.icon} ${displayName}</span>
                     <span class="folder-count">${folder.docs.length}</span>
+                    <button class="folder-emoji-change" onclick="changeFolderEmoji('${folderKey}'); event.stopPropagation();" title="Change icon">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+                        </svg>
+                    </button>
                 </div>
                 <div class="folder-children">
-                    ${folder.docs.map(doc => `
-                        <div class="folder-doc ${state.selectedDoc?.path === doc.path ? 'active' : ''}" onclick="selectDoc('${doc.path}'); event.stopPropagation();">
+                    ${folder.docs.map(doc => {
+                        const docKey = doc.isNote ? doc.id : doc.path;
+                        const isActive = state.selectedDoc && (state.selectedDoc.path === docKey || state.selectedDoc.id === docKey);
+                        return `
+                        <div class="folder-doc ${isActive ? 'active' : ''}"
+                             draggable="true"
+                             ondragstart="startDocDrag(event, '${docKey}', ${doc.isNote || false})"
+                             onclick="selectDoc('${docKey}'); event.stopPropagation();">
                             <svg class="folder-doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                                 <polyline points="14 2 14 8 20 8"/>
                             </svg>
                             <span>${escapeHtml(doc.title.replace(/^Daily Memory - /, '').replace(/^Content Intelligence Report - /, 'CI: '))}</span>
                         </div>
-                    `).join('')}
+                    `}).join('')}
                 </div>
             </div>
         `;
@@ -858,8 +985,11 @@ function renderDocs() {
 
     // Filter by selected folder
     if (docFolderState.selectedFolder) {
+        const assignments = JSON.parse(localStorage.getItem('docFolderAssignments') || '{}');
         allDocs = allDocs.filter(d => {
-            if (d.isNote) return docFolderState.selectedFolder === 'notes';
+            if (d.isNote) return d.category === docFolderState.selectedFolder;
+            const override = assignments[d.path];
+            if (override) return override === docFolderState.selectedFolder;
             const pathParts = d.path.split('/').filter(Boolean);
             const folder = pathParts.length > 1 ? pathParts[0] : 'root';
             return folder === docFolderState.selectedFolder;
@@ -893,7 +1023,10 @@ function renderDocs() {
             const docPath = doc.isNote ? doc.id : doc.path;
             const isActive = state.selectedDoc && (state.selectedDoc.path === docPath || state.selectedDoc.id === docPath);
             return `
-            <div class="doc-item ${isActive ? 'active' : ''}" onclick="selectDoc('${docPath}')">
+            <div class="doc-item ${isActive ? 'active' : ''}"
+                 draggable="true"
+                 ondragstart="startDocDrag(event, '${docPath}', ${doc.isNote || false})"
+                 onclick="selectDoc('${docPath}')">
                 <div class="doc-title">${escapeHtml(doc.title)}</div>
                 <div class="doc-meta">
                     <span class="doc-category">${doc.category}</span>
@@ -1117,11 +1250,12 @@ function formatText(command, value = null) {
 
 // Add notes to the folder tree
 function getNotesForTree() {
+    const assignments = JSON.parse(localStorage.getItem('docFolderAssignments') || '{}');
     return notesState.notes.map(note => ({
         id: note.id,
         path: note.id,
         title: note.title,
-        category: 'notes',
+        category: assignments[note.id] || 'notes',
         date: note.updatedAt.split('T')[0],
         isNote: true
     }));
@@ -2758,6 +2892,10 @@ window.createFolder = createFolder;
 window.pickFolderEmoji = pickFolderEmoji;
 window.closeFolderModal = closeFolderModal;
 window.saveFolderFromModal = saveFolderFromModal;
+window.changeFolderEmoji = changeFolderEmoji;
+window.saveChangedEmoji = saveChangedEmoji;
+window.startDocDrag = startDocDrag;
+window.dropOnFolder = dropOnFolder;
 window.filterDocs = filterDocs;
 window.selectDoc = selectDoc;
 window.selectFolder = selectFolder;
