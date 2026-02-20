@@ -1243,6 +1243,33 @@ async function deleteNote() {
     renderDocs();
 }
 
+function deleteNoteFromPreview(noteId) {
+    const note = notesState.notes.find(n => n.id === noteId);
+    if (!note) return;
+
+    const isNotion = note.source === 'notion';
+    const msg = isNotion
+        ? 'Remove this note from the Command Center?\n\n(The original will remain safe in Notion.)'
+        : 'Delete this note?';
+    if (!confirm(msg)) return;
+
+    notesState.notes = notesState.notes.filter(n => n.id !== noteId);
+
+    if (isNotion) {
+        let hidden = JSON.parse(localStorage.getItem('hiddenNotionNotes') || '[]');
+        if (!hidden.includes(noteId)) {
+            hidden.push(noteId);
+            localStorage.setItem('hiddenNotionNotes', JSON.stringify(hidden));
+        }
+    }
+
+    saveLocalNotes();
+    state.selectedDoc = null;
+    document.getElementById('docsPreview').innerHTML = `<div class="empty-state"><p>Select a document to preview</p></div>`;
+    renderDocsTree();
+    renderDocs();
+}
+
 function formatText(command, value = null) {
     document.execCommand(command, false, value);
     document.getElementById('noteContentEditor').focus();
@@ -1307,7 +1334,15 @@ async function selectDoc(path) {
             <div class="markdown-content">
                 <div class="note-preview-header">
                     <h1>${escapeHtml(note.title)}</h1>
-                    ${notionBtn}
+                    <div class="note-preview-actions">
+                        ${notionBtn}
+                        <button class="btn btn-danger btn-sm" onclick="deleteNoteFromPreview('${note.id}')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                            Remove
+                        </button>
+                    </div>
                 </div>
                 <p class="doc-meta-info">
                     <span class="doc-category">Note</span>
@@ -2904,6 +2939,7 @@ window.createNewNote = createNewNote;
 window.editNote = editNote;
 window.saveNote = saveNote;
 window.deleteNote = deleteNote;
+window.deleteNoteFromPreview = deleteNoteFromPreview;
 window.cancelNoteEdit = cancelNoteEdit;
 window.formatText = formatText;
 window.toggleModelDropdown = toggleModelDropdown;

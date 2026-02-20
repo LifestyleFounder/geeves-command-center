@@ -1026,6 +1026,21 @@ body {
     margin: 0;
 }
 
+.note-preview-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    border: none;
+}
+.btn-danger:hover {
+    background: #c82333;
+}
+
 .note-preview-content {
     line-height: 1.7;
 }
