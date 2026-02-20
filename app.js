@@ -1767,6 +1767,7 @@ let currentModel = 'auto';
 let chatMessages = [];
 let agentConfigs = {};
 let isGenerating = false;
+let currentThreadId = null;
 
 const models = {
     'auto': { name: 'Auto', icon: '🔮', apiModel: null },
@@ -1787,9 +1788,13 @@ async function loadAgentConfigs() {
 }
 
 // Initialize chat on page load
-document.addEventListener('DOMContentLoaded', () => {
-    loadAgentConfigs();
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadAgentConfigs();
     loadChatSettings();
+    ChatPersistence.init();
+    if (ChatPersistence.isReady()) {
+        await loadActiveThread(currentAgent);
+    }
 });
 
 function toggleModelDropdown() {
@@ -1946,27 +1951,46 @@ function formatMessageContent(content) {
 async function sendChatMessage() {
     const input = document.getElementById('chatInput');
     const message = input.value.trim();
-    
+
     if (!message || isGenerating) return;
-    
+
+    // Auto-create thread on first message if none exists
+    if (!currentThreadId && ChatPersistence.isReady()) {
+        const thread = await ChatPersistence.createThread(currentAgent, ChatPersistence.generateTitle(message));
+        if (thread) {
+            currentThreadId = thread.id;
+            updateThreadSelector();
+        }
+    }
+
     // Add user message to chat
     addMessageToChat('user', message);
     chatMessages.push({ role: 'user', content: message });
-    
+
+    // Persist user message (fire-and-forget)
+    if (currentThreadId && ChatPersistence.isReady()) {
+        ChatPersistence.saveMessage(currentThreadId, 'user', message);
+    }
+
     // Clear input
     input.value = '';
     input.style.height = 'auto';
-    
+
     // Show loading
     isGenerating = true;
     document.getElementById('chatSendBtn').disabled = true;
     addLoadingMessage();
-    
+
     try {
         const response = await callLLMAPI(message);
         removeLoadingMessage();
         addMessageToChat('assistant', response);
         chatMessages.push({ role: 'assistant', content: response });
+
+        // Persist assistant message (fire-and-forget)
+        if (currentThreadId && ChatPersistence.isReady()) {
+            ChatPersistence.saveMessage(currentThreadId, 'assistant', response);
+        }
     } catch (error) {
         removeLoadingMessage();
         addMessageToChat('assistant', `Error: ${error.message}. Check your API settings.`);
@@ -2185,11 +2209,12 @@ function updateChatUI() {
     updateModelIndicator();
 }
 
-function switchAgent(agentId) {
+async function switchAgent(agentId) {
     currentAgent = agentId;
-    
-    // Clear chat history when switching agents
+    currentThreadId = null;
     chatMessages = [];
+
+    // Reset chat UI to welcome screen
     const messagesContainer = document.getElementById('chatMessages');
     if (messagesContainer) {
         messagesContainer.innerHTML = `
@@ -2200,8 +2225,130 @@ function switchAgent(agentId) {
             </div>
         `;
     }
-    
+
     updateChatUI();
+
+    // Load most recent thread for this agent
+    if (ChatPersistence.isReady()) {
+        await loadActiveThread(agentId);
+    }
+}
+
+// ── Thread Management ────────────────────────────────
+
+async function loadActiveThread(agentId) {
+    const threads = await ChatPersistence.getThreadsForAgent(agentId);
+    if (threads.length > 0) {
+        await loadThread(threads[0].id);
+    }
+    updateThreadSelector();
+}
+
+async function loadThread(threadId) {
+    const messages = await ChatPersistence.getMessages(threadId);
+    currentThreadId = threadId;
+    chatMessages = messages.map(m => ({ role: m.role, content: m.content }));
+    renderChatMessages(chatMessages);
+}
+
+function renderChatMessages(msgs) {
+    const container = document.getElementById('chatMessages');
+    if (!container) return;
+
+    if (msgs.length === 0) {
+        // Show welcome screen
+        const agent = agentConfigs[currentAgent] || { icon: '🤖', name: 'Assistant', description: 'AI Assistant' };
+        container.innerHTML = `
+            <div class="chat-welcome" id="chatWelcome">
+                <div class="welcome-icon" id="welcomeIcon">${agent.icon}</div>
+                <h3 id="welcomeTitle">Chat with ${agent.name}</h3>
+                <p id="welcomeDesc">${agent.description}</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = '';
+    const agentIcon = agentConfigs[currentAgent]?.icon || '🤖';
+    msgs.forEach(m => {
+        const avatar = m.role === 'user' ? '👤' : agentIcon;
+        const div = document.createElement('div');
+        div.className = `chat-message ${m.role}`;
+        div.innerHTML = `
+            <div class="message-avatar">${avatar}</div>
+            <div class="message-content">${formatMessageContent(m.content)}</div>
+        `;
+        container.appendChild(div);
+    });
+    container.scrollTop = container.scrollHeight;
+}
+
+async function startNewThread() {
+    currentThreadId = null;
+    chatMessages = [];
+    renderChatMessages([]);
+    updateThreadSelector();
+    document.getElementById('chatInput')?.focus();
+}
+
+function toggleThreadList() {
+    const panel = document.getElementById('threadListPanel');
+    if (!panel) return;
+    const visible = panel.style.display !== 'none';
+    panel.style.display = visible ? 'none' : 'block';
+    if (!visible) updateThreadSelector();
+}
+
+async function updateThreadSelector() {
+    const container = document.getElementById('threadListItems');
+    if (!container) return;
+
+    if (!ChatPersistence.isReady()) {
+        container.innerHTML = '<div class="thread-list-empty">Persistence not connected</div>';
+        return;
+    }
+
+    const threads = await ChatPersistence.getThreadsForAgent(currentAgent);
+    if (threads.length === 0) {
+        container.innerHTML = '<div class="thread-list-empty">No past threads</div>';
+        return;
+    }
+
+    container.innerHTML = threads.map(t => {
+        const active = t.id === currentThreadId ? ' active' : '';
+        const date = new Date(t.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return `
+            <div class="thread-item${active}" onclick="selectThread('${t.id}')">
+                <div class="thread-item-info">
+                    <div class="thread-item-title">${escapeHTML(t.title)}</div>
+                    <div class="thread-item-date">${date}</div>
+                </div>
+                <button class="thread-item-archive" onclick="event.stopPropagation(); archiveThreadUI('${t.id}')" title="Archive">✕</button>
+            </div>
+        `;
+    }).join('');
+}
+
+function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+async function selectThread(threadId) {
+    await loadThread(threadId);
+    updateThreadSelector();
+    document.getElementById('threadListPanel').style.display = 'none';
+}
+
+async function archiveThreadUI(threadId) {
+    await ChatPersistence.archiveThread(threadId);
+    if (threadId === currentThreadId) {
+        currentThreadId = null;
+        chatMessages = [];
+        renderChatMessages([]);
+    }
+    updateThreadSelector();
 }
 
 function openChatFullscreen() {

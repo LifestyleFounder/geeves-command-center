@@ -4393,3 +4393,125 @@ body {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
 }
+
+/* ===========================================
+   THREAD CONTROLS & LIST
+   =========================================== */
+
+.thread-controls {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.thread-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.thread-btn:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.2);
+}
+
+.thread-btn svg {
+    flex-shrink: 0;
+}
+
+.thread-list-panel {
+    max-height: 220px;
+    overflow-y: auto;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.15);
+}
+
+.thread-list-panel::-webkit-scrollbar {
+    width: 4px;
+}
+
+.thread-list-panel::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 4px;
+}
+
+.thread-list-items {
+    padding: 4px;
+}
+
+.thread-list-empty {
+    padding: 12px;
+    text-align: center;
+    color: rgba(255,255,255,0.35);
+    font-size: 12px;
+}
+
+.thread-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.12s ease;
+}
+
+.thread-item:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+.thread-item.active {
+    background: rgba(255,255,255,0.12);
+}
+
+.thread-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.thread-item-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.thread-item-date {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 1px;
+}
+
+.thread-item-archive {
+    opacity: 0;
+    padding: 2px 6px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    background: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    flex-shrink: 0;
+}
+
+.thread-item:hover .thread-item-archive {
+    opacity: 1;
+}
+
+.thread-item-archive:hover {
+    color: var(--error);
+    background: rgba(239,68,68,0.15);
+}

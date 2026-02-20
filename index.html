@@ -1463,6 +1463,26 @@ Sam Ovens
         <div class="chat-agent-info" id="chatAgentInfo">
             <span class="agent-name">Geeves</span>
             <span class="agent-desc">Your EA — strategy, ops, research, everything</span>
+            <div class="thread-controls">
+                <button class="thread-btn" onclick="startNewThread()" title="New thread">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    New
+                </button>
+                <button class="thread-btn" onclick="toggleThreadList()" id="threadListBtn" title="Thread history">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+                        <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+                    </svg>
+                    Threads
+                </button>
+            </div>
+        </div>
+        <div class="thread-list-panel" id="threadListPanel" style="display:none;">
+            <div class="thread-list-items" id="threadListItems">
+                <div class="thread-list-empty">No past threads</div>
+            </div>
         </div>
         <div class="chat-messages" id="chatMessages">
             <div class="chat-welcome" id="chatWelcome">
@@ -1500,6 +1520,8 @@ Sam Ovens
     </div>
     <div class="chat-overlay" id="chatOverlay" onclick="toggleChat()"></div>
 
-    <script src="app.js?v=20250209"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="chat-persistence.js?v=20250220"></script>
+    <script src="app.js?v=20250220"></script>
 </body>
 </html>
