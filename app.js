@@ -33,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loadAllData();
     initDragAndDrop();
     setDefaultDates();
+    // Initialize Knowledge Hub sub-tab actions
+    switchKHSubtab('kb');
 });
 
 function initNavigation() {
@@ -62,8 +64,7 @@ function switchTab(tabName) {
         tracker: 'Performance',
         kanban: 'Projects',
         reports: 'Reports',
-        knowledge: 'Knowledge',
-        docs: 'Docs Hub',
+        'knowledge-hub': 'Knowledge Hub',
         content: 'Content Intel',
         youtube: 'YouTube',
         instagram: 'Instagram',
@@ -515,9 +516,6 @@ function switchReportsSubtab(subtab) {
     document.querySelectorAll('.reports-panel').forEach(panel => {
         panel.classList.toggle('active', panel.id === 'reportPanel-' + subtab);
     });
-    // Render doc lists on first open
-    if (subtab === 'memory') renderReportsDocs('memory', 'memoryDocList');
-    if (subtab === 'report-docs') renderReportsDocs('reports', 'reportDocList');
 }
 
 function renderReportsDocs(category, containerId) {
@@ -540,9 +538,71 @@ function renderReportsDocs(category, containerId) {
 }
 
 function openReportDoc(path) {
-    // Switch to Docs Hub and select the doc
-    switchTab('docs');
+    // Switch to Knowledge Hub > Docs and select the doc
+    switchTab('knowledge-hub');
+    switchKHSubtab('docs');
     selectDoc(path);
+}
+
+// ===========================================
+// KNOWLEDGE HUB — sub-tab switching
+// ===========================================
+
+let currentKHSubtab = 'kb';
+
+function switchKHSubtab(subtab) {
+    currentKHSubtab = subtab;
+    document.querySelectorAll('.kh-subtab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.khSubtab === subtab);
+    });
+    document.querySelectorAll('.kh-panel').forEach(panel => {
+        panel.classList.toggle('active', panel.id === 'khPanel-' + subtab);
+    });
+    // Update header actions based on sub-tab
+    const actions = document.getElementById('khActions');
+    if (!actions) return;
+    if (subtab === 'kb') {
+        actions.innerHTML = `
+            <button class="btn btn-secondary" onclick="syncFromNotion()" id="notionSyncBtn">🔄 Sync from Notion</button>
+            <button class="btn btn-primary" onclick="openUploadDocModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Add Document
+            </button>
+        `;
+    } else {
+        actions.innerHTML = `
+            <input type="text" class="search-input" id="docsSearch" placeholder="Search docs..." oninput="filterDocs()">
+            <button class="btn btn-primary" onclick="createNewNote()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                New Note
+            </button>
+            <button class="btn btn-secondary btn-icon-only" onclick="toggleAllFolders()" title="Expand/Collapse All">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+            </button>
+        `;
+    }
+}
+
+// Create a new folder in Docs
+function createFolder() {
+    const name = prompt('Folder name:');
+    if (!name || !name.trim()) return;
+    const key = name.trim().toLowerCase().replace(/\s+/g, '-');
+    // Add to custom folders list (persisted)
+    let customFolders = JSON.parse(localStorage.getItem('customFolders') || '[]');
+    if (!customFolders.includes(key)) {
+        customFolders.push(key);
+        localStorage.setItem('customFolders', JSON.stringify(customFolders));
+    }
+    docFolderState.expandedFolders.add(key);
+    renderDocsTree();
+    renderDocs();
 }
 
 // ===========================================
@@ -570,7 +630,7 @@ async function loadDocs() {
 
 function buildFolderTree(docs) {
     const tree = {};
-    
+
     // Add local notes first
     const localNotes = getNotesForTree();
     if (localNotes.length > 0) {
@@ -580,12 +640,12 @@ function buildFolderTree(docs) {
             icon: '📝'
         };
     }
-    
+
     docs.forEach(doc => {
         // Extract folder from path (e.g., "/research/file.md" -> "research")
         const pathParts = doc.path.split('/').filter(Boolean);
         const folder = pathParts.length > 1 ? pathParts[0] : 'root';
-        
+
         if (!tree[folder]) {
             tree[folder] = {
                 name: folder,
@@ -595,12 +655,20 @@ function buildFolderTree(docs) {
         }
         tree[folder].docs.push(doc);
     });
-    
+
+    // Add custom (empty) folders so they always appear
+    const customFolders = JSON.parse(localStorage.getItem('customFolders') || '[]');
+    customFolders.forEach(key => {
+        if (!tree[key]) {
+            tree[key] = { name: key, docs: [], icon: '📁' };
+        }
+    });
+
     // Sort docs within each folder by date (newest first)
     Object.values(tree).forEach(folder => {
         folder.docs.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
     });
-    
+
     return tree;
 }
 
@@ -617,7 +685,8 @@ function getFolderIcon(folder) {
 
 function renderDocsTree() {
     const container = document.getElementById('docsTree');
-    const searchTerm = document.getElementById('docsSearch').value.toLowerCase();
+    const searchEl = document.getElementById('docsSearch');
+    const searchTerm = searchEl ? searchEl.value.toLowerCase() : '';
     
     let filteredDocs = state.docs;
     if (searchTerm) {
@@ -629,8 +698,9 @@ function renderDocsTree() {
     
     const tree = buildFolderTree(filteredDocs);
     
-    // Define folder order (notes first)
-    const folderOrder = ['notes', 'research', 'root'];
+    // Define folder order (notes first, custom folders in middle, root last)
+    const customFolders = JSON.parse(localStorage.getItem('customFolders') || '[]');
+    const folderOrder = ['notes', 'research', ...customFolders, 'root'];
     const sortedFolders = Object.keys(tree).sort((a, b) => {
         const aIdx = folderOrder.indexOf(a);
         const bIdx = folderOrder.indexOf(b);
@@ -710,7 +780,8 @@ function toggleAllFolders() {
 
 function renderDocs() {
     const container = document.getElementById('docsList');
-    const searchTerm = document.getElementById('docsSearch').value.toLowerCase();
+    const searchEl = document.getElementById('docsSearch');
+    const searchTerm = searchEl ? searchEl.value.toLowerCase() : '';
     
     let filtered = state.docs;
     
@@ -1000,17 +1071,28 @@ async function selectDoc(path) {
             }
         }
 
+        const notionBtn = note.source === 'notion' && note.notionUrl
+            ? `<a href="${escapeHtml(note.notionUrl)}" target="_blank" class="btn btn-primary btn-sm">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                        <polyline points="15 3 21 3 21 9"/>
+                        <line x1="10" y1="14" x2="21" y2="3"/>
+                    </svg>
+                    Edit in Notion
+               </a>`
+            : `<button class="btn btn-secondary btn-sm" onclick="editNote('${note.id}')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                    Edit
+               </button>`;
+
         preview.innerHTML = `
             <div class="markdown-content">
                 <div class="note-preview-header">
                     <h1>${escapeHtml(note.title)}</h1>
-                    <button class="btn btn-secondary btn-sm" onclick="editNote('${note.id}')">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                        </svg>
-                        Edit
-                    </button>
+                    ${notionBtn}
                 </div>
                 <p class="doc-meta-info">
                     <span class="doc-category">Note</span>
@@ -2590,6 +2672,8 @@ window.deleteTask = deleteTask;
 window.filterActivity = filterActivity;
 window.switchReportsSubtab = switchReportsSubtab;
 window.openReportDoc = openReportDoc;
+window.switchKHSubtab = switchKHSubtab;
+window.createFolder = createFolder;
 window.filterDocs = filterDocs;
 window.selectDoc = selectDoc;
 window.selectFolder = selectFolder;

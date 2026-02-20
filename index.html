@@ -104,19 +104,12 @@
                         </svg>
                         <span>Reports</span>
                     </li>
-                    <li class="nav-item" data-tab="knowledge" draggable="true">
+                    <li class="nav-item" data-tab="knowledge-hub" draggable="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
                             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
                         </svg>
-                        <span>Knowledge</span>
-                    </li>
-                    <li class="nav-item" data-tab="docs" draggable="true">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                        </svg>
-                        <span>Docs Hub</span>
+                        <span>Knowledge Hub</span>
                     </li>
                     <li class="nav-item" data-tab="content" draggable="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -425,8 +418,6 @@
                     <div class="reports-subtabs">
                         <button class="reports-subtab active" data-subtab="activity" onclick="switchReportsSubtab('activity')">Activity</button>
                         <button class="reports-subtab" data-subtab="schedules" onclick="switchReportsSubtab('schedules')">Schedules</button>
-                        <button class="reports-subtab" data-subtab="memory" onclick="switchReportsSubtab('memory')">Memory</button>
-                        <button class="reports-subtab" data-subtab="report-docs" onclick="switchReportsSubtab('report-docs')">Reports</button>
                     </div>
 
                     <!-- Activity sub-tab -->
@@ -452,125 +443,93 @@
                         </div>
                         <div class="schedules-grid" id="schedulesList"></div>
                     </div>
-
-                    <!-- Memory sub-tab -->
-                    <div class="reports-panel" id="reportPanel-memory">
-                        <div class="reports-doc-list" id="memoryDocList"></div>
-                    </div>
-
-                    <!-- Reports sub-tab -->
-                    <div class="reports-panel" id="reportPanel-report-docs">
-                        <div class="reports-doc-list" id="reportDocList"></div>
-                    </div>
                 </section>
 
-                <!-- Knowledge Base Tab -->
-                <section class="tab-content" id="knowledge">
+                <!-- Knowledge Hub Tab (Knowledge Base + Docs) -->
+                <section class="tab-content" id="knowledge-hub">
                     <div class="tab-header">
-                        <h1>📚 Knowledge Base</h1>
-                        <div class="tab-actions">
-                            <button class="btn btn-secondary" onclick="syncFromNotion()" id="notionSyncBtn">
-                                🔄 Sync from Notion
-                            </button>
-                            <button class="btn btn-secondary" onclick="openNotionSettings()" title="Notion Settings">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="3"/>
-                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                                </svg>
-                            </button>
-                            <button class="btn btn-primary" onclick="openUploadDocModal()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="12" y1="5" x2="12" y2="19"/>
-                                    <line x1="5" y1="12" x2="19" y2="12"/>
-                                </svg>
-                                Add Document
-                            </button>
+                        <h1>📚 Knowledge Hub</h1>
+                        <div class="tab-actions" id="khActions">
+                            <!-- Actions swap based on active sub-tab -->
                         </div>
                     </div>
-                    <div class="knowledge-header-info">
-                        <p>📝 Use <code>@doc:name</code> or <code>@notion:name</code> in chat to reference documents. <code>@metrics</code>, <code>@tasks</code>, <code>@pipeline</code> for live data.</p>
-                        <span class="sync-status" id="notionSyncStatus"></span>
+                    <div class="kh-subtabs">
+                        <button class="kh-subtab active" data-kh-subtab="kb" onclick="switchKHSubtab('kb')">Knowledge Base</button>
+                        <button class="kh-subtab" data-kh-subtab="docs" onclick="switchKHSubtab('docs')">Docs</button>
                     </div>
-                    <div class="knowledge-container">
-                        <div class="knowledge-list" id="knowledgeList">
-                            <!-- Populated by JS -->
-                        </div>
-                        <div class="knowledge-preview" id="knowledgePreview">
-                            <div class="empty-state">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-                                </svg>
-                                <p>Select a document to preview</p>
-                                <small>Or add documents to use as context in AI chats</small>
-                            </div>
-                        </div>
-                    </div>
-                </section>
 
-                <!-- Docs Hub Tab -->
-                <section class="tab-content" id="docs">
-                    <div class="tab-header">
-                        <h1>📁 Docs Hub</h1>
-                        <div class="tab-actions">
-                            <input type="text" class="search-input" id="docsSearch" placeholder="Search docs..." oninput="filterDocs()">
-                            <button class="btn btn-primary" onclick="createNewNote()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="12" y1="5" x2="12" y2="19"/>
-                                    <line x1="5" y1="12" x2="19" y2="12"/>
-                                </svg>
-                                New Note
-                            </button>
-                            <button class="btn btn-secondary btn-icon-only" onclick="toggleAllFolders()" title="Expand/Collapse All">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                                </svg>
-                            </button>
+                    <!-- Knowledge Base sub-tab -->
+                    <div class="kh-panel active" id="khPanel-kb">
+                        <div class="knowledge-header-info">
+                            <p>📝 Use <code>@doc:name</code> or <code>@notion:name</code> in chat to reference documents. <code>@metrics</code>, <code>@tasks</code>, <code>@pipeline</code> for live data.</p>
+                            <span class="sync-status" id="notionSyncStatus"></span>
                         </div>
-                    </div>
-                    <div class="docs-container">
-                        <div class="docs-sidebar" id="docsSidebar">
-                            <div class="docs-tree" id="docsTree">
+                        <div class="knowledge-container">
+                            <div class="knowledge-list" id="knowledgeList">
                                 <!-- Populated by JS -->
                             </div>
-                        </div>
-                        <div class="docs-main">
-                            <div class="docs-list" id="docsList">
-                                <!-- Populated by JS -->
-                            </div>
-                            <div class="docs-preview" id="docsPreview">
+                            <div class="knowledge-preview" id="knowledgePreview">
                                 <div class="empty-state">
                                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                        <polyline points="14 2 14 8 20 8"/>
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
                                     </svg>
-                                    <p>Select a document or create a new note</p>
+                                    <p>Select a document to preview</p>
+                                    <small>Or add documents to use as context in AI chats</small>
                                 </div>
                             </div>
-                            <!-- Note Editor -->
-                            <div class="note-editor" id="noteEditor" style="display: none;">
-                                <div class="note-editor-header">
-                                    <input type="text" class="note-title-input" id="noteTitleInput" placeholder="Note title...">
-                                    <div class="note-editor-actions">
-                                        <button class="btn btn-secondary btn-sm" onclick="cancelNoteEdit()">Cancel</button>
-                                        <button class="btn btn-primary btn-sm" onclick="saveNote()">Save</button>
+                        </div>
+                    </div>
+
+                    <!-- Docs sub-tab -->
+                    <div class="kh-panel" id="khPanel-docs">
+                        <div class="docs-container">
+                            <div class="docs-sidebar" id="docsSidebar">
+                                <div class="docs-tree" id="docsTree">
+                                    <!-- Populated by JS -->
+                                </div>
+                                <button class="btn btn-secondary btn-sm docs-new-folder-btn" onclick="createFolder()">
+                                    + New Folder
+                                </button>
+                            </div>
+                            <div class="docs-main">
+                                <div class="docs-list" id="docsList">
+                                    <!-- Populated by JS -->
+                                </div>
+                                <div class="docs-preview" id="docsPreview">
+                                    <div class="empty-state">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                            <polyline points="14 2 14 8 20 8"/>
+                                        </svg>
+                                        <p>Select a document or create a new note</p>
                                     </div>
                                 </div>
-                                <div class="note-toolbar">
-                                    <button class="toolbar-btn" onclick="formatText('bold')" title="Bold"><b>B</b></button>
-                                    <button class="toolbar-btn" onclick="formatText('italic')" title="Italic"><i>I</i></button>
-                                    <button class="toolbar-btn" onclick="formatText('underline')" title="Underline"><u>U</u></button>
-                                    <span class="toolbar-divider"></span>
-                                    <button class="toolbar-btn" onclick="formatText('insertUnorderedList')" title="Bullet List">•</button>
-                                    <button class="toolbar-btn" onclick="formatText('insertOrderedList')" title="Numbered List">1.</button>
-                                    <span class="toolbar-divider"></span>
-                                    <button class="toolbar-btn" onclick="formatText('formatBlock', '<h2>')" title="Heading">H</button>
-                                    <button class="toolbar-btn" onclick="formatText('formatBlock', '<blockquote>')" title="Quote">"</button>
-                                </div>
-                                <div class="note-content-editor" id="noteContentEditor" contenteditable="true"></div>
-                                <div class="note-editor-footer">
-                                    <span class="note-meta" id="noteEditorMeta"></span>
-                                    <button class="btn btn-danger btn-sm" id="deleteNoteBtn" onclick="deleteNote()" style="display: none;">Delete</button>
+                                <!-- Note Editor -->
+                                <div class="note-editor" id="noteEditor" style="display: none;">
+                                    <div class="note-editor-header">
+                                        <input type="text" class="note-title-input" id="noteTitleInput" placeholder="Note title...">
+                                        <div class="note-editor-actions">
+                                            <button class="btn btn-secondary btn-sm" onclick="cancelNoteEdit()">Cancel</button>
+                                            <button class="btn btn-primary btn-sm" onclick="saveNote()">Save</button>
+                                        </div>
+                                    </div>
+                                    <div class="note-toolbar">
+                                        <button class="toolbar-btn" onclick="formatText('bold')" title="Bold"><b>B</b></button>
+                                        <button class="toolbar-btn" onclick="formatText('italic')" title="Italic"><i>I</i></button>
+                                        <button class="toolbar-btn" onclick="formatText('underline')" title="Underline"><u>U</u></button>
+                                        <span class="toolbar-divider"></span>
+                                        <button class="toolbar-btn" onclick="formatText('insertUnorderedList')" title="Bullet List">•</button>
+                                        <button class="toolbar-btn" onclick="formatText('insertOrderedList')" title="Numbered List">1.</button>
+                                        <span class="toolbar-divider"></span>
+                                        <button class="toolbar-btn" onclick="formatText('formatBlock', '<h2>')" title="Heading">H</button>
+                                        <button class="toolbar-btn" onclick="formatText('formatBlock', '<blockquote>')" title="Quote">"</button>
+                                    </div>
+                                    <div class="note-content-editor" id="noteContentEditor" contenteditable="true"></div>
+                                    <div class="note-editor-footer">
+                                        <span class="note-meta" id="noteEditorMeta"></span>
+                                        <button class="btn btn-danger btn-sm" id="deleteNoteBtn" onclick="deleteNote()" style="display: none;">Delete</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
