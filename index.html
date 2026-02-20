@@ -676,90 +676,86 @@
                 <!-- Instagram Tab -->
                 <section class="tab-content" id="instagram">
                     <div class="tab-header">
-                        <h1>📸 Instagram Analytics</h1>
-                        <div class="tab-actions">
-                            <button class="btn btn-primary" onclick="openIgSnapshotModal()">
+                        <h1>📸 Creator Tracker</h1>
+                        <div class="tab-actions" id="igActions">
+                            <button class="btn btn-primary" onclick="openAddCreatorModal()">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <line x1="12" y1="5" x2="12" y2="19"/>
                                     <line x1="5" y1="12" x2="19" y2="12"/>
                                 </svg>
-                                Add Snapshot
+                                Add Creator
                             </button>
                         </div>
                     </div>
-                    <div class="ig-stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon ig">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="9" cy="7" r="4"/>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                                </svg>
-                            </div>
-                            <div class="stat-content">
-                                <span class="stat-label">Followers</span>
-                                <span class="stat-value" id="igFollowers">--</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon ig">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="8.5" cy="7" r="4"/>
-                                    <line x1="20" y1="8" x2="20" y2="14"/>
-                                    <line x1="23" y1="11" x2="17" y2="11"/>
-                                </svg>
-                            </div>
-                            <div class="stat-content">
-                                <span class="stat-label">Following</span>
-                                <span class="stat-value" id="igFollowing">--</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon ig">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                    <circle cx="8.5" cy="8.5" r="1.5"/>
-                                    <polyline points="21 15 16 10 5 21"/>
-                                </svg>
-                            </div>
-                            <div class="stat-content">
-                                <span class="stat-label">Posts</span>
-                                <span class="stat-value" id="igPosts">--</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon ig">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                                </svg>
-                            </div>
-                            <div class="stat-content">
-                                <span class="stat-label">Engagement</span>
-                                <span class="stat-value" id="igEngagement">--</span>
+                    <div class="ig-subtabs">
+                        <button class="ig-subtab active" data-ig-subtab="feed" onclick="switchIGSubtab('feed')">Feed</button>
+                        <button class="ig-subtab" data-ig-subtab="creators" onclick="switchIGSubtab('creators')">Creators</button>
+                        <button class="ig-subtab" data-ig-subtab="top-posts" onclick="switchIGSubtab('top-posts')">Top Posts</button>
+                    </div>
+
+                    <!-- Feed sub-tab -->
+                    <div class="ig-panel active" id="igPanel-feed">
+                        <div id="igFeedGrid" class="ig-post-grid">
+                            <div class="empty-state">
+                                <p>No posts yet. Add creators and run the scraper to see their feed here.</p>
                             </div>
                         </div>
                     </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Weekly Snapshots</h2>
+
+                    <!-- Creators sub-tab -->
+                    <div class="ig-panel" id="igPanel-creators">
+                        <div class="card">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Creator</th>
+                                        <th>Followers</th>
+                                        <th>Following</th>
+                                        <th>Posts</th>
+                                        <th>Eng. Rate</th>
+                                        <th>Avg Likes</th>
+                                        <th>Last Scraped</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="igCreatorsBody">
+                                    <tr><td colspan="8" class="empty">No creators tracked yet. Click "Add Creator" to start.</td></tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Followers</th>
-                                    <th>Following</th>
-                                    <th>Posts</th>
-                                    <th>Avg Likes</th>
-                                    <th>Engagement</th>
-                                </tr>
-                            </thead>
-                            <tbody id="igHistoryBody">
-                                <tr><td colspan="6" class="empty">Loading...</td></tr>
-                            </tbody>
-                        </table>
+                    </div>
+
+                    <!-- Top Posts sub-tab -->
+                    <div class="ig-panel" id="igPanel-top-posts">
+                        <div class="ig-top-filters">
+                            <select id="igTopCreatorFilter" onchange="renderIGTopPosts()">
+                                <option value="">All Creators</option>
+                            </select>
+                            <select id="igTopSortBy" onchange="renderIGTopPosts()">
+                                <option value="likes">Sort by Likes</option>
+                                <option value="comments">Sort by Comments</option>
+                                <option value="views">Sort by Views</option>
+                            </select>
+                        </div>
+                        <div class="card">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Creator</th>
+                                        <th>Caption</th>
+                                        <th>Type</th>
+                                        <th>Likes</th>
+                                        <th>Comments</th>
+                                        <th>Views</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="igTopPostsBody">
+                                    <tr><td colspan="8" class="empty">No posts yet.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
@@ -1061,41 +1057,33 @@
             </div>
         </div>
 
-        <!-- Instagram Snapshot Modal -->
-        <div class="modal" id="igSnapshotModal">
+        <!-- Add Creator Modal -->
+        <div class="modal" id="addCreatorModal">
             <div class="modal-header">
-                <h2>Add Instagram Snapshot</h2>
+                <h2>Add Instagram Creator</h2>
                 <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Date</label>
-                    <input type="date" id="igDate">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Followers</label>
-                        <input type="number" id="igInputFollowers" placeholder="20800">
-                    </div>
-                    <div class="form-group">
-                        <label>Following</label>
-                        <input type="number" id="igInputFollowing" placeholder="500">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Posts</label>
-                        <input type="number" id="igInputPosts" placeholder="711">
-                    </div>
-                    <div class="form-group">
-                        <label>Avg Likes</label>
-                        <input type="number" id="igInputLikes" placeholder="150">
-                    </div>
+                    <label>Instagram Username</label>
+                    <input type="text" id="addCreatorUsername" placeholder="e.g. garyvee" autocomplete="off">
+                    <small style="color: var(--text-secondary)">Enter without the @ symbol. The creator will be scraped on the next n8n run.</small>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="saveIgSnapshot()">Save Snapshot</button>
+                <button class="btn btn-primary" onclick="addIGCreator()">Add Creator</button>
+            </div>
+        </div>
+
+        <!-- Post Detail Modal -->
+        <div class="modal ig-post-modal" id="postDetailModal">
+            <div class="modal-header">
+                <h2>Post Details</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="postDetailBody">
+                <!-- Populated by JS -->
             </div>
         </div>
 
@@ -1505,6 +1493,7 @@ Sam Ovens
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="chat-persistence.js?v=20250220"></script>
+    <script src="creator-scraper.js?v=20250220"></script>
     <script src="notion-notes.js?v=20250220"></script>
     <script src="user-settings.js?v=20250220"></script>
     <script src="app.js?v=20250220"></script>

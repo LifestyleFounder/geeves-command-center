@@ -1,0 +1,295 @@
+{
+  "name": "Instagram Creator Scraper",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24,
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Daily 6AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "ig_creators",
+        "returnAll": true,
+        "filterType": "string",
+        "filterString": "is_active=eq.true"
+      },
+      "id": "fetch-creators",
+      "name": "Fetch Active Creators",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [220, 0],
+      "credentials": {
+        "supabaseApi": {
+          "id": "",
+          "name": "Supabase — Command Center"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "tableId": "ig_scrape_runs",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldName": "status",
+              "fieldValue": "running"
+            }
+          ]
+        }
+      },
+      "id": "create-scrape-run",
+      "name": "Create Scrape Run",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [440, 0],
+      "credentials": {
+        "supabaseApi": {
+          "id": "",
+          "name": "Supabase — Command Center"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "loop-creators",
+      "name": "Loop Over Creators",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [660, 0]
+    },
+    {
+      "parameters": {
+        "actorId": "apify/instagram-scraper",
+        "input": "={{ JSON.stringify({ directUrls: ['https://www.instagram.com/' + $json.username + '/'], resultsLimit: 20, resultsType: 'posts', searchType: 'user' }) }}",
+        "options": {
+          "waitForFinish": true,
+          "timeoutSecs": 300
+        }
+      },
+      "id": "apify-scrape",
+      "name": "Apify Instagram Scraper",
+      "type": "n8n-nodes-base.apify",
+      "typeVersion": 1,
+      "position": [880, 0],
+      "credentials": {
+        "apifyApi": {
+          "id": "",
+          "name": "Apify"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Transform Apify output into Supabase-ready data\nconst items = $input.all();\nconst creatorItem = items[0]?.json;\n\n// The parent loop item has the creator info\nconst creatorId = $('Loop Over Creators').item.json.id;\nconst username = $('Loop Over Creators').item.json.username;\n\n// Apify returns an array of post objects\n// First item often has profile-level data\nlet followers = 0, following = 0, postsCount = 0;\nlet fullName = '', profilePicUrl = '', bio = '';\nlet posts = [];\n\nfor (const item of items) {\n  const d = item.json;\n  \n  // Profile data (from first result or ownerProfile)\n  if (d.followersCount || d.ownerProfile) {\n    const profile = d.ownerProfile || d;\n    followers = profile.followersCount || followers;\n    following = profile.followingCount || following;\n    postsCount = profile.postsCount || postsCount;\n    fullName = profile.fullName || fullName;\n    profilePicUrl = profile.profilePicUrl || profilePicUrl;\n    bio = profile.biography || bio;\n  }\n  \n  // Post data\n  if (d.shortCode || d.shortcode) {\n    const shortcode = d.shortCode || d.shortcode;\n    posts.push({\n      creator_id: creatorId,\n      shortcode: shortcode,\n      caption: (d.caption || '').substring(0, 2000),\n      post_type: d.type || (d.videoUrl ? 'Video' : d.childPosts ? 'Sidecar' : 'Image'),\n      likes: d.likesCount || 0,\n      comments: d.commentsCount || 0,\n      views: d.videoViewCount || 0,\n      thumbnail_url: d.displayUrl || d.thumbnailUrl || '',\n      post_url: 'https://www.instagram.com/p/' + shortcode + '/',\n      posted_at: d.timestamp || d.takenAtTimestamp ? new Date((d.timestamp || d.takenAtTimestamp) * 1000).toISOString() : null\n    });\n  }\n}\n\n// Calculate engagement\nconst totalLikes = posts.reduce((s, p) => s + p.likes, 0);\nconst totalComments = posts.reduce((s, p) => s + p.comments, 0);\nconst avgLikes = posts.length ? Math.round(totalLikes / posts.length) : 0;\nconst avgComments = posts.length ? Math.round(totalComments / posts.length) : 0;\nconst engagementRate = followers > 0 ? parseFloat(((avgLikes + avgComments) / followers * 100).toFixed(2)) : 0;\n\nreturn [{\n  json: {\n    creatorId,\n    username,\n    fullName,\n    profilePicUrl,\n    bio,\n    followers,\n    following,\n    postsCount,\n    avgLikes,\n    avgComments,\n    engagementRate,\n    posts,\n    postsFound: posts.length\n  }\n}];"
+      },
+      "id": "transform-data",
+      "name": "Transform Apify Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1100, 0]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "ig_creators",
+        "filterType": "string",
+        "filterString": "id=eq.{{ $json.creatorId }}",
+        "fieldsUi": {
+          "fieldValues": [
+            { "fieldName": "full_name", "fieldValue": "={{ $json.fullName }}" },
+            { "fieldName": "profile_pic_url", "fieldValue": "={{ $json.profilePicUrl }}" },
+            { "fieldName": "bio", "fieldValue": "={{ $json.bio }}" }
+          ]
+        }
+      },
+      "id": "update-creator",
+      "name": "Update Creator Profile",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1320, -100],
+      "credentials": {
+        "supabaseApi": {
+          "id": "",
+          "name": "Supabase — Command Center"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "tableId": "ig_creator_snapshots",
+        "fieldsUi": {
+          "fieldValues": [
+            { "fieldName": "creator_id", "fieldValue": "={{ $json.creatorId }}" },
+            { "fieldName": "followers", "fieldValue": "={{ $json.followers }}" },
+            { "fieldName": "following", "fieldValue": "={{ $json.following }}" },
+            { "fieldName": "posts_count", "fieldValue": "={{ $json.postsCount }}" },
+            { "fieldName": "avg_likes", "fieldValue": "={{ $json.avgLikes }}" },
+            { "fieldName": "avg_comments", "fieldValue": "={{ $json.avgComments }}" },
+            { "fieldName": "engagement_rate", "fieldValue": "={{ $json.engagementRate }}" }
+          ]
+        }
+      },
+      "id": "insert-snapshot",
+      "name": "Insert Snapshot",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1320, 100],
+      "credentials": {
+        "supabaseApi": {
+          "id": "",
+          "name": "Supabase — Command Center"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://nzppfxttbqrgwjofxqfm.supabase.co/rest/v1/ig_posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $credentials.supabaseApi.serviceKey || $credentials.supabaseApi.supabaseApiKey }}" },
+            { "name": "Authorization", "value": "Bearer {{ $credentials.supabaseApi.serviceKey || $credentials.supabaseApi.supabaseApiKey }}" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Prefer", "value": "resolution=merge-duplicates" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "body", "value": "={{ JSON.stringify($json.posts) }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "upsert-posts",
+      "name": "Upsert Posts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1540, 0],
+      "credentials": {
+        "supabaseApi": {
+          "id": "",
+          "name": "Supabase — Command Center"
+        }
+      },
+      "notes": "Uses HTTP Request for bulk upsert with ON CONFLICT (shortcode). If this fails, use the Supabase node to insert posts one by one via a sub-loop."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aggregate totals from all loop iterations\nconst allItems = $('Transform Apify Data').all();\nlet totalCreators = allItems.length;\nlet totalPosts = 0;\nfor (const item of allItems) {\n  totalPosts += item.json.postsFound || 0;\n}\n\nconst runId = $('Create Scrape Run').first().json.id;\n\nreturn [{ json: { runId, totalCreators, totalPosts } }];"
+      },
+      "id": "aggregate-results",
+      "name": "Aggregate Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1760, 0]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "ig_scrape_runs",
+        "filterType": "string",
+        "filterString": "id=eq.{{ $json.runId }}",
+        "fieldsUi": {
+          "fieldValues": [
+            { "fieldName": "status", "fieldValue": "completed" },
+            { "fieldName": "creators_scraped", "fieldValue": "={{ $json.totalCreators }}" },
+            { "fieldName": "posts_found", "fieldValue": "={{ $json.totalPosts }}" },
+            { "fieldName": "completed_at", "fieldValue": "={{ new Date().toISOString() }}" }
+          ]
+        }
+      },
+      "id": "complete-scrape-run",
+      "name": "Complete Scrape Run",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1980, 0],
+      "credentials": {
+        "supabaseApi": {
+          "id": "",
+          "name": "Supabase — Command Center"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Daily 6AM": {
+      "main": [
+        [{ "node": "Fetch Active Creators", "type": "main", "index": 0 }]
+      ]
+    },
+    "Fetch Active Creators": {
+      "main": [
+        [{ "node": "Create Scrape Run", "type": "main", "index": 0 }]
+      ]
+    },
+    "Create Scrape Run": {
+      "main": [
+        [{ "node": "Loop Over Creators", "type": "main", "index": 0 }]
+      ]
+    },
+    "Loop Over Creators": {
+      "main": [
+        [{ "node": "Apify Instagram Scraper", "type": "main", "index": 0 }],
+        [{ "node": "Aggregate Results", "type": "main", "index": 0 }]
+      ]
+    },
+    "Apify Instagram Scraper": {
+      "main": [
+        [{ "node": "Transform Apify Data", "type": "main", "index": 0 }]
+      ]
+    },
+    "Transform Apify Data": {
+      "main": [
+        [
+          { "node": "Update Creator Profile", "type": "main", "index": 0 },
+          { "node": "Insert Snapshot", "type": "main", "index": 0 },
+          { "node": "Upsert Posts", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Update Creator Profile": {
+      "main": [
+        [{ "node": "Loop Over Creators", "type": "main", "index": 0 }]
+      ]
+    },
+    "Insert Snapshot": {
+      "main": [
+        []
+      ]
+    },
+    "Upsert Posts": {
+      "main": [
+        []
+      ]
+    },
+    "Aggregate Results": {
+      "main": [
+        [{ "node": "Complete Scrape Run", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -83,7 +83,7 @@ function switchTab(tabName) {
 
 function setDefaultDates() {
     const today = new Date().toISOString().split('T')[0];
-    const dateInputs = ['taskDue', 'igDate'];
+    const dateInputs = ['taskDue'];
     dateInputs.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = today;
@@ -1776,101 +1776,230 @@ function refreshYouTube() {
 }
 
 // ===========================================
-// INSTAGRAM
+// INSTAGRAM — Creator Tracker
 // ===========================================
 
+let igCreators = [];
+let igLatestSnapshots = [];
+let igRecentPosts = [];
+let igTopPostsCache = [];
+let currentIGSubtab = 'feed';
+
 async function loadInstagram() {
-    const data = await loadJSON('instagram');
-    if (data) {
-        state.instagram = data;
-        renderInstagram();
-    }
+    CreatorScraper.init();
+    if (!CreatorScraper.isReady()) return;
+    // Load data in parallel
+    const [creators, snapshots, posts] = await Promise.all([
+        CreatorScraper.getCreators(),
+        CreatorScraper.getLatestSnapshots(),
+        CreatorScraper.getRecentPosts(30)
+    ]);
+    igCreators = creators;
+    igLatestSnapshots = snapshots;
+    igRecentPosts = posts;
+    renderInstagram();
 }
 
 function renderInstagram() {
-    if (!state.instagram) return;
-    
-    const stats = state.instagram.currentStats || {};
-    
-    document.getElementById('igFollowers').textContent = formatNumber(stats.followers);
-    document.getElementById('igFollowing').textContent = formatNumber(stats.following);
-    document.getElementById('igPosts').textContent = formatNumber(stats.posts);
-    document.getElementById('igEngagement').textContent = stats.engagementRate ? `${stats.engagementRate}%` : '--';
-    
-    // Render history
-    const tbody = document.getElementById('igHistoryBody');
-    const history = state.instagram.history || [];
-    
-    if (history.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="empty">No data yet — add your first snapshot</td></tr>';
-        return;
-    }
-    
-    tbody.innerHTML = history.map(row => `
-        <tr>
-            <td>${row.date}</td>
-            <td>${formatNumber(row.followers)}</td>
-            <td>${formatNumber(row.following)}</td>
-            <td>${formatNumber(row.posts)}</td>
-            <td>${formatNumber(row.avgLikes)}</td>
-            <td>${row.engagementRate}%</td>
-        </tr>
-    `).join('');
+    renderIGFeed();
+    renderIGCreators();
+    populateIGCreatorFilter();
 }
 
-function openIgSnapshotModal() {
-    document.getElementById('igDate').value = new Date().toISOString().split('T')[0];
-    document.getElementById('igInputFollowers').value = '';
-    document.getElementById('igInputFollowing').value = '';
-    document.getElementById('igInputPosts').value = '';
-    document.getElementById('igInputLikes').value = '';
-    openModal('igSnapshotModal');
+function switchIGSubtab(subtab) {
+    currentIGSubtab = subtab;
+    document.querySelectorAll('.ig-subtab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.igSubtab === subtab);
+    });
+    document.querySelectorAll('.ig-panel').forEach(panel => {
+        panel.classList.toggle('active', panel.id === 'igPanel-' + subtab);
+    });
+    if (subtab === 'top-posts' && igTopPostsCache.length === 0) {
+        renderIGTopPosts();
+    }
 }
 
-function saveIgSnapshot() {
-    const date = document.getElementById('igDate').value;
-    const followers = parseInt(document.getElementById('igInputFollowers').value) || 0;
-    const following = parseInt(document.getElementById('igInputFollowing').value) || 0;
-    const posts = parseInt(document.getElementById('igInputPosts').value) || 0;
-    const avgLikes = parseInt(document.getElementById('igInputLikes').value) || 0;
-    
-    if (!date || !followers) {
-        alert('Please enter at least date and followers');
+// ── Feed ──────────────────────────────────────
+
+function renderIGFeed() {
+    const grid = document.getElementById('igFeedGrid');
+    if (!igRecentPosts.length) {
+        grid.innerHTML = '<div class="empty-state"><p>No posts yet. Add creators and run the scraper to see their feed here.</p></div>';
         return;
     }
-    
-    const engagementRate = followers > 0 ? ((avgLikes / followers) * 100).toFixed(2) : 0;
-    
-    const snapshot = {
-        date: date,
-        followers: followers,
-        following: following,
-        posts: posts,
-        avgLikes: avgLikes,
-        engagementRate: parseFloat(engagementRate)
-    };
-    
-    if (!state.instagram) state.instagram = { history: [] };
-    if (!state.instagram.history) state.instagram.history = [];
-    
-    // Add to history (avoid duplicates by date)
-    state.instagram.history = state.instagram.history.filter(h => h.date !== date);
-    state.instagram.history.unshift(snapshot);
-    state.instagram.history.sort((a, b) => b.date.localeCompare(a.date));
-    
-    // Update current stats
-    state.instagram.currentStats = {
-        ...snapshot,
-        snapshotDate: date
-    };
-    
-    state.instagram.lastUpdated = new Date().toISOString();
-    
-    saveJSON('instagram', state.instagram);
-    renderInstagram();
-    closeModal();
-    
-    addActivity('task', 'Added Instagram snapshot', `${followers} followers, ${engagementRate}% engagement`);
+    grid.innerHTML = igRecentPosts.map(post => {
+        const creator = post.ig_creators || {};
+        const caption = post.caption ? escapeHtml(post.caption).substring(0, 100) + (post.caption.length > 100 ? '...' : '') : '';
+        const postedDate = post.posted_at ? new Date(post.posted_at).toLocaleDateString() : '';
+        return `
+            <div class="ig-post-card" onclick="showPostDetail('${post.id}')">
+                ${post.thumbnail_url
+                    ? `<div class="ig-post-thumb" style="background-image:url('${post.thumbnail_url}')"></div>`
+                    : `<div class="ig-post-thumb ig-post-thumb-empty">${post.post_type === 'Video' ? '🎬' : '📷'}</div>`
+                }
+                <div class="ig-post-info">
+                    <div class="ig-post-creator">@${escapeHtml(creator.username || '?')}</div>
+                    <div class="ig-post-caption">${caption}</div>
+                    <div class="ig-post-stats">
+                        <span>❤️ ${formatNumber(post.likes)}</span>
+                        <span>💬 ${formatNumber(post.comments)}</span>
+                        ${post.views ? `<span>👁 ${formatNumber(post.views)}</span>` : ''}
+                    </div>
+                    <div class="ig-post-date">${postedDate}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ── Creators ──────────────────────────────────
+
+function renderIGCreators() {
+    const tbody = document.getElementById('igCreatorsBody');
+    if (!igCreators.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="empty">No creators tracked yet. Click "Add Creator" to start.</td></tr>';
+        return;
+    }
+    // Build lookup: creator_id → snapshot
+    const snapMap = {};
+    igLatestSnapshots.forEach(s => { snapMap[s.creator_id] = s; });
+
+    tbody.innerHTML = igCreators.map(c => {
+        const snap = snapMap[c.id] || {};
+        const scraped = snap.scraped_at ? new Date(snap.scraped_at).toLocaleDateString() : 'Never';
+        return `
+            <tr>
+                <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                        ${c.profile_pic_url
+                            ? `<img src="${c.profile_pic_url}" class="ig-avatar" alt="">`
+                            : `<div class="ig-avatar ig-avatar-placeholder">📷</div>`
+                        }
+                        <div>
+                            <strong>@${escapeHtml(c.username)}</strong>
+                            ${c.full_name ? `<br><small style="color:var(--text-secondary)">${escapeHtml(c.full_name)}</small>` : ''}
+                        </div>
+                    </div>
+                </td>
+                <td>${formatNumber(snap.followers)}</td>
+                <td>${formatNumber(snap.following)}</td>
+                <td>${formatNumber(snap.posts_count)}</td>
+                <td>${snap.engagement_rate != null ? snap.engagement_rate + '%' : '--'}</td>
+                <td>${formatNumber(snap.avg_likes)}</td>
+                <td>${scraped}</td>
+                <td>
+                    <button class="btn btn-sm btn-danger" onclick="removeIGCreator('${c.id}', '${escapeHtml(c.username)}')" title="Remove">✕</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function populateIGCreatorFilter() {
+    const select = document.getElementById('igTopCreatorFilter');
+    if (!select) return;
+    const current = select.value;
+    select.innerHTML = '<option value="">All Creators</option>' +
+        igCreators.map(c => `<option value="${c.id}">${escapeHtml(c.username)}</option>`).join('');
+    select.value = current;
+}
+
+// ── Top Posts ─────────────────────────────────
+
+async function renderIGTopPosts() {
+    const tbody = document.getElementById('igTopPostsBody');
+    tbody.innerHTML = '<tr><td colspan="8" class="empty">Loading...</td></tr>';
+    const creatorId = document.getElementById('igTopCreatorFilter')?.value || undefined;
+    const sortBy = document.getElementById('igTopSortBy')?.value || 'likes';
+    const posts = await CreatorScraper.getTopPosts({ creatorId: creatorId || undefined, sortBy, limit: 50 });
+    igTopPostsCache = posts;
+    if (!posts.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="empty">No posts yet.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = posts.map(post => {
+        const creator = post.ig_creators || {};
+        const caption = post.caption ? escapeHtml(post.caption).substring(0, 60) + (post.caption.length > 60 ? '...' : '') : '';
+        const postedDate = post.posted_at ? new Date(post.posted_at).toLocaleDateString() : '';
+        return `
+            <tr class="clickable-row" onclick="showPostDetail('${post.id}')">
+                <td>
+                    ${post.thumbnail_url
+                        ? `<img src="${post.thumbnail_url}" class="ig-table-thumb" alt="">`
+                        : `<span class="ig-table-thumb-empty">${post.post_type === 'Video' ? '🎬' : '📷'}</span>`
+                    }
+                </td>
+                <td>@${escapeHtml(creator.username || '?')}</td>
+                <td>${caption}</td>
+                <td>${post.post_type || '--'}</td>
+                <td>${formatNumber(post.likes)}</td>
+                <td>${formatNumber(post.comments)}</td>
+                <td>${formatNumber(post.views)}</td>
+                <td>${postedDate}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// ── Add / Remove Creators ─────────────────────
+
+function openAddCreatorModal() {
+    document.getElementById('addCreatorUsername').value = '';
+    openModal('addCreatorModal');
+}
+
+async function addIGCreator() {
+    const input = document.getElementById('addCreatorUsername');
+    const username = input.value.trim();
+    if (!username) { alert('Please enter a username'); return; }
+    const result = await CreatorScraper.addCreator(username);
+    if (result) {
+        closeModal();
+        await loadInstagram();
+        addActivity('task', 'Added IG creator', `@${username} added to tracking`);
+    } else {
+        alert('Failed to add creator. Check console for errors.');
+    }
+}
+
+async function removeIGCreator(id, username) {
+    if (!confirm(`Remove @${username} from tracking?`)) return;
+    const ok = await CreatorScraper.removeCreator(id);
+    if (ok) {
+        await loadInstagram();
+        addActivity('task', 'Removed IG creator', `@${username} removed from tracking`);
+    }
+}
+
+// ── Post Detail Modal ─────────────────────────
+
+async function showPostDetail(postId) {
+    const body = document.getElementById('postDetailBody');
+    body.innerHTML = '<p>Loading...</p>';
+    openModal('postDetailModal');
+    const post = await CreatorScraper.getPostById(postId);
+    if (!post) { body.innerHTML = '<p>Post not found.</p>'; return; }
+    const creator = post.ig_creators || {};
+    const postedDate = post.posted_at ? new Date(post.posted_at).toLocaleString() : 'Unknown';
+    body.innerHTML = `
+        <div class="ig-detail-layout">
+            ${post.thumbnail_url
+                ? `<img src="${post.thumbnail_url}" class="ig-detail-image" alt="">`
+                : `<div class="ig-detail-image ig-detail-image-empty">${post.post_type === 'Video' ? '🎬' : '📷'}</div>`
+            }
+            <div class="ig-detail-meta">
+                <div class="ig-detail-creator">@${escapeHtml(creator.username || '?')}${creator.full_name ? ' · ' + escapeHtml(creator.full_name) : ''}</div>
+                <div class="ig-detail-stats">
+                    <div class="ig-detail-stat"><span class="ig-detail-stat-val">${formatNumber(post.likes)}</span><span class="ig-detail-stat-label">Likes</span></div>
+                    <div class="ig-detail-stat"><span class="ig-detail-stat-val">${formatNumber(post.comments)}</span><span class="ig-detail-stat-label">Comments</span></div>
+                    ${post.views ? `<div class="ig-detail-stat"><span class="ig-detail-stat-val">${formatNumber(post.views)}</span><span class="ig-detail-stat-label">Views</span></div>` : ''}
+                </div>
+                <div class="ig-detail-type">${post.post_type || 'Post'} · ${postedDate}</div>
+                ${post.caption ? `<div class="ig-detail-caption">${escapeHtml(post.caption)}</div>` : ''}
+                ${post.post_url ? `<a href="${post.post_url}" target="_blank" rel="noopener" class="btn btn-secondary" style="margin-top:12px">View on Instagram</a>` : ''}
+            </div>
+        </div>
+    `;
 }
 
 // ===========================================
@@ -2958,8 +3087,12 @@ window.openYouTubeConfig = openYouTubeConfig;
 window.saveYouTubeConfig = saveYouTubeConfig;
 window.fetchYouTubeData = fetchYouTubeData;
 window.refreshYouTube = refreshYouTube;
-window.openIgSnapshotModal = openIgSnapshotModal;
-window.saveIgSnapshot = saveIgSnapshot;
+window.openAddCreatorModal = openAddCreatorModal;
+window.addIGCreator = addIGCreator;
+window.removeIGCreator = removeIGCreator;
+window.switchIGSubtab = switchIGSubtab;
+window.showPostDetail = showPostDetail;
+window.renderIGTopPosts = renderIGTopPosts;
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.toggleSidebar = toggleSidebar;
