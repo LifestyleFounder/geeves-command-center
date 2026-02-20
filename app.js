@@ -516,6 +516,9 @@ function switchReportsSubtab(subtab) {
     document.querySelectorAll('.reports-panel').forEach(panel => {
         panel.classList.toggle('active', panel.id === 'reportPanel-' + subtab);
     });
+    // Render doc lists on first open
+    if (subtab === 'memory') renderReportsDocs('memory', 'memoryDocList');
+    if (subtab === 'report-docs') renderReportsDocs('reports', 'reportDocList');
 }
 
 function renderReportsDocs(category, containerId) {
@@ -589,18 +592,67 @@ function switchKHSubtab(subtab) {
     }
 }
 
-// Create a new folder in Docs
+// Create a new folder in Docs with emoji picker
 function createFolder() {
-    const name = prompt('Folder name:');
-    if (!name || !name.trim()) return;
-    const key = name.trim().toLowerCase().replace(/\s+/g, '-');
-    // Add to custom folders list (persisted)
+    // Show a small modal for folder name + icon
+    const emojis = ['📁','📂','📝','📚','🔬','💡','🎯','💰','⚙️','🎨','📊','🗂️','📋','🏷️','🔖','💼','🧠','⭐','🔥','📎'];
+    const overlay = document.createElement('div');
+    overlay.className = 'folder-modal-overlay';
+    overlay.innerHTML = `
+        <div class="folder-modal">
+            <h3>New Folder</h3>
+            <input type="text" class="folder-name-input" id="newFolderName" placeholder="Folder name..." autofocus>
+            <div class="folder-emoji-label">Choose an icon:</div>
+            <div class="folder-emoji-grid">
+                ${emojis.map((e, i) => `<button class="folder-emoji-btn ${i === 0 ? 'selected' : ''}" data-emoji="${e}" onclick="pickFolderEmoji(this)">${e}</button>`).join('')}
+            </div>
+            <div class="folder-modal-actions">
+                <button class="btn btn-secondary btn-sm" onclick="closeFolderModal()">Cancel</button>
+                <button class="btn btn-primary btn-sm" onclick="saveFolderFromModal()">Create</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#newFolderName').focus();
+    // Allow Enter to submit
+    overlay.querySelector('#newFolderName').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') saveFolderFromModal();
+        if (e.key === 'Escape') closeFolderModal();
+    });
+}
+
+function pickFolderEmoji(btn) {
+    document.querySelectorAll('.folder-emoji-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+}
+
+function closeFolderModal() {
+    const overlay = document.querySelector('.folder-modal-overlay');
+    if (overlay) overlay.remove();
+}
+
+function saveFolderFromModal() {
+    const nameInput = document.getElementById('newFolderName');
+    const selectedEmoji = document.querySelector('.folder-emoji-btn.selected');
+    const name = nameInput ? nameInput.value.trim() : '';
+    if (!name) { nameInput && nameInput.focus(); return; }
+
+    const key = name.toLowerCase().replace(/\s+/g, '-');
+    const emoji = selectedEmoji ? selectedEmoji.dataset.emoji : '📁';
+
+    // Persist folder
     let customFolders = JSON.parse(localStorage.getItem('customFolders') || '[]');
     if (!customFolders.includes(key)) {
         customFolders.push(key);
         localStorage.setItem('customFolders', JSON.stringify(customFolders));
     }
+    // Persist icon
+    let customIcons = JSON.parse(localStorage.getItem('customFolderIcons') || '{}');
+    customIcons[key] = emoji;
+    localStorage.setItem('customFolderIcons', JSON.stringify(customIcons));
+
     docFolderState.expandedFolders.add(key);
+    closeFolderModal();
     renderDocsTree();
     renderDocs();
 }
@@ -646,6 +698,9 @@ function buildFolderTree(docs) {
         const pathParts = doc.path.split('/').filter(Boolean);
         const folder = pathParts.length > 1 ? pathParts[0] : 'root';
 
+        // Memory and Reports live in the Reports tab, skip them here
+        if (folder === 'memory' || folder === 'reports') return;
+
         if (!tree[folder]) {
             tree[folder] = {
                 name: folder,
@@ -676,11 +731,12 @@ function getFolderIcon(folder) {
     const icons = {
         notes: '📝',
         research: '🔬',
-        memory: '🧠',
-        reports: '📊',
         root: '📄'
     };
-    return icons[folder] || '📁';
+    if (icons[folder]) return icons[folder];
+    // Check custom folder icons
+    const customIcons = JSON.parse(localStorage.getItem('customFolderIcons') || '{}');
+    return customIcons[folder] || '📁';
 }
 
 function renderDocsTree() {
@@ -782,38 +838,46 @@ function renderDocs() {
     const container = document.getElementById('docsList');
     const searchEl = document.getElementById('docsSearch');
     const searchTerm = searchEl ? searchEl.value.toLowerCase() : '';
-    
-    let filtered = state.docs;
-    
+
+    // Merge regular docs (excluding memory/reports) with notes
+    const noteDocs = getNotesForTree();
+    const regularDocs = state.docs.filter(d => {
+        const pathParts = d.path.split('/').filter(Boolean);
+        const folder = pathParts.length > 1 ? pathParts[0] : 'root';
+        return folder !== 'memory' && folder !== 'reports';
+    });
+    let allDocs = [...noteDocs, ...regularDocs];
+
     // Filter by search
     if (searchTerm) {
-        filtered = filtered.filter(d => 
+        allDocs = allDocs.filter(d =>
             d.title.toLowerCase().includes(searchTerm) ||
             d.path.toLowerCase().includes(searchTerm)
         );
     }
-    
+
     // Filter by selected folder
     if (docFolderState.selectedFolder) {
-        filtered = filtered.filter(d => {
+        allDocs = allDocs.filter(d => {
+            if (d.isNote) return docFolderState.selectedFolder === 'notes';
             const pathParts = d.path.split('/').filter(Boolean);
             const folder = pathParts.length > 1 ? pathParts[0] : 'root';
             return folder === docFolderState.selectedFolder;
         });
     }
-    
+
     // Sort by date
-    filtered.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-    
+    allDocs.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
     // Get folder display name
     let headerText = 'All Documents';
     if (docFolderState.selectedFolder) {
-        const name = docFolderState.selectedFolder === 'root' ? 'Other' : 
+        const name = docFolderState.selectedFolder === 'root' ? 'Other' :
             docFolderState.selectedFolder.charAt(0).toUpperCase() + docFolderState.selectedFolder.slice(1);
         headerText = `${getFolderIcon(docFolderState.selectedFolder)} ${name}`;
     }
-    
-    if (filtered.length === 0) {
+
+    if (allDocs.length === 0) {
         container.innerHTML = `
             <div class="docs-list-header">${headerText}</div>
             <div class="empty-state small">
@@ -822,18 +886,22 @@ function renderDocs() {
         `;
         return;
     }
-    
+
     container.innerHTML = `
-        <div class="docs-list-header">${headerText} <span style="font-weight: normal; color: #999;">(${filtered.length})</span></div>
-        ${filtered.map(doc => `
-            <div class="doc-item ${state.selectedDoc?.path === doc.path ? 'active' : ''}" onclick="selectDoc('${doc.path}')">
+        <div class="docs-list-header">${headerText} <span style="font-weight: normal; color: #999;">(${allDocs.length})</span></div>
+        ${allDocs.map(doc => {
+            const docPath = doc.isNote ? doc.id : doc.path;
+            const isActive = state.selectedDoc && (state.selectedDoc.path === docPath || state.selectedDoc.id === docPath);
+            return `
+            <div class="doc-item ${isActive ? 'active' : ''}" onclick="selectDoc('${docPath}')">
                 <div class="doc-title">${escapeHtml(doc.title)}</div>
                 <div class="doc-meta">
                     <span class="doc-category">${doc.category}</span>
                     <span>${doc.date}</span>
                 </div>
             </div>
-        `).join('')}
+            `;
+        }).join('')}
     `;
 }
 
@@ -857,15 +925,18 @@ async function loadLocalNotes() {
     try {
         const notes = await NotionNotes.list();
         if (notes.length > 0) {
-            notesState.notes = notes.map(n => ({
-                id: n.id,
-                title: n.title,
-                content: '', // loaded on demand when editing
-                createdAt: n.createdAt,
-                updatedAt: n.updatedAt,
-                source: 'notion',
-                notionUrl: n.url,
-            }));
+            const hidden = JSON.parse(localStorage.getItem('hiddenNotionNotes') || '[]');
+            notesState.notes = notes
+                .filter(n => !hidden.includes(n.id))
+                .map(n => ({
+                    id: n.id,
+                    title: n.title,
+                    content: '', // loaded on demand when editing
+                    createdAt: n.createdAt,
+                    updatedAt: n.updatedAt,
+                    source: 'notion',
+                    notionUrl: n.url,
+                }));
             notesState.notionReady = true;
             return;
         }
@@ -1013,16 +1084,26 @@ async function saveNote() {
 
 async function deleteNote() {
     if (!notesState.editingNote || notesState.isNew) return;
-    if (!confirm('Delete this note?')) return;
 
-    // Archive in Notion
-    if (notesState.editingNote.source === 'notion') {
-        await NotionNotes.remove(notesState.editingNote.id);
+    const isNotion = notesState.editingNote.source === 'notion';
+    const msg = isNotion
+        ? 'Remove this note from the Command Center?\n\n(The original will remain safe in Notion.)'
+        : 'Delete this note?';
+    if (!confirm(msg)) return;
+
+    // Only remove from local view — never archive/delete from Notion
+    notesState.notes = notesState.notes.filter(n => n.id !== notesState.editingNote.id);
+
+    // Track hidden Notion notes so they don't reappear on next load
+    if (isNotion) {
+        let hidden = JSON.parse(localStorage.getItem('hiddenNotionNotes') || '[]');
+        if (!hidden.includes(notesState.editingNote.id)) {
+            hidden.push(notesState.editingNote.id);
+            localStorage.setItem('hiddenNotionNotes', JSON.stringify(hidden));
+        }
     }
 
-    notesState.notes = notesState.notes.filter(n => n.id !== notesState.editingNote.id);
     saveLocalNotes();
-
     hideNoteEditor();
     state.selectedDoc = null;
     renderDocsTree();
@@ -2674,6 +2755,9 @@ window.switchReportsSubtab = switchReportsSubtab;
 window.openReportDoc = openReportDoc;
 window.switchKHSubtab = switchKHSubtab;
 window.createFolder = createFolder;
+window.pickFolderEmoji = pickFolderEmoji;
+window.closeFolderModal = closeFolderModal;
+window.saveFolderFromModal = saveFolderFromModal;
 window.filterDocs = filterDocs;
 window.selectDoc = selectDoc;
 window.selectFolder = selectFolder;

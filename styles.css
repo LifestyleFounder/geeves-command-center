@@ -4641,3 +4641,85 @@ body {
 .docs-new-folder-btn:hover {
     opacity: 1;
 }
+
+/* Folder creation modal */
+.folder-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.folder-modal {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    width: 340px;
+    max-width: 90vw;
+}
+
+.folder-modal h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.folder-name-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 13px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.folder-emoji-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.folder-emoji-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 14px;
+}
+
+.folder-emoji-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-secondary);
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s ease;
+}
+
+.folder-emoji-btn:hover {
+    border-color: var(--forest-green);
+    background: var(--bg-primary);
+}
+
+.folder-emoji-btn.selected {
+    border-color: var(--forest-green);
+    background: rgba(34,139,34,0.1);
+    box-shadow: 0 0 0 1px var(--forest-green);
+}
+
+.folder-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}

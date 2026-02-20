@@ -418,6 +418,8 @@
                     <div class="reports-subtabs">
                         <button class="reports-subtab active" data-subtab="activity" onclick="switchReportsSubtab('activity')">Activity</button>
                         <button class="reports-subtab" data-subtab="schedules" onclick="switchReportsSubtab('schedules')">Schedules</button>
+                        <button class="reports-subtab" data-subtab="memory" onclick="switchReportsSubtab('memory')">Memory</button>
+                        <button class="reports-subtab" data-subtab="report-docs" onclick="switchReportsSubtab('report-docs')">Reports</button>
                     </div>
 
                     <!-- Activity sub-tab -->
@@ -442,6 +444,16 @@
                             <span class="last-updated" id="schedulesLastUpdated">Last updated: --</span>
                         </div>
                         <div class="schedules-grid" id="schedulesList"></div>
+                    </div>
+
+                    <!-- Memory sub-tab -->
+                    <div class="reports-panel" id="reportPanel-memory">
+                        <div class="reports-doc-list" id="memoryDocList"></div>
+                    </div>
+
+                    <!-- Reports sub-tab -->
+                    <div class="reports-panel" id="reportPanel-report-docs">
+                        <div class="reports-doc-list" id="reportDocList"></div>
                     </div>
                 </section>
 
