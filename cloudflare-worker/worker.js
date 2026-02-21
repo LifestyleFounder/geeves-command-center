@@ -81,6 +81,28 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
+    // ── Image Proxy (Instagram CDN CORS bypass) ──────
+    if (path === '/img-proxy' && request.method === 'GET') {
+      const imageUrl = url.searchParams.get('url');
+      if (!imageUrl) return json({ error: 'Missing url param' }, 400);
+      try {
+        const imgRes = await fetch(imageUrl, {
+          headers: { 'User-Agent': 'Mozilla/5.0' },
+        });
+        if (!imgRes.ok) return new Response('Image fetch failed', { status: imgRes.status, headers: CORS });
+        const contentType = imgRes.headers.get('content-type') || 'image/jpeg';
+        return new Response(imgRes.body, {
+          headers: {
+            'Content-Type': contentType,
+            'Cache-Control': 'public, max-age=86400',
+            ...CORS,
+          },
+        });
+      } catch (e) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
     // ── Notion Notes routes ──────────────────────────
     if (path.startsWith('/notion-notes')) {
       const notionKey = env.NOTION_API_KEY;

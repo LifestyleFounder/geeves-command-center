@@ -4,6 +4,12 @@
  * Unified dashboard for Dan Harrison / LFG
  */
 
+// Proxy Instagram CDN images through Cloudflare Worker to bypass CORS
+function proxyImg(url) {
+    if (!url || !url.includes('cdninstagram.com') && !url.includes('instagram.')) return url;
+    return 'https://anthropic-proxy.dan-a14.workers.dev/img-proxy?url=' + encodeURIComponent(url);
+}
+
 // ===========================================
 // STATE MANAGEMENT
 // ===========================================
@@ -1836,7 +1842,7 @@ function renderIGFeed() {
         return `
             <div class="ig-post-card" onclick="showPostDetail('${post.id}')">
                 ${post.thumbnail_url
-                    ? `<div class="ig-post-thumb" style="background-image:url('${post.thumbnail_url}')"></div>`
+                    ? `<div class="ig-post-thumb" style="background-image:url('${proxyImg(post.thumbnail_url)}')"></div>`
                     : `<div class="ig-post-thumb ig-post-thumb-empty">${post.post_type === 'Video' ? '🎬' : '📷'}</div>`
                 }
                 <div class="ig-post-info">
@@ -1927,7 +1933,7 @@ async function renderIGTopPosts() {
             <tr class="clickable-row" onclick="showPostDetail('${post.id}')">
                 <td>
                     ${post.thumbnail_url
-                        ? `<img src="${post.thumbnail_url}" class="ig-table-thumb" alt="">`
+                        ? `<img src="${proxyImg(post.thumbnail_url)}" class="ig-table-thumb" alt="">`
                         : `<span class="ig-table-thumb-empty">${post.post_type === 'Video' ? '🎬' : '📷'}</span>`
                     }
                 </td>
@@ -1986,7 +1992,7 @@ async function showPostDetail(postId) {
     body.innerHTML = `
         <div class="ig-detail-layout">
             ${post.thumbnail_url
-                ? `<img src="${post.thumbnail_url}" class="ig-detail-image" alt="">`
+                ? `<img src="${proxyImg(post.thumbnail_url)}" class="ig-detail-image" alt="">`
                 : `<div class="ig-detail-image ig-detail-image-empty">${post.post_type === 'Video' ? '🎬' : '📷'}</div>`
             }
             <div class="ig-detail-meta">
