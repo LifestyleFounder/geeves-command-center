@@ -1305,8 +1305,8 @@ async function selectDoc(path) {
         editor.style.display = 'none';
         preview.style.display = 'block';
 
-        // Fetch content from Notion if not yet loaded
-        if (note.source === 'notion' && !note._contentLoaded) {
+        // Always fetch latest content from Notion
+        if (note.source === 'notion') {
             preview.innerHTML = `<div class="markdown-content"><p><em>Loading note from Notion...</em></p></div>`;
             const full = await NotionNotes.get(note.id);
             if (full) {
@@ -1315,6 +1315,13 @@ async function selectDoc(path) {
             }
         }
 
+        const editBtn = `<button class="btn btn-secondary btn-sm" onclick="editNote('${note.id}')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                    Edit
+               </button>`;
         const notionBtn = note.source === 'notion' && note.notionUrl
             ? `<a href="${escapeHtml(note.notionUrl)}" target="_blank" class="btn btn-primary btn-sm">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1322,21 +1329,16 @@ async function selectDoc(path) {
                         <polyline points="15 3 21 3 21 9"/>
                         <line x1="10" y1="14" x2="21" y2="3"/>
                     </svg>
-                    Edit in Notion
+                    Open in Notion
                </a>`
-            : `<button class="btn btn-secondary btn-sm" onclick="editNote('${note.id}')">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                    </svg>
-                    Edit
-               </button>`;
+            : '';
 
         preview.innerHTML = `
             <div class="markdown-content">
                 <div class="note-preview-header">
                     <h1>${escapeHtml(note.title)}</h1>
                     <div class="note-preview-actions">
+                        ${editBtn}
                         ${notionBtn}
                         <button class="btn btn-danger btn-sm" onclick="deleteNoteFromPreview('${note.id}')">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
