@@ -70,7 +70,7 @@ function switchTab(tabName) {
     const titles = {
         business: 'Business',
         tracker: 'Performance',
-        kanban: 'Projects',
+        'agent-hub': 'Agent Hub',
         reports: 'Reports',
         'knowledge-hub': 'Knowledge Hub',
         content: 'Content Intel',
@@ -152,6 +152,7 @@ document.addEventListener('DOMContentLoaded', initToggleSections);
 async function loadAllData() {
     await Promise.all([
         loadTasks(),
+        initAgentHub(),
         loadActivities(),
         loadDocs(),
         loadNotes(),
@@ -193,6 +194,92 @@ async function loadJSON(path) {
 
 function saveJSON(path, data) {
     localStorage.setItem(`geeves-${path}`, JSON.stringify(data));
+}
+
+// ===========================================
+// AGENT HUB
+// ===========================================
+
+let agentHubData = { agents: [] };
+
+async function initAgentHub() {
+    const data = await loadJSON('agents');
+    if (data && data.agents) {
+        agentHubData = data;
+        renderAgentCards();
+    }
+}
+
+function renderAgentCards() {
+    const container = document.getElementById('agentCardsGrid');
+    if (!container) return;
+
+    if (agentHubData.agents.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No agents configured</p></div>';
+        return;
+    }
+
+    container.innerHTML = agentHubData.agents.map(agent => {
+        const statusClass = agent.status === 'online' ? 'online' : agent.status === 'idle' ? 'idle' : 'offline';
+        const statusLabel = agent.status.charAt(0).toUpperCase() + agent.status.slice(1);
+        const lastActive = agent.lastActive ? formatRelativeTime(agent.lastActive) : 'Never';
+        const currentTask = agent.currentTask || 'No active task';
+        const capsHtml = (agent.capabilities || []).map(c => `<span class="agent-cap-pill">${escapeHtml(c)}</span>`).join('');
+
+        return `
+        <div class="agent-card" onclick="toggleAgentDetail('${agent.id}')">
+            <div class="agent-card-header">
+                <div class="agent-avatar">${agent.emoji}</div>
+                <div class="agent-info">
+                    <div class="agent-name-row">
+                        <span class="agent-name">${escapeHtml(agent.name)}</span>
+                        <span class="agent-status-dot ${statusClass}" title="${statusLabel}"></span>
+                    </div>
+                    <div class="agent-role">${escapeHtml(agent.role)}</div>
+                </div>
+            </div>
+            <div class="agent-card-body">
+                <div class="agent-meta-row">
+                    <span class="agent-meta-label">Machine</span>
+                    <span class="agent-meta-value">${escapeHtml(agent.machine)}</span>
+                </div>
+                <div class="agent-meta-row">
+                    <span class="agent-meta-label">Current Task</span>
+                    <span class="agent-meta-value ${!agent.currentTask ? 'muted' : ''}">${escapeHtml(currentTask)}</span>
+                </div>
+                <div class="agent-meta-row">
+                    <span class="agent-meta-label">Tasks Done</span>
+                    <span class="agent-meta-value">${agent.tasksCompleted}</span>
+                </div>
+                <div class="agent-meta-row">
+                    <span class="agent-meta-label">Last Active</span>
+                    <span class="agent-meta-value">${lastActive}</span>
+                </div>
+                ${capsHtml ? `<div class="agent-caps">${capsHtml}</div>` : ''}
+            </div>
+            <div class="agent-detail" id="agentDetail-${agent.id}" style="display:none;">
+                <div class="agent-detail-header">Recent Activity</div>
+                ${agent.recentActivity && agent.recentActivity.length > 0
+                    ? `<div class="agent-timeline">${agent.recentActivity.slice(0, 10).map(a => {
+                        const statusIcon = a.status === 'done' ? '✅' : a.status === 'in-progress' ? '⏳' : '❌';
+                        const time = new Date(a.time);
+                        const timeStr = time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+                        return `<div class="agent-timeline-item">
+                            <span class="agent-timeline-icon">${statusIcon}</span>
+                            <span class="agent-timeline-action">${escapeHtml(a.action)}</span>
+                            <span class="agent-timeline-time">${timeStr}</span>
+                        </div>`;
+                    }).join('')}</div>`
+                    : '<div class="agent-no-activity">No recent activity</div>'}
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function toggleAgentDetail(agentId) {
+    const detail = document.getElementById('agentDetail-' + agentId);
+    if (!detail) return;
+    detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
 }
 
 // ===========================================

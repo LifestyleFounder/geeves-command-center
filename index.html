@@ -87,14 +87,14 @@
                         </svg>
                         <span>Performance</span>
                     </li>
-                    <li class="nav-item" data-tab="kanban" draggable="true">
+                    <li class="nav-item" data-tab="agent-hub" draggable="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="7" height="7"/>
                             <rect x="14" y="3" width="7" height="7"/>
                             <rect x="14" y="14" width="7" height="7"/>
                             <rect x="3" y="14" width="7" height="7"/>
                         </svg>
-                        <span>Projects</span>
+                        <span>Agent Hub</span>
                     </li>
                     <li class="nav-item" data-tab="reports" draggable="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -378,53 +378,13 @@
                     </div>
                 </section>
 
-                <!-- Projects Tab -->
-                <section class="tab-content" id="kanban">
+                <!-- Agent Hub Tab -->
+                <section class="tab-content" id="agent-hub">
                     <div class="tab-header">
-                        <h1>📋 Projects</h1>
-                        <div class="tab-actions">
-                            <button class="btn btn-primary" onclick="openAddTaskModal()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="12" y1="5" x2="12" y2="19"/>
-                                    <line x1="5" y1="12" x2="19" y2="12"/>
-                                </svg>
-                                Add Task
-                            </button>
-                        </div>
+                        <h1>🤖 Agent Hub</h1>
                     </div>
-                    <div class="kanban-board" id="kanbanBoard">
-                        <div class="kanban-column" data-status="inbox">
-                            <div class="column-header">
-                                <span class="column-icon">📥</span>
-                                <span class="column-title">Inbox</span>
-                                <span class="column-count">0</span>
-                            </div>
-                            <div class="column-tasks" data-status="inbox"></div>
-                        </div>
-                        <div class="kanban-column" data-status="todo">
-                            <div class="column-header">
-                                <span class="column-icon">🔄</span>
-                                <span class="column-title">To Do</span>
-                                <span class="column-count">0</span>
-                            </div>
-                            <div class="column-tasks" data-status="todo"></div>
-                        </div>
-                        <div class="kanban-column" data-status="progress">
-                            <div class="column-header">
-                                <span class="column-icon">⚡</span>
-                                <span class="column-title">In Progress</span>
-                                <span class="column-count">0</span>
-                            </div>
-                            <div class="column-tasks" data-status="progress"></div>
-                        </div>
-                        <div class="kanban-column" data-status="done">
-                            <div class="column-header">
-                                <span class="column-icon">✅</span>
-                                <span class="column-title">Done</span>
-                                <span class="column-count">0</span>
-                            </div>
-                            <div class="column-tasks" data-status="done"></div>
-                        </div>
+                    <div class="agent-cards-grid" id="agentCardsGrid">
+                        <div class="empty-state"><p>Loading agents...</p></div>
                     </div>
                 </section>
 
