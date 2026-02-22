@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geeves Command Center</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20250209">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260221">
 </head>
 <body>
     <div class="app">
@@ -123,7 +124,7 @@
                         </svg>
                         <span>YouTube</span>
                     </li>
-                    <li class="nav-item" data-tab="instagram" draggable="true">
+                    <li class="nav-item" data-tab="instagram" draggable="true" style="display:none">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                         </svg>
@@ -141,6 +142,34 @@
                             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                         </svg>
                         <span>Content Multiplier</span>
+                    </li>
+                    <li class="nav-item" data-tab="vip-clients" draggable="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>VIP Clients</span>
+                    </li>
+                    <li class="nav-item" data-tab="competitors" draggable="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="6"/>
+                            <circle cx="12" cy="12" r="2"/>
+                            <line x1="12" y1="2" x2="12" y2="4"/>
+                            <line x1="12" y1="20" x2="12" y2="22"/>
+                            <line x1="2" y1="12" x2="4" y2="12"/>
+                            <line x1="20" y1="12" x2="22" y2="12"/>
+                        </svg>
+                        <span>Competitors</span>
+                    </li>
+                    <li class="nav-item" data-tab="google-tasks" draggable="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                        <span>Tasks</span>
                     </li>
                 </ul>
                 <div class="sidebar-footer">
@@ -177,84 +206,73 @@
                         </div>
                     </div>
                     
-                    <!-- Calendar & Pipeline Row -->
-                    <div class="business-grid resizable-grid" id="businessGrid">
+                    <!-- Business Grid: 2x2 Layout -->
+                    <div class="business-grid-2x2" id="businessGrid">
+                        <!-- Row 1: Calendar + Tasks -->
                         <!-- Calendar Embed -->
-                        <div class="card calendar-card resizable-card" data-card="calendar">
+                        <div class="card calendar-card biz-card" data-card="calendar">
                             <div class="card-header">
                                 <h2>📅 Schedule</h2>
-                                <button class="btn-icon btn-drag" title="Drag to reorder">⋮⋮</button>
                             </div>
-                            <div class="resize-handle resize-handle-e"></div>
-                            <div class="resize-handle resize-handle-s"></div>
-                            <div class="resize-handle resize-handle-se"></div>
                             <div class="calendar-embed">
                                 <iframe 
                                     src="https://calendar.google.com/calendar/embed?src=dan%40quantumcollective.com&ctz=America%2FVancouver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&showDate=1"
-                                    style="border: 0; width: 100%; height: 500px; border-radius: 8px;"
+                                    style="border: 0; width: 100%; height: 460px; border-radius: 8px;"
                                     frameborder="0"
                                     scrolling="no">
                                 </iframe>
                             </div>
                         </div>
 
-                        <!-- Client Health -->
-                        <div class="card clients-card resizable-card" data-card="clients">
+                        <!-- Tasks -->
+                        <div class="card tasks-card biz-card" data-card="tasks">
                             <div class="card-header">
-                                <h2>👥 Client Health</h2>
-                                <button class="btn-icon btn-drag" title="Drag to reorder">⋮⋮</button>
-                            </div>
-                            <div class="resize-handle resize-handle-e"></div>
-                            <div class="resize-handle resize-handle-s"></div>
-                            <div class="resize-handle resize-handle-se"></div>
-                            <div class="client-summary">
-                                <div class="health-stat healthy clickable" onclick="toggleClientList('healthy')">
-                                    <span class="health-count" id="clientsHealthy">28</span>
-                                    <span class="health-label">Healthy</span>
-                                    <span class="health-expand">▼</span>
-                                </div>
-                                <div class="health-stat warning clickable" onclick="toggleClientList('warning')">
-                                    <span class="health-count" id="clientsWarning">5</span>
-                                    <span class="health-label">Watch</span>
-                                    <span class="health-expand">▼</span>
-                                </div>
-                                <div class="health-stat at-risk clickable" onclick="toggleClientList('atRisk')">
-                                    <span class="health-count" id="clientsAtRisk">2</span>
-                                    <span class="health-label">At Risk</span>
-                                    <span class="health-expand">▼</span>
+                                <h2>✅ Tasks</h2>
+                                <div class="tasks-card-controls">
+                                    <select id="tasksListSelectBiz" class="tasks-list-select-sm" onchange="loadTasksBiz()">
+                                        <option value="">Loading...</option>
+                                    </select>
+                                    <button class="btn-sm" onclick="showAddTaskBiz()">+</button>
                                 </div>
                             </div>
-                            <div class="client-list-expanded" id="clientListExpanded" style="display: none;">
-                                <div class="client-list-header">
-                                    <span id="clientListTitle">Healthy Clients</span>
-                                    <button class="btn-close" onclick="toggleClientList(null)">×</button>
-                                </div>
-                                <div class="client-list-items" id="clientListItems">
-                                    <!-- Populated by JS -->
+                            <!-- Add Task Form (hidden) -->
+                            <div id="addTaskFormBiz" class="add-task-form-biz" style="display:none;">
+                                <input type="text" id="newTaskTitleBiz" class="task-input-sm" placeholder="What needs to be done?" onkeydown="if(event.key==='Enter')createTaskBiz()">
+                                <div class="add-task-row">
+                                    <input type="date" id="newTaskDueBiz" class="task-input-sm task-due-sm">
+                                    <input type="time" id="newTaskTimeBiz" class="task-input-sm task-time-sm">
+                                    <button class="btn-sm btn-green" onclick="createTaskBiz()">Add</button>
+                                    <button class="btn-sm" onclick="hideAddTaskBiz()">✕</button>
                                 </div>
                             </div>
-                            <div class="client-alerts" id="clientAlerts">
-                                <div class="alerts-header">Recent Activity</div>
-                                <div class="alert-item warning">
-                                    <span class="alert-icon">⚠️</span>
-                                    <span class="alert-text">Drew T. — Low engagement (4 days)</span>
-                                </div>
-                                <div class="alert-item success">
-                                    <span class="alert-icon">🎉</span>
-                                    <span class="alert-text">Nick H. — New VIP, posted first win!</span>
-                                </div>
+                            <!-- Task List -->
+                            <div id="tasksListBiz" class="tasks-list-biz">
+                                <div class="empty-state"><p>Loading tasks...</p></div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Client Health + Pipeline -->
+
+                        <!-- Client Health (powered by VIP data) -->
+                        <div class="card clients-card biz-card" data-card="clients">
+                            <div class="card-header">
+                                <h2>Clients</h2>
+                                <span class="card-header-sub" id="clientsTotalLabel">—</span>
+                            </div>
+                            <div class="client-health-grid" id="clientHealthGrid">
+                                <!-- Populated by JS from VIP data -->
+                                <div class="empty-state"><p>Loading...</p></div>
+                            </div>
+                            <div class="client-alerts-live" id="clientAlertsLive">
+                                <!-- Populated by JS -->
                             </div>
                         </div>
 
                         <!-- Pipeline Metrics -->
-                        <div class="card pipeline-card resizable-card" data-card="pipeline">
+                        <div class="card pipeline-card biz-card" data-card="pipeline">
                             <div class="card-header">
                                 <h2>🔥 Pipeline (This Week)</h2>
-                                <button class="btn-icon btn-drag" title="Drag to reorder">⋮⋮</button>
                             </div>
-                            <div class="resize-handle resize-handle-e"></div>
-                            <div class="resize-handle resize-handle-s"></div>
-                            <div class="resize-handle resize-handle-se"></div>
                             <div class="pipeline-metrics-grid">
                                 <!-- Free Community -->
                                 <div class="metric-card free-card">
@@ -500,14 +518,13 @@
                                 <div class="docs-tree" id="docsTree">
                                     <!-- Populated by JS -->
                                 </div>
+                                <!-- docs list merged into tree above -->
                                 <button class="btn btn-secondary btn-sm docs-new-folder-btn" onclick="createFolder()">
                                     + New Folder
                                 </button>
                             </div>
+                            <div class="docs-resize-handle" id="docsResizeHandle"></div>
                             <div class="docs-main">
-                                <div class="docs-list" id="docsList">
-                                    <!-- Populated by JS -->
-                                </div>
                                 <div class="docs-preview" id="docsPreview">
                                     <div class="empty-state">
                                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -759,6 +776,66 @@
                     </div>
                 </section>
 
+                <!-- VIP Clients Tab -->
+                <section class="tab-content" id="vip-clients">
+                    <div class="tab-header">
+                        <h1>👥 VIP Client Tracker</h1>
+                        <div class="tab-actions">
+                            <span class="last-updated" id="vipLastSynced">Last synced: --</span>
+                            <button class="btn btn-secondary" onclick="syncVIPClients()">🔄 Sync from Notion</button>
+                        </div>
+                    </div>
+                    <div class="vip-stats-grid" id="vipStatsGrid"></div>
+                    <div class="vip-filters" id="vipFilters">
+                        <input type="text" class="search-input" id="vipSearch" placeholder="Search clients..." oninput="filterVIPClients()">
+                        <select class="filter-select" id="vipStatusFilter" onchange="filterVIPClients()">
+                            <option value="all">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="At Risk">At Risk</option>
+                            <option value="Churned">Churned</option>
+                            <option value="Onboarding">Onboarding</option>
+                        </select>
+                        <select class="filter-select" id="vipProgramFilter" onchange="filterVIPClients()">
+                            <option value="all">All Programs</option>
+                        </select>
+                        <select class="filter-select" id="vipPaymentFilter" onchange="filterVIPClients()">
+                            <option value="all">All Payments</option>
+                        </select>
+                    </div>
+                    <div class="card" style="margin-top:16px; overflow-x:auto;">
+                        <table class="data-table" id="vipTable">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" onclick="sortVIPTable('name')">Name</th>
+                                    <th class="sortable" onclick="sortVIPTable('status')">Status</th>
+                                    <th class="sortable" onclick="sortVIPTable('program')">Program</th>
+                                    <th class="sortable" onclick="sortVIPTable('payment')">Payment</th>
+                                    <th>PIF</th>
+                                    <th class="sortable" onclick="sortVIPTable('joined')">Joined</th>
+                                    <th class="sortable" onclick="sortVIPTable('programLength')">Length</th>
+                                    <th class="sortable" onclick="sortVIPTable('programEnd')">Program End</th>
+                                    <th>TODO</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vipTableBody">
+                                <tr><td colspan="10" class="empty">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- VIP Client Detail Modal -->
+                <div class="modal-overlay" id="vipDetailModal">
+                    <div class="modal modal-lg">
+                        <div class="modal-header">
+                            <h2 id="vipDetailName">Client</h2>
+                            <button class="modal-close" onclick="closeModal()">&times;</button>
+                        </div>
+                        <div class="modal-body" id="vipDetailBody"></div>
+                    </div>
+                </div>
+
                 <!-- Schedules Tab -->
 
                 <!-- Meta Ads Tab (Combined with Ad Swipes) -->
@@ -966,6 +1043,101 @@
                         <iframe src="https://lfgmultiplier.com" style="width:100%; height:100%; border:none; border-radius:12px;" allow="clipboard-write"></iframe>
                     </div>
                 </section>
+
+                <!-- Competitors Tab -->
+                <section class="tab-content" id="competitors">
+                    <div class="tab-header">
+                        <h1>🎯 Competitor Analysis</h1>
+                        <div class="tab-actions">
+                            <button class="btn btn-secondary comp-view-btn active" id="compViewPosts" onclick="switchCompView('posts')">Posts</button>
+                            <button class="btn btn-secondary comp-view-btn" id="compViewHooks" onclick="switchCompView('hooks')">Hook Library</button>
+                        </div>
+                    </div>
+
+                    <!-- Stats Bar -->
+                    <div class="comp-stats-bar">
+                        <div class="comp-stat"><span class="comp-stat-value" id="compTotalPosts">--</span><span class="comp-stat-label">Posts Analyzed</span></div>
+                        <div class="comp-stat"><span class="comp-stat-value" id="compCreatorCount">--</span><span class="comp-stat-label">Creators</span></div>
+                        <div class="comp-stat"><span class="comp-stat-value" id="compTopHookStructure">--</span><span class="comp-stat-label">Top Hook Structure</span></div>
+                        <div class="comp-stat"><span class="comp-stat-value" id="compTopContentStructure">--</span><span class="comp-stat-label">Top Content Structure</span></div>
+                        <div class="comp-stat"><span class="comp-stat-value" id="compAvgViews">--</span><span class="comp-stat-label">Avg Views</span></div>
+                    </div>
+
+                    <!-- Add Creator -->
+                    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;">
+                        <input type="text" id="compNewCreator" placeholder="Instagram handle (e.g. hormozi)" style="flex:1;">
+                        <button class="btn btn-primary" onclick="addCreator()">+ Add Creator</button>
+                        <button class="btn btn-secondary" onclick="toggleManageCreators()">Manage</button>
+                    </div>
+                    <div id="manageCreatorsPanel" style="display:none;margin-bottom:16px;padding:12px;">
+                        <div id="activeCreatorsList">Loading creators...</div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="comp-filters" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+                        <select id="compFilterCreator" onchange="renderCompetitorPosts()" >
+                            <option value="all">All Creators</option>
+                        </select>
+                        <select id="compFilterHookStructure" onchange="renderCompetitorPosts()" >
+                            <option value="all">All Hook Structures</option>
+                        </select>
+                        <select id="compFilterContentStructure" onchange="renderCompetitorPosts()" >
+                            <option value="all">All Content Structures</option>
+                        </select>
+                        <select id="compFilterVisualFormat" onchange="renderCompetitorPosts()" >
+                            <option value="all">All Visual Formats</option>
+                        </select>
+                        <select id="compSortBy" onchange="renderCompetitorPosts()" >
+                            <option value="posted_at">Newest</option>
+                            <option value="views">Most Views</option>
+                            <option value="likes">Most Likes</option>
+                            <option value="comments">Most Comments</option>
+                        </select>
+                    </div>
+
+                    <!-- Posts View -->
+                    <div id="compPostsView"><div class="comp-posts-grid" id="compPostsGrid"><div class="empty-state"><p>Loading competitor data...</p></div></div></div>
+                    <!-- Hook Library View -->
+                    <div id="compHooksView" style="display:none;"><div id="compHookLibrary"><div class="empty-state"><p>Loading hooks...</p></div></div></div>
+                </section>
+
+                <!-- Tasks Tab -->
+                <section class="tab-content" id="google-tasks">
+                    <div class="tasks-header">
+                        <div class="tasks-title-row">
+                            <h2>Tasks</h2>
+                            <div class="tasks-controls">
+                                <select id="tasksListSelect" class="tasks-list-select" onchange="loadGTasks()">
+                                    <option value="">Loading lists...</option>
+                                </select>
+                                <button class="btn-primary" onclick="showAddGTask()">+ Add Task</button>
+                            </div>
+                        </div>
+                        <div class="tasks-filters">
+                            <button class="tasks-filter-btn active" data-filter="active" onclick="filterGTasks('active')">Active</button>
+                            <button class="tasks-filter-btn" data-filter="completed" onclick="filterGTasks('completed')">Completed</button>
+                            <button class="tasks-filter-btn" data-filter="all" onclick="filterGTasks('all')">All</button>
+                        </div>
+                    </div>
+
+                    <!-- Add Task Form (hidden by default) -->
+                    <div id="addTaskForm" class="add-task-form" style="display:none;">
+                        <input type="text" id="newTaskTitle" class="task-input" placeholder="What needs to be done?" onkeydown="if(event.key==='Enter')createGTask()">
+                        <input type="text" id="newTaskNotes" class="task-input task-notes-input" placeholder="Notes (optional)">
+                        <input type="date" id="newTaskDue" class="task-input task-due-input">
+                        <input type="time" id="newTaskTime" class="task-input task-time-input">
+                        <div class="add-task-actions">
+                            <button class="btn-primary" onclick="createGTask()">Add</button>
+                            <button class="btn-secondary" onclick="hideAddGTask()">Cancel</button>
+                        </div>
+                    </div>
+
+                    <!-- Task List -->
+                    <div id="tasksList" class="tasks-list">
+                        <div class="empty-state"><p>Loading tasks...</p></div>
+                    </div>
+                </section>
+
             </main>
 
             <!-- Quick Notes Sidebar -->
@@ -1496,6 +1668,6 @@ Sam Ovens
     <script src="creator-scraper.js?v=20250220b"></script>
     <script src="notion-notes.js?v=20250220b"></script>
     <script src="user-settings.js?v=20250220b"></script>
-    <script src="app.js?v=20250220b"></script>
+    <script src="app.js?v=20260221"></script>
 </body>
 </html>

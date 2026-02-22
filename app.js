@@ -77,11 +77,24 @@ function switchTab(tabName) {
         youtube: 'YouTube',
         instagram: 'Instagram',
         'meta-ads': 'Meta Ads',
-        multiplier: 'Content Multiplier'
+        multiplier: 'Content Multiplier',
+        competitors: 'Competitors',
+        'vip-clients': 'VIP Clients',
+        'google-tasks': 'Tasks'
     };
     document.getElementById('mobileTitle').textContent = titles[tabName] || tabName;
     
     state.currentTab = tabName;
+    
+    // Load VIP data on tab switch
+    if (tabName === 'vip-clients' && typeof loadVIPClients === 'function') {
+        loadVIPClients();
+    }
+    
+    // Load competitor data on tab switch
+    if (tabName === 'competitors' && typeof loadCompetitorData === 'function') {
+        loadCompetitorData();
+    }
     
     // Close sidebar on mobile
     document.getElementById('sidebar').classList.remove('open');
@@ -833,9 +846,26 @@ function buildFolderTree(docs) {
 
     // Add custom (empty) folders so they always appear
     const customFolders = UserSettings.get('customFolders', []);
+    const folderParents = UserSettings.get('folderParents', {});
     customFolders.forEach(key => {
         if (!tree[key]) {
             tree[key] = { name: key, docs: [], icon: getFolderIcon(key) };
+        }
+        // Mark parent relationship
+        if (folderParents[key]) {
+            tree[key].parent = folderParents[key];
+        }
+    });
+    
+    // Build subfolder arrays
+    Object.keys(tree).forEach(key => {
+        tree[key].subfolders = [];
+    });
+    Object.keys(tree).forEach(key => {
+        const parent = tree[key].parent;
+        if (parent && tree[parent]) {
+            tree[parent].subfolders = tree[parent].subfolders || [];
+            tree[parent].subfolders.push(key);
         }
     });
 
@@ -877,11 +907,13 @@ function renderDocsTree() {
     // Define folder order (notes first, custom folders in middle, root last)
     const customFolders = UserSettings.get('customFolders', []);
     const folderOrder = ['notes', 'research', ...customFolders, 'root'];
-    const sortedFolders = Object.keys(tree).sort((a, b) => {
+    // Only show top-level folders (those without a parent)
+    const topLevelFolders = Object.keys(tree).filter(k => !tree[k].parent).sort((a, b) => {
         const aIdx = folderOrder.indexOf(a);
         const bIdx = folderOrder.indexOf(b);
         return (aIdx === -1 ? 999 : aIdx) - (bIdx === -1 ? 999 : bIdx);
     });
+    const sortedFolders = topLevelFolders;
     
     if (sortedFolders.length === 0) {
         container.innerHTML = `
@@ -892,50 +924,60 @@ function renderDocsTree() {
         return;
     }
     
-    container.innerHTML = sortedFolders.map(folderKey => {
-        const folder = tree[folderKey];
+    // Helper to render a doc item
+    function renderDocItem(doc) {
+        const docKey = doc.isNote ? doc.id : doc.path;
+        const isActive = state.selectedDoc && (state.selectedDoc.path === docKey || state.selectedDoc.id === docKey);
+        return `
+            <div class="kh-doc ${isActive ? 'active' : ''}"
+                 draggable="true"
+                 ondragstart="startDocDrag(event, '${docKey}', ${doc.isNote || false})"
+                 onclick="selectDoc('${docKey}'); event.stopPropagation();">
+                <div class="kh-doc-icon">${doc.isNote ? '📝' : '📄'}</div>
+                <div class="kh-doc-info">
+                    <div class="kh-doc-name">${escapeHtml(doc.title.replace(/^Daily Memory - /, '').replace(/^Content Intelligence Report - /, 'CI: '))}</div>
+                    ${doc.date ? `<div class="kh-doc-date">${doc.date}</div>` : ''}
+                </div>
+            </div>`;
+    }
+
+    // Helper to render a folder section (used for both top-level and subfolders)
+    function renderFolderSection(folderKey, folder, isSubfolder) {
         const isExpanded = docFolderState.expandedFolders.has(folderKey);
-        const isSelected = docFolderState.selectedFolder === folderKey;
         const displayName = folderKey === 'root' ? 'Other' : folderKey.charAt(0).toUpperCase() + folderKey.slice(1);
+        const totalDocs = folder.docs.length + (folder.subfolders || []).reduce((n, sk) => n + (tree[sk]?.docs.length || 0), 0);
 
         return `
-            <div class="folder-item ${isExpanded ? '' : 'collapsed'}">
-                <div class="folder-header ${isSelected ? 'active' : ''}"
+            <div class="kh-category ${isExpanded ? 'expanded' : 'collapsed'} ${isSubfolder ? 'kh-subcategory' : ''}">
+                <div class="kh-cat-header"
                      onclick="selectFolder('${folderKey}')"
                      ondragover="event.preventDefault(); this.classList.add('drag-over')"
                      ondragleave="this.classList.remove('drag-over')"
                      ondrop="dropOnFolder(event, '${folderKey}'); this.classList.remove('drag-over')">
-                    <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg class="kh-cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
                         <polyline points="6 9 12 15 18 9"/>
                     </svg>
-                    <span class="folder-name">${folder.icon} ${displayName}</span>
-                    <span class="folder-count">${folder.docs.length}</span>
-                    <button class="folder-emoji-change" onclick="changeFolderEmoji('${folderKey}'); event.stopPropagation();" title="Change icon">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
-                        </svg>
-                    </button>
+                    <span class="kh-cat-icon">${folder.icon}</span>
+                    <span class="kh-cat-name">${displayName}</span>
+                    <span class="kh-cat-count">${totalDocs}</span>
+                    <div class="kh-cat-actions">
+                        <button class="kh-cat-btn" onclick="createSubFolder('${folderKey}'); event.stopPropagation();" title="Add subfolder">+</button>
+                        <button class="kh-cat-btn danger" onclick="deleteFolder('${folderKey}'); event.stopPropagation();" title="Delete">✕</button>
+                    </div>
                 </div>
-                <div class="folder-children">
-                    ${folder.docs.map(doc => {
-                        const docKey = doc.isNote ? doc.id : doc.path;
-                        const isActive = state.selectedDoc && (state.selectedDoc.path === docKey || state.selectedDoc.id === docKey);
-                        return `
-                        <div class="folder-doc ${isActive ? 'active' : ''}"
-                             draggable="true"
-                             ondragstart="startDocDrag(event, '${docKey}', ${doc.isNote || false})"
-                             onclick="selectDoc('${docKey}'); event.stopPropagation();">
-                            <svg class="folder-doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14 2 14 8 20 8"/>
-                            </svg>
-                            <span>${escapeHtml(doc.title.replace(/^Daily Memory - /, '').replace(/^Content Intelligence Report - /, 'CI: '))}</span>
-                        </div>
-                    `}).join('')}
+                <div class="kh-cat-body">
+                    ${folder.docs.map(renderDocItem).join('')}
+                    ${(folder.subfolders || []).map(subKey => {
+                        const sub = tree[subKey];
+                        return sub ? renderFolderSection(subKey, sub, true) : '';
+                    }).join('')}
                 </div>
-            </div>
-        `;
-    }).join('');
+            </div>`;
+    }
+
+    container.innerHTML = sortedFolders.map(folderKey => 
+        renderFolderSection(folderKey, tree[folderKey], false)
+    ).join('');
 }
 
 function selectFolder(folderKey) {
@@ -971,6 +1013,7 @@ function toggleAllFolders() {
 
 function renderDocs() {
     const container = document.getElementById('docsList');
+    if (!container) return; // docs list removed from UI — tree handles display
     const searchEl = document.getElementById('docsSearch');
     const searchTerm = searchEl ? searchEl.value.toLowerCase() : '';
 
@@ -3062,6 +3105,101 @@ window.filterActivity = filterActivity;
 window.switchReportsSubtab = switchReportsSubtab;
 window.openReportDoc = openReportDoc;
 window.switchKHSubtab = switchKHSubtab;
+function deleteFolder(folderKey) {
+    const builtIn = ['notes', 'research', 'root'];
+    if (builtIn.includes(folderKey)) {
+        if (typeof showToast === 'function') showToast('Cannot delete built-in folders');
+        return;
+    }
+    
+    if (!confirm(`Delete folder "${folderKey}"? Documents inside will move to "Other".`)) return;
+    
+    // Remove from custom folders
+    let customFolders = UserSettings.get('customFolders', []);
+    customFolders = customFolders.filter(f => f !== folderKey);
+    UserSettings.set('customFolders', customFolders);
+    
+    // Move docs assigned to this folder back to root
+    const assignments = UserSettings.get('docFolderAssignments', {});
+    for (const [docPath, folder] of Object.entries(assignments)) {
+        if (folder === folderKey) delete assignments[docPath];
+    }
+    UserSettings.set('docFolderAssignments', assignments);
+    
+    // Remove custom icon
+    const icons = UserSettings.get('folderIcons', {});
+    delete icons[folderKey];
+    UserSettings.set('folderIcons', icons);
+    
+    // Clear selection if this folder was selected
+    if (docFolderState.selectedFolder === folderKey) {
+        docFolderState.selectedFolder = null;
+    }
+    docFolderState.expandedFolders.delete(folderKey);
+    
+    renderDocsTree();
+    if (typeof showToast === 'function') showToast('Folder deleted');
+}
+
+function createSubFolder(parentKey) {
+    const emojis = ['📁','📂','📝','📚','🔬','💡','🎯','💰','⚙️','🎨','📊','🗂️','📋','🏷️','🔖','💼','🧠','⭐','🔥','📎'];
+    const overlay = document.createElement('div');
+    overlay.className = 'folder-modal-overlay';
+    overlay.innerHTML = `
+        <div class="folder-modal">
+            <h3>New Subfolder in ${parentKey.charAt(0).toUpperCase() + parentKey.slice(1)}</h3>
+            <input type="text" class="folder-name-input" id="newSubFolderName" placeholder="Subfolder name..." autofocus>
+            <div class="folder-emoji-label">Choose an icon:</div>
+            <div class="folder-emoji-grid">
+                ${emojis.map((e, i) => `<button class="folder-emoji-btn ${i === 0 ? 'selected' : ''}" data-emoji="${e}" onclick="pickFolderEmoji(this)">${e}</button>`).join('')}
+            </div>
+            <div class="folder-modal-actions">
+                <button class="btn btn-secondary btn-sm" onclick="closeFolderModal()">Cancel</button>
+                <button class="btn btn-primary btn-sm" onclick="saveSubFolderFromModal('${parentKey}')">Create</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#newSubFolderName').focus();
+    overlay.querySelector('#newSubFolderName').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') saveSubFolderFromModal(parentKey);
+        if (e.key === 'Escape') closeFolderModal();
+    });
+}
+
+function saveSubFolderFromModal(parentKey) {
+    const nameInput = document.getElementById('newSubFolderName');
+    const selectedEmoji = document.querySelector('.folder-emoji-btn.selected');
+    const name = nameInput ? nameInput.value.trim() : '';
+    if (!name) { nameInput && nameInput.focus(); return; }
+
+    const key = name.toLowerCase().replace(/\s+/g, '-');
+    const emoji = selectedEmoji ? selectedEmoji.dataset.emoji : '📁';
+
+    let customFolders = UserSettings.get('customFolders', []);
+    if (!customFolders.includes(key)) {
+        customFolders.push(key);
+        UserSettings.set('customFolders', customFolders);
+    }
+
+    let customIcons = UserSettings.get('customFolderIcons', {});
+    customIcons[key] = emoji;
+    UserSettings.set('customFolderIcons', customIcons);
+
+    // Store parent relationship
+    let folderParents = UserSettings.get('folderParents', {});
+    folderParents[key] = parentKey;
+    UserSettings.set('folderParents', folderParents);
+
+    docFolderState.expandedFolders.add(key);
+    docFolderState.expandedFolders.add(parentKey);
+    closeFolderModal();
+    renderDocsTree();
+}
+
+window.createSubFolder = createSubFolder;
+window.saveSubFolderFromModal = saveSubFolderFromModal;
+window.deleteFolder = deleteFolder;
 window.createFolder = createFolder;
 window.pickFolderEmoji = pickFolderEmoji;
 window.closeFolderModal = closeFolderModal;
@@ -3190,9 +3328,19 @@ function renderDocumentLibrary() {
         uncategorized: '📄'
     };
     
-    container.innerHTML = Object.entries(categories).map(([cat, docs]) => `
-        <div class="knowledge-category">
-            <div class="category-header">
+    // Track expanded state for KB categories
+    if (!window._kbExpanded) window._kbExpanded = new Set(Object.keys(categories));
+    // Auto-add new categories
+    Object.keys(categories).forEach(k => { if (!window._kbExpanded.has(k) && window._kbExpanded.size < 20) window._kbExpanded.add(k); });
+    
+    container.innerHTML = Object.entries(categories).map(([cat, docs]) => {
+        const isExpanded = window._kbExpanded.has(cat);
+        return `
+        <div class="knowledge-category ${isExpanded ? 'expanded' : 'collapsed'}">
+            <div class="category-header" onclick="toggleKBCategory('${cat}')">
+                <svg class="kh-cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
                 <span class="category-icon">${categoryIcons[cat] || '📄'}</span>
                 <span class="category-name">${cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
                 <span class="category-count">${docs.length}</span>
@@ -3216,8 +3364,8 @@ function renderDocumentLibrary() {
                     </div>
                 `).join('')}
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 }
 
 // Get all documents for @mention matching
@@ -3542,7 +3690,7 @@ function openUploadDocModal() {
     openModal('uploadDocModal');
 }
 
-// Save uploaded document
+// Save uploaded document (handles both create and edit)
 async function saveUploadedDocument() {
     const name = document.getElementById('docName').value.trim();
     const category = document.getElementById('docCategory').value;
@@ -3554,21 +3702,66 @@ async function saveUploadedDocument() {
         return;
     }
     
-    const doc = {
-        id: 'doc-' + Date.now(),
-        name,
-        type: 'local',
-        category,
-        content,
-        tags,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-    };
+    const modal = document.getElementById('uploadDocModal');
+    const editingId = modal?.dataset.editingId;
     
-    documentLibrary.documents.push(doc);
+    if (editingId) {
+        // Update existing document
+        let doc = documentLibrary.documents.find(d => d.id === editingId) ||
+                  documentLibrary.notionDocs.find(d => d.id === editingId);
+        if (doc) {
+            doc.name = name;
+            doc.category = category;
+            doc.content = content;
+            doc.tags = tags;
+            doc.updatedAt = new Date().toISOString();
+        }
+        // Clear editing state
+        delete modal.dataset.editingId;
+    } else {
+        // Create new document — push to Notion if API key is configured
+        const apiKey = localStorage.getItem('notionApiKey');
+        let notionPage = null;
+        
+        if (apiKey) {
+            try {
+                notionPage = await createNotionDoc(name, content, category);
+            } catch (e) {
+                console.error('Notion create failed:', e);
+            }
+        }
+        
+        if (notionPage) {
+            // Created in Notion — add to notionDocs
+            documentLibrary.notionDocs.push({
+                id: notionPage.id,
+                name,
+                type: 'notion',
+                category: category || 'uncategorized',
+                content,
+                tags,
+                notionUrl: notionPage.url,
+                lastSynced: new Date().toISOString()
+            });
+        } else {
+            // Local-only fallback
+            documentLibrary.documents.push({
+                id: 'doc-' + Date.now(),
+                name,
+                type: 'local',
+                category,
+                content,
+                tags,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            });
+        }
+    }
+    
     saveDocumentLibrary();
     renderDocumentLibrary();
     closeModal();
+    if (typeof showToast === 'function') showToast(editingId ? 'Document updated ✓' : 'Document saved ✓');
     
     // Clear form
     document.getElementById('docName').value = '';
@@ -3615,21 +3808,126 @@ function previewDocument(docId) {
     if (preview) {
         preview.innerHTML = `
             <div class="doc-preview-header">
-                <h2>${escapeHtml(doc.name)}</h2>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;">
+                    <h2>${escapeHtml(doc.name)}</h2>
+                    <div style="display:flex;gap:0.5rem;">
+                        <button class="btn-sm" id="docEditToggle" onclick="toggleDocEditMode('${doc.id}')">✏️ Edit</button>
+                        <button class="btn-sm btn-green" id="docSaveBtn" onclick="saveDocInline('${doc.id}')" style="display:none;">💾 Save</button>
+                    </div>
+                </div>
                 <div class="doc-preview-meta">
                     <span class="doc-category">${doc.category || 'uncategorized'}</span>
                     ${doc.tags ? doc.tags.map(t => `<span class="doc-tag">${t}</span>`).join('') : ''}
                 </div>
             </div>
-            <div class="doc-preview-content">
+            <div class="doc-preview-content" id="docPreviewContent">
                 ${formatMarkdown(doc.content)}
             </div>
+            <textarea class="doc-edit-area" id="docEditArea" style="display:none;">${escapeHtml(doc.content || '')}</textarea>
             <div class="doc-preview-footer">
                 <small>Use <code>@${doc.type === 'notion' ? 'notion' : 'doc'}:${doc.name.toLowerCase().replace(/\s+/g, '-')}</code> to reference in chat</small>
             </div>
         `;
     }
 }
+
+function toggleDocEditMode(docId) {
+    const contentEl = document.getElementById('docPreviewContent');
+    const editArea = document.getElementById('docEditArea');
+    const editBtn = document.getElementById('docEditToggle');
+    const saveBtn = document.getElementById('docSaveBtn');
+    
+    if (editArea.style.display === 'none') {
+        // Switch to edit mode
+        contentEl.style.display = 'none';
+        editArea.style.display = 'block';
+        editBtn.textContent = '👁️ Preview';
+        saveBtn.style.display = 'inline-flex';
+        editArea.focus();
+    } else {
+        // Switch to preview mode
+        contentEl.innerHTML = formatMarkdown(editArea.value);
+        contentEl.style.display = 'block';
+        editArea.style.display = 'none';
+        editBtn.textContent = '✏️ Edit';
+        saveBtn.style.display = 'none';
+    }
+}
+
+async function saveDocInline(docId) {
+    const editArea = document.getElementById('docEditArea');
+    if (!editArea) return;
+    
+    const saveBtn = document.getElementById('docSaveBtn');
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '⏳ Saving...'; }
+    
+    const newContent = editArea.value;
+    let doc = documentLibrary.documents.find(d => d.id === docId) ||
+              documentLibrary.notionDocs.find(d => d.id === docId);
+    
+    if (doc) {
+        doc.content = newContent;
+        doc.updatedAt = new Date().toISOString();
+        
+        // Push to Notion if it's a Notion doc
+        if (doc.type === 'notion' && doc.id) {
+            try {
+                await updateNotionDoc(doc.id, newContent);
+                doc.lastSynced = new Date().toISOString();
+            } catch (e) {
+                console.error('Notion update failed:', e);
+                if (typeof showToast === 'function') showToast('⚠️ Saved locally but Notion sync failed');
+            }
+        }
+        
+        saveDocumentLibrary();
+        
+        // Update preview
+        const contentEl = document.getElementById('docPreviewContent');
+        if (contentEl) contentEl.innerHTML = formatMarkdown(newContent);
+        
+        // Switch back to preview mode
+        contentEl.style.display = 'block';
+        editArea.style.display = 'none';
+        document.getElementById('docEditToggle').textContent = '✏️ Edit';
+        if (saveBtn) { saveBtn.style.display = 'none'; saveBtn.disabled = false; saveBtn.textContent = '💾 Save'; }
+        
+        renderDocumentLibrary();
+        if (typeof showToast === 'function') showToast('Document saved ✓');
+    }
+}
+
+window.toggleDocEditMode = toggleDocEditMode;
+window.saveDocInline = saveDocInline;
+
+// Docs sidebar resize handle
+(function initDocsResize() {
+    const handle = document.getElementById('docsResizeHandle');
+    if (!handle) return;
+    const container = handle.closest('.docs-container');
+    let startX, startWidth;
+    
+    handle.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        startX = e.clientX;
+        startWidth = document.getElementById('docsSidebar').offsetWidth;
+        handle.classList.add('dragging');
+        document.addEventListener('mousemove', onDrag);
+        document.addEventListener('mouseup', onStop);
+    });
+    
+    function onDrag(e) {
+        const newWidth = Math.max(180, Math.min(600, startWidth + (e.clientX - startX)));
+        container.style.setProperty('--docs-sidebar-width', newWidth + 'px');
+        container.style.gridTemplateColumns = `${newWidth}px 6px 1fr`;
+    }
+    
+    function onStop() {
+        handle.classList.remove('dragging');
+        document.removeEventListener('mousemove', onDrag);
+        document.removeEventListener('mouseup', onStop);
+    }
+})();
 
 // Simple markdown formatter
 function formatMarkdown(text) {
@@ -3768,6 +4066,87 @@ function extractNotionContent(blocks) {
     }).filter(Boolean).join('\n\n');
 }
 
+// Convert markdown text to Notion blocks
+function markdownToNotionBlocks(text) {
+    if (!text) return [];
+    return text.split('\n').filter(line => line.trim()).map(line => {
+        // Headings
+        if (line.startsWith('### ')) return { object: 'block', type: 'heading_3', heading_3: { rich_text: [{ type: 'text', text: { content: line.slice(4) } }] } };
+        if (line.startsWith('## ')) return { object: 'block', type: 'heading_2', heading_2: { rich_text: [{ type: 'text', text: { content: line.slice(3) } }] } };
+        if (line.startsWith('# ')) return { object: 'block', type: 'heading_1', heading_1: { rich_text: [{ type: 'text', text: { content: line.slice(2) } }] } };
+        // Bullet list
+        if (line.startsWith('- ')) return { object: 'block', type: 'bulleted_list_item', bulleted_list_item: { rich_text: [{ type: 'text', text: { content: line.slice(2) } }] } };
+        // Paragraph
+        return { object: 'block', type: 'paragraph', paragraph: { rich_text: [{ type: 'text', text: { content: line } }] } };
+    });
+}
+
+// Create a new page in Notion Docs database
+async function createNotionDoc(name, content, category) {
+    const apiKey = localStorage.getItem('notionApiKey');
+    if (!apiKey) throw new Error('Notion API key not configured');
+    
+    const PROXY_URL = 'https://anthropic-proxy.dan-a14.workers.dev/notion';
+    const databaseId = documentLibrary.notionSync.databaseId || '1b3ff8c6-2c63-4941-bad2-1876bd405333';
+    
+    const properties = {
+        Name: { title: [{ text: { content: name } }] }
+    };
+    if (category && category !== 'uncategorized') {
+        properties.Category = { select: { name: category.charAt(0).toUpperCase() + category.slice(1) } };
+    }
+    
+    const blocks = markdownToNotionBlocks(content);
+    
+    const res = await fetch(`${PROXY_URL}/pages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Notion-Token': apiKey },
+        body: JSON.stringify({
+            parent: { database_id: databaseId },
+            properties,
+            children: blocks.slice(0, 100) // Notion limit: 100 blocks per request
+        })
+    });
+    
+    if (!res.ok) throw new Error('Notion create failed: ' + res.status);
+    return await res.json();
+}
+
+// Update an existing Notion page's content (replace all blocks)
+async function updateNotionDoc(pageId, content) {
+    const apiKey = localStorage.getItem('notionApiKey');
+    if (!apiKey) throw new Error('Notion API key not configured');
+    
+    const PROXY_URL = 'https://anthropic-proxy.dan-a14.workers.dev/notion';
+    
+    // First, get existing blocks to delete them
+    const blocksRes = await fetch(`${PROXY_URL}/blocks/${pageId}/children?page_size=100`, {
+        headers: { 'X-Notion-Token': apiKey }
+    });
+    
+    if (blocksRes.ok) {
+        const existing = await blocksRes.json();
+        // Delete existing blocks
+        for (const block of (existing.results || [])) {
+            await fetch(`${PROXY_URL}/blocks/${block.id}`, {
+                method: 'DELETE',
+                headers: { 'X-Notion-Token': apiKey }
+            });
+        }
+    }
+    
+    // Append new blocks
+    const blocks = markdownToNotionBlocks(content);
+    if (blocks.length > 0) {
+        const appendRes = await fetch(`${PROXY_URL}/blocks/${pageId}/children`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'X-Notion-Token': apiKey },
+            body: JSON.stringify({ children: blocks.slice(0, 100) })
+        });
+        if (!appendRes.ok) throw new Error('Notion append failed: ' + appendRes.status);
+    }
+}
+
 function updateNotionSyncStatus() {
     const statusEl = document.getElementById('notionSyncStatus');
     if (statusEl && documentLibrary.notionSync.lastSync) {
@@ -3855,6 +4234,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Export new functions
 window.loadDocumentLibrary = loadDocumentLibrary;
+function toggleKBCategory(cat) {
+    if (!window._kbExpanded) window._kbExpanded = new Set();
+    if (window._kbExpanded.has(cat)) {
+        window._kbExpanded.delete(cat);
+    } else {
+        window._kbExpanded.add(cat);
+    }
+    renderDocumentLibrary();
+}
+window.toggleKBCategory = toggleKBCategory;
 window.renderDocumentLibrary = renderDocumentLibrary;
 window.openUploadDocModal = openUploadDocModal;
 window.saveUploadedDocument = saveUploadedDocument;
@@ -4760,3 +5149,1531 @@ window.toggleSection = toggleSection;
 window.initSortableSidebar = initSortableSidebar;
 window.loadSidebarOrder = loadSidebarOrder;
 window.saveSidebarOrder = saveSidebarOrder;
+
+// ═══════════════════════════════════════════════
+// COMPETITORS TAB (IG Content Analysis)
+// ═══════════════════════════════════════════════
+const SUPABASE_URL = 'https://nzppfxttbqrgwjofxqfm.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHBmeHR0YnFyZ3dqb2Z4cWZtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MTYwMzc0NCwiZXhwIjoyMDg3MTc5NzQ0fQ.c09wGidcUfUPODNAGXdZEDBaZIdLcXew5ePzCN-zeKM';
+
+let competitorData = {
+    posts: [],
+    creators: [],
+    loaded: false,
+    loading: false
+};
+
+async function supabaseFetch(table, query = '') {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+        headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json'
+        }
+    });
+    if (!res.ok) throw new Error(`Supabase error: ${res.status}`);
+    return res.json();
+}
+
+async function loadCompetitorData(force = false) {
+    if (competitorData.loading) return;
+    if (competitorData.loaded && !force) return;
+
+    competitorData.loading = true;
+    
+    const grid = document.getElementById('compPostsGrid');
+    if (grid) grid.innerHTML = '<div class="empty-state"><p>⏳ Loading competitor data...</p></div>';
+
+    try {
+        const [posts, creators] = await Promise.all([
+            supabaseFetch('ig_posts', '?select=*&order=posted_at.desc.nullslast&limit=500'),
+            supabaseFetch('ig_creators', '?select=*')
+        ]);
+
+        // Build creator lookup map (id → username)
+        const creatorMap = {};
+        (creators || []).forEach(c => { creatorMap[c.id] = c.username; });
+        // Enrich posts with creator_username
+        (posts || []).forEach(p => {
+            if (!p.creator_username && p.creator_id) {
+                p.creator_username = creatorMap[p.creator_id] || 'unknown';
+            }
+        });
+        competitorData.posts = posts || [];
+        competitorData.creators = creators || [];
+        competitorData.creatorMap = creatorMap;
+        competitorData.loaded = true;
+
+        populateCompFilters();
+        renderCompStats();
+        renderCompetitorPosts();
+        renderHookLibrary();
+    } catch (err) {
+        console.error('Competitor data load failed:', err);
+        if (grid) grid.innerHTML = `<div class="empty-state"><p>❌ Failed to load data</p><small>${escapeHtml(err.message)}</small></div>`;
+    } finally {
+        competitorData.loading = false;
+    }
+}
+
+function populateCompFilters() {
+    const posts = competitorData.posts;
+    const creators = competitorData.creators;
+
+    // Creator dropdown
+    const creatorSel = document.getElementById('compFilterCreator');
+    if (!creatorSel) return; // Tab HTML not loaded yet
+    const creatorNames = [...new Set(creators.map(c => c.username).concat(posts.map(p => p.creator_username)).filter(Boolean))].sort();
+    creatorSel.innerHTML = '<option value="all">All Creators</option>' +
+        creatorNames.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+
+    // Hook Structure
+    const hookStructures = [...new Set(posts.map(p => p.hook_structure).filter(Boolean))].sort();
+    const hsSel = document.getElementById('compFilterHookStructure');
+    hsSel.innerHTML = '<option value="all">All Hook Structures</option>' +
+        hookStructures.map(h => `<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`).join('');
+
+    // Content Structure
+    const contentStructures = [...new Set(posts.map(p => p.content_structure).filter(Boolean))].sort();
+    const csSel = document.getElementById('compFilterContentStructure');
+    csSel.innerHTML = '<option value="all">All Content Structures</option>' +
+        contentStructures.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+
+    // Visual Format
+    const visualFormats = [...new Set(posts.map(p => p.visual_format).filter(Boolean))].sort();
+    const vfSel = document.getElementById('compFilterVisualFormat');
+    vfSel.innerHTML = '<option value="all">All Visual Formats</option>' +
+        visualFormats.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+}
+
+function renderCompStats() {
+    const posts = competitorData.posts;
+    const creators = competitorData.creators;
+    const $ = id => document.getElementById(id) || {};
+
+    $('compTotalPosts').textContent = posts.length;
+    $('compCreatorCount').textContent = creators.length || [...new Set(posts.map(p => p.creator_username))].length;
+
+    const hookCounts = {};
+    posts.forEach(p => { if (p.hook_structure) hookCounts[p.hook_structure] = (hookCounts[p.hook_structure] || 0) + 1; });
+    const topHook = Object.entries(hookCounts).sort((a, b) => b[1] - a[1])[0];
+    $('compTopHookStructure').textContent = topHook ? topHook[0] : '--';
+
+    const contentCounts = {};
+    posts.forEach(p => { if (p.content_structure) contentCounts[p.content_structure] = (contentCounts[p.content_structure] || 0) + 1; });
+    const topContent = Object.entries(contentCounts).sort((a, b) => b[1] - a[1])[0];
+    $('compTopContentStructure').textContent = topContent ? topContent[0] : '--';
+
+    const viewPosts = posts.filter(p => p.views);
+    const avgViews = viewPosts.length > 0 ? Math.round(viewPosts.reduce((s, p) => s + p.views, 0) / viewPosts.length) : 0;
+    $('compAvgViews').textContent = formatCompactNumber(avgViews);
+}
+
+function getFilteredCompPosts() {
+    let filtered = [...competitorData.posts];
+
+    const creator = document.getElementById('compFilterCreator')?.value;
+    const hookStructure = document.getElementById('compFilterHookStructure')?.value;
+    const contentStructure = document.getElementById('compFilterContentStructure')?.value;
+    const visualFormat = document.getElementById('compFilterVisualFormat')?.value;
+    const sortBy = document.getElementById('compSortBy')?.value || 'posted_at';
+
+    if (creator && creator !== 'all') filtered = filtered.filter(p => p.creator_username === creator);
+    if (hookStructure && hookStructure !== 'all') filtered = filtered.filter(p => p.hook_structure === hookStructure);
+    if (contentStructure && contentStructure !== 'all') filtered = filtered.filter(p => p.content_structure === contentStructure);
+    if (visualFormat && visualFormat !== 'all') filtered = filtered.filter(p => p.visual_format === visualFormat);
+
+    filtered.sort((a, b) => {
+        if (sortBy === 'views') return (b.views || 0) - (a.views || 0);
+        if (sortBy === 'likes') return (b.likes || 0) - (a.likes || 0);
+        if (sortBy === 'comments') return (b.comments || 0) - (a.comments || 0);
+        return (b.posted_at || '').localeCompare(a.posted_at || '');
+    });
+
+    return filtered;
+}
+
+function renderCompetitorPosts() {
+    const grid = document.getElementById('compPostsGrid');
+    const filtered = getFilteredCompPosts();
+
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div class="empty-state"><p>No posts match your filters</p></div>';
+        return;
+    }
+
+    grid.innerHTML = filtered.map(post => {
+        return `
+        <div class="comp-post-card">
+            <!-- @username + date at top -->
+            <div class="comp-post-header">
+                <span class="comp-creator">@${escapeHtml(post.creator_username || 'unknown')}</span>
+                <span class="comp-date">${post.posted_at ? formatDate(post.posted_at) : '--'}</span>
+            </div>
+
+            <!-- Thumbnail image - 4:5 aspect ratio -->
+            <div class="comp-thumb-wrap">
+                <img class="comp-thumb-img" src="${proxyImg(post.thumbnail_url)}" alt="" onerror="this.parentElement.style.display='none'">
+            </div>
+
+            <!-- Stats bar underneath image -->
+            <div class="comp-stats-bar">
+                <div class="comp-stat-item">
+                    <span class="comp-stat-number">${formatCompactNumber(post.views)}</span>
+                    <span class="comp-stat-label">views</span>
+                </div>
+                <div class="comp-stat-item">
+                    <span class="comp-stat-number">${formatCompactNumber(post.likes)}</span>
+                    <span class="comp-stat-label">likes</span>
+                </div>
+                <div class="comp-stat-item">
+                    <span class="comp-stat-number">${formatCompactNumber(post.comments)}</span>
+                    <span class="comp-stat-label">comments</span>
+                </div>
+            </div>
+
+            <!-- Hook Framework (if exists) -->
+            ${post.hook_framework ? `
+            <div class="comp-hook-framework">
+                <div class="comp-framework-text">"${escapeHtml(post.hook_framework)}"</div>
+            </div>` : ''}
+
+            <!-- Analysis fields below -->
+            <div class="comp-analysis">
+                ${post.hook_structure ? `<div class="comp-detail"><span class="comp-label">Hook Structure</span><span class="comp-value">${escapeHtml(post.hook_structure)}</span></div>` : ''}
+                ${post.content_structure ? `<div class="comp-detail"><span class="comp-label">Content Structure</span><span class="comp-value">${escapeHtml(post.content_structure)}</span></div>` : ''}
+                ${post.visual_format ? `<div class="comp-detail"><span class="comp-label">Visual Format</span><span class="comp-value">${escapeHtml(post.visual_format)}</span></div>` : ''}
+                ${post.visual_hook ? `<div class="comp-detail"><span class="comp-label">Visual Hook</span><span class="comp-value">${escapeHtml(post.visual_hook)}</span></div>` : ''}
+                ${post.text_hook ? `<div class="comp-detail"><span class="comp-label">Text Hook</span><span class="comp-value">${escapeHtml(post.text_hook)}</span></div>` : ''}
+                ${post.spoken_hook ? `<div class="comp-detail"><span class="comp-label">Spoken Hook</span><span class="comp-value">${escapeHtml(post.spoken_hook)}</span></div>` : ''}
+                ${post.topic ? `<div class="comp-detail"><span class="comp-label">Topic</span><span class="comp-value">${escapeHtml(post.topic)}</span></div>` : ''}
+                ${post.summary ? `<div class="comp-detail"><span class="comp-label">Summary</span><span class="comp-value">${escapeHtml(post.summary)}</span></div>` : ''}
+                ${post.cta ? `<div class="comp-detail"><span class="comp-label">CTA</span><span class="comp-value">${escapeHtml(post.cta)}</span></div>` : ''}
+            </div>
+
+            <!-- Badges -->
+            <div class="comp-badges">
+                ${post.hook_structure ? `<span class="comp-badge hook-structure">${escapeHtml(post.hook_structure)}</span>` : ''}
+                ${post.content_structure ? `<span class="comp-badge content-structure">${escapeHtml(post.content_structure)}</span>` : ''}
+                ${post.visual_format ? `<span class="comp-badge visual-format">${escapeHtml(post.visual_format)}</span>` : ''}
+            </div>
+
+            ${post.post_url ? `<a href="${escapeHtml(post.post_url)}" target="_blank" class="comp-link">View Original →</a>` : ''}
+        </div>`;
+    }).join('');
+}
+
+function renderHookLibrary() {
+    const container = document.getElementById('compHookLibrary') || document.getElementById('compHooksContainer');
+    const posts = competitorData.posts.filter(p => p.hook_framework);
+
+    if (posts.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No hook frameworks found yet</p></div>';
+        return;
+    }
+
+    // Group by hook_structure
+    const grouped = {};
+    posts.forEach(p => {
+        const key = p.hook_structure || 'Uncategorized';
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(p);
+    });
+
+    // Sort groups by count
+    const sortedGroups = Object.entries(grouped).sort((a, b) => b[1].length - a[1].length);
+
+    container.innerHTML = sortedGroups.map(([structure, groupPosts]) => `
+        <div class="hook-group">
+            <div class="hook-group-header">
+                <h3>${escapeHtml(structure)}</h3>
+                <span class="hook-group-count">${groupPosts.length} hooks</span>
+            </div>
+            <div class="hook-group-items">
+                ${groupPosts.map(p => `
+                    <div class="hook-swipe-card">
+                        <div class="hook-swipe-framework">"${escapeHtml(p.hook_framework)}"</div>
+                        <div class="hook-swipe-meta">
+                            <span class="hook-swipe-creator">@${escapeHtml(p.creator_username || 'unknown')}</span>
+                            <span class="hook-swipe-stat">${formatCompactNumber(p.views)} views</span>
+                            <span class="hook-swipe-stat">${formatCompactNumber(p.likes)} likes</span>
+                            ${(p.topic_tag || p.topic) ? `<span class="hook-swipe-topic">${escapeHtml(p.topic_tag || p.topic)}</span>` : ''}
+                        </div>
+                        <div class="hook-swipe-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText('${escapeHtml(p.hook_framework).replace(/'/g, "\\'")}'); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',1500)">Copy</button>
+                            ${p.post_url ? `<a href="${escapeHtml(p.post_url)}" target="_blank" class="btn btn-secondary btn-sm">View Original</a>` : ''}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+}
+
+function switchCompView(view) {
+    document.getElementById('compPostsView').style.display = view === 'posts' ? 'block' : 'none';
+    document.getElementById('compHooksView').style.display = view === 'hooks' ? 'block' : 'none';
+    document.getElementById('compViewPosts').classList.toggle('active', view === 'posts');
+    document.getElementById('compViewHooks').classList.toggle('active', view === 'hooks');
+}
+
+async function addCreator() {
+    const input = document.getElementById('compNewCreator');
+    if (!input) return;
+    const handle = (input.value || '').trim().replace(/^@/, '');
+    if (!handle) { showToast('Enter an Instagram handle'); return; }
+    try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/ig_creators`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=representation,resolution=merge-duplicates'
+            },
+            body: JSON.stringify({ username: handle, is_active: true })
+        });
+        if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
+        input.value = '';
+        showToast(`@${handle} added! They'll be scraped on the next run.`);
+        loadCompetitorData(true);
+        loadActiveCreators();
+    } catch (err) {
+        showToast(`Failed to add: ${err.message}`);
+    }
+}
+
+async function deleteCreator(username) {
+    if (!confirm(`Are you sure you want to remove @${username} from tracking?`)) return;
+    
+    try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/ig_creators?username=eq.${username}`, {
+            method: 'PATCH',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({ is_active: false })
+        });
+        if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
+        
+        showToast(`@${username} removed from tracking`);
+        loadActiveCreators();
+        loadCompetitorData(true);
+    } catch (err) {
+        showToast(`Failed to remove: ${err.message}`);
+    }
+}
+
+async function loadActiveCreators() {
+    try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/ig_creators?is_active=eq.true&order=username`, {
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`
+            }
+        });
+        if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
+        
+        const creators = await res.json();
+        renderActiveCreators(creators);
+    } catch (err) {
+        console.error('Failed to load active creators:', err);
+    }
+}
+
+function renderActiveCreators(creators) {
+    const container = document.getElementById('activeCreatorsList') || document.getElementById('manageCreatorsList');
+    if (!container) return;
+    
+    if (!creators || creators.length === 0) {
+        container.innerHTML = '<div class="creators-empty">No creators being tracked yet.</div>';
+        return;
+    }
+    
+    container.innerHTML = creators.map(creator => `
+        <div class="creator-item">
+            <span class="creator-handle">@${creator.username}</span>
+            <button class="btn-delete" onclick="deleteCreator('${creator.username}')" title="Remove creator">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+    `).join('');
+}
+
+// showToast defined above (Forge's version at line ~2989)
+
+function toggleManageCreators() {
+    const panel = document.getElementById('manageCreatorsPanel');
+    if (!panel) return;
+    const isVisible = panel.style.display !== 'none';
+    
+    if (isVisible) {
+        panel.style.display = 'none';
+    } else {
+        panel.style.display = 'block';
+        loadActiveCreators();
+    }
+}
+
+// Competitors tab hook handled in main switchTab function
+
+// Also update the titles map
+const origTitles = {
+    business: 'Business',
+    tracker: 'Performance',
+    kanban: 'Projects',
+    activity: 'Activity',
+    knowledge: 'Knowledge',
+    docs: 'Docs Hub',
+    content: 'Content Intel',
+    youtube: 'YouTube',
+    instagram: 'Instagram',
+    schedules: 'Schedules',
+    'meta-ads': 'Meta Ads',
+    competitors: 'Competitors',
+    multiplier: 'Multiplier'
+};
+
+// ===========================================
+// REPORTS & KNOWLEDGE HUB SUBTABS
+// ===========================================
+
+// Competitors tab hook handled in main switchTab function above
+
+// Export competitor functions
+window.loadCompetitorData = loadCompetitorData;
+window.renderCompetitorPosts = renderCompetitorPosts;
+window.switchCompView = switchCompView;
+window.addCreator = addCreator;
+window.deleteCreator = deleteCreator;
+window.loadActiveCreators = loadActiveCreators;
+window.toggleManageCreators = toggleManageCreators;
+
+// ===========================================
+// VIP CLIENT TRACKER (v2 — Inline Editing)
+// ===========================================
+
+const VIP_API = 'http://localhost:3847';
+
+let vipState = {
+    clients: [],
+    lastSynced: null,
+    loaded: false,
+    sortField: 'name',
+    sortAsc: true,
+};
+
+// ── Helpers ──────────────────────────────────
+
+function vipCalcProgramEnd(client) {
+    if (!client.joined || !client.programLength) return null;
+    const months = parseInt(client.programLength) || 0;
+    if (!months) return null;
+    const d = new Date(client.joined + 'T00:00:00');
+    d.setMonth(d.getMonth() + months);
+    return d.toISOString().slice(0, 10);
+}
+
+function vipEndClass(endDate) {
+    if (!endDate) return '';
+    const now = new Date();
+    const end = new Date(endDate + 'T00:00:00');
+    const diff = (end - now) / 86400000;
+    if (diff < 0) return 'vip-end-past';
+    if (diff <= 30) return 'vip-end-soon';
+    return '';
+}
+
+function vipShowToast(msg, isError) {
+    showToast((isError ? '❌ ' : '✅ ') + msg);
+}
+
+async function vipUpdateField(pageId, notionProp, value) {
+    // Optimistic local update is done before calling this
+    try {
+        const res = await fetch(VIP_API + '/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pageId, property: notionProp, value }),
+        });
+        if (!res.ok) throw new Error('API error');
+        vipShowToast('Synced to Notion');
+    } catch (e) {
+        console.error('VIP update failed:', e);
+        vipShowToast('Notion sync failed — saved locally', true);
+    }
+}
+
+function vipSaveLocal() {
+    const data = { lastSynced: vipState.lastSynced, clients: vipState.clients };
+    localStorage.setItem('geeves-vip-clients', JSON.stringify(data));
+}
+
+// ── Load / Sync ──────────────────────────────
+
+async function loadVIPClients() {
+    // Try API server first, fall back to static JSON
+    try {
+        const res = await fetch(VIP_API + '/clients');
+        if (res.ok) {
+            const data = await res.json();
+            if (data && data.clients) {
+                vipState.clients = data.clients;
+                vipState.lastSynced = data.lastSynced;
+                vipState.loaded = true;
+            }
+        }
+    } catch {
+        // API server not running, fall back
+    }
+    if (!vipState.loaded) {
+        const data = await loadJSON('vip-clients');
+        if (data && data.clients) {
+            vipState.clients = data.clients;
+            vipState.lastSynced = data.lastSynced;
+            vipState.loaded = true;
+        }
+    }
+    populateVIPFilters();
+    renderVIPStats();
+    renderVIPTable();
+    if (vipState.lastSynced) {
+        document.getElementById('vipLastSynced').textContent = 'Last synced: ' + formatDateTime(vipState.lastSynced);
+    }
+}
+
+async function syncVIPClients() {
+    const btn = event.target.closest('button');
+    btn.textContent = '⏳ Syncing...';
+    btn.disabled = true;
+    try {
+        const res = await fetch(VIP_API + '/sync', { method: 'POST' });
+        if (res.ok) {
+            const data = await res.json();
+            if (data && data.clients) {
+                vipState.clients = data.clients;
+                vipState.lastSynced = data.lastSynced;
+                populateVIPFilters();
+                renderVIPStats();
+                renderVIPTable();
+                if (data.lastSynced) {
+                    document.getElementById('vipLastSynced').textContent = 'Last synced: ' + formatDateTime(data.lastSynced);
+                }
+                vipShowToast('Synced from Notion');
+            }
+        } else {
+            throw new Error('sync failed');
+        }
+    } catch (e) {
+        console.error('VIP sync error:', e);
+        vipShowToast('Sync failed — is the VIP API server running?', true);
+    } finally {
+        btn.textContent = '🔄 Sync from Notion';
+        btn.disabled = false;
+    }
+}
+
+// ── Stats ────────────────────────────────────
+
+function renderVIPStats() {
+    const clients = vipState.clients;
+    const active = clients.filter(c => c.status === 'Active').length;
+    const atRisk = clients.filter(c => c.status === 'At Risk').length;
+    const churned = clients.filter(c => c.status === 'Churned').length;
+    const onboarding = clients.filter(c => c.status === 'Onboarding').length;
+    const target = 72;
+
+    let mrr = 0;
+    clients.filter(c => c.status === 'Active' || c.status === 'Onboarding').forEach(c => {
+        if (c.payment === '1k/month') mrr += 1000;
+        else if (c.payment === '3k PIF/Year') mrr += 250;
+        else if (c.payment === '+1') mrr += 1000;
+        else mrr += 500;
+    });
+
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10);
+    const newThisMonth = clients.filter(c => c.joined >= monthStart).length;
+
+    document.getElementById('vipStatsGrid').innerHTML = `
+        <div class="vip-stat-card"><div class="vip-stat-value" style="color:#22C55E">${active}</div><div class="vip-stat-label">Active VIPs</div><div class="vip-stat-sub">${Math.round(active/target*100)}% of ${target} target</div></div>
+        <div class="vip-stat-card"><div class="vip-stat-value" style="color:var(--forest-green)">$${mrr.toLocaleString()}</div><div class="vip-stat-label">Est. MRR</div><div class="vip-stat-sub">from ${active + onboarding} clients</div></div>
+        <div class="vip-stat-card"><div class="vip-stat-value" style="color:${atRisk > 0 ? '#F59E0B' : 'var(--charcoal)'}">${atRisk}</div><div class="vip-stat-label">At Risk</div><div class="vip-stat-sub">${atRisk > 0 ? '⚠️ needs attention' : 'all clear'}</div></div>
+        <div class="vip-stat-card"><div class="vip-stat-value" style="color:#3B82F6">${newThisMonth}</div><div class="vip-stat-label">New This Month</div><div class="vip-stat-sub">${onboarding} onboarding</div></div>
+        <div class="vip-stat-card"><div class="vip-stat-value" style="color:#EF4444">${churned}</div><div class="vip-stat-label">Churned</div><div class="vip-stat-sub">total lost</div></div>
+        <div class="vip-stat-card"><div class="vip-stat-value">${clients.length}</div><div class="vip-stat-label">Total Clients</div><div class="vip-stat-sub">all statuses</div></div>
+    `;
+}
+
+// ── Filters ──────────────────────────────────
+
+function populateVIPFilters() {
+    const programs = new Set();
+    const payments = new Set();
+    vipState.clients.forEach(c => {
+        (c.program || []).forEach(p => programs.add(p));
+        if (c.payment) payments.add(c.payment);
+    });
+    document.getElementById('vipProgramFilter').innerHTML = '<option value="all">All Programs</option>' +
+        [...programs].sort().map(p => `<option value="${p}">${p}</option>`).join('');
+    document.getElementById('vipPaymentFilter').innerHTML = '<option value="all">All Payments</option>' +
+        [...payments].sort().map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+function getFilteredVIPClients() {
+    const search = (document.getElementById('vipSearch')?.value || '').toLowerCase();
+    const status = document.getElementById('vipStatusFilter')?.value || 'all';
+    const program = document.getElementById('vipProgramFilter')?.value || 'all';
+    const payment = document.getElementById('vipPaymentFilter')?.value || 'all';
+    return vipState.clients.filter(c => {
+        if (search && !c.name.toLowerCase().includes(search) && !(c.email||'').toLowerCase().includes(search)) return false;
+        if (status !== 'all' && c.status !== status) return false;
+        if (program !== 'all' && !(c.program || []).includes(program)) return false;
+        if (payment !== 'all' && c.payment !== payment) return false;
+        return true;
+    });
+}
+
+function sortVIPTable(field) {
+    if (vipState.sortField === field) vipState.sortAsc = !vipState.sortAsc;
+    else { vipState.sortField = field; vipState.sortAsc = true; }
+    renderVIPTable();
+}
+
+function filterVIPClients() { renderVIPTable(); }
+
+// ── Table Render (with inline editable cells) ──
+
+function renderVIPTable() {
+    let clients = getFilteredVIPClients();
+    const f = vipState.sortField;
+    const dir = vipState.sortAsc ? 1 : -1;
+    clients.sort((a, b) => {
+        let va, vb;
+        if (f === 'program') { va = (a.program||[]).join(','); vb = (b.program||[]).join(','); }
+        else if (f === 'programEnd') { va = vipCalcProgramEnd(a) || 'zzzz'; vb = vipCalcProgramEnd(b) || 'zzzz'; }
+        else { va = a[f] || ''; vb = b[f] || ''; }
+        if (typeof va === 'string') va = va.toLowerCase();
+        if (typeof vb === 'string') vb = vb.toLowerCase();
+        return va < vb ? -dir : va > vb ? dir : 0;
+    });
+
+    const tbody = document.getElementById('vipTableBody');
+    if (clients.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" class="empty">No clients match filters</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = clients.map(c => {
+        const statusClass = {'Active':'vip-badge-active','At Risk':'vip-badge-risk','Churned':'vip-badge-churned','Onboarding':'vip-badge-onboarding'}[c.status] || '';
+        const programBadges = (c.program||[]).map(p => `<span class="vip-program-badge">${escapeHtml(p)}</span>`).join(' ');
+        const todoBadges = (c.todo||[]).map(t => `<span class="vip-todo-badge">${escapeHtml(t)}</span>`).join(' ');
+        const joinedFmt = c.joined ? new Date(c.joined+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+        const endDate = vipCalcProgramEnd(c);
+        const endFmt = endDate ? new Date(endDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+        const endCls = vipEndClass(endDate);
+
+        return `<tr class="vip-row">
+            <td class="vip-name-cell" onclick="openVIPDetail('${c.id}')"><strong>${escapeHtml(c.name)}</strong></td>
+            <td class="vip-editable" onclick="vipEditSelect(event,'${c.id}','status',['Active','At Risk','Churned','Onboarding'])"><span class="vip-status-badge ${statusClass}">${escapeHtml(c.status)}</span></td>
+            <td class="vip-editable" onclick="vipEditMultiSelect(event,'${c.id}','program')">${programBadges || '<span class="vip-empty-cell">—</span>'}</td>
+            <td class="vip-editable" onclick="vipEditSelect(event,'${c.id}','payment',['1k/month','3k PIF/Year','PIF','+1',''])">${escapeHtml(c.payment) || '<span class="vip-empty-cell">—</span>'}</td>
+            <td class="vip-editable" onclick="vipEditText(event,'${c.id}','pif')">${escapeHtml(c.pif) || '<span class="vip-empty-cell">—</span>'}</td>
+            <td>${joinedFmt}</td>
+            <td>${escapeHtml(c.programLength) || '—'}</td>
+            <td class="${endCls}">${endFmt}</td>
+            <td class="vip-editable" onclick="vipEditText(event,'${c.id}','todo')">${todoBadges || '<span class="vip-empty-cell">—</span>'}</td>
+            <td>${c.email ? `<a href="mailto:${escapeHtml(c.email)}" class="vip-email-link" onclick="event.stopPropagation()">${escapeHtml(c.email)}</a>` : ''}</td>
+        </tr>`;
+    }).join('');
+}
+
+// ── Inline Editing: Select Dropdown ──────────
+
+function vipEditSelect(event, clientId, field, options) {
+    event.stopPropagation();
+    const td = event.currentTarget;
+    if (td.querySelector('.vip-inline-select')) return; // Already editing
+
+    const client = vipState.clients.find(c => c.id === clientId);
+    if (!client) return;
+
+    const currentVal = client[field] || '';
+    const select = document.createElement('select');
+    select.className = 'vip-inline-select';
+    options.forEach(opt => {
+        const o = document.createElement('option');
+        o.value = opt;
+        o.textContent = opt || '(empty)';
+        if (opt === currentVal) o.selected = true;
+        select.appendChild(o);
+    });
+
+    td.innerHTML = '';
+    td.appendChild(select);
+    select.focus();
+
+    const commit = () => {
+        const newVal = select.value;
+        if (newVal !== currentVal) {
+            client[field] = newVal;
+            vipSaveLocal();
+            renderVIPStats();
+            renderVIPTable();
+            // Map field to Notion property name
+            const notionMap = { status: 'Status', payment: 'Payment' };
+            vipUpdateField(clientId, notionMap[field] || field, newVal);
+        } else {
+            renderVIPTable();
+        }
+    };
+    select.addEventListener('change', commit);
+    select.addEventListener('blur', () => { setTimeout(() => renderVIPTable(), 100); });
+}
+
+// ── Inline Editing: Text Input ───────────────
+
+function vipEditText(event, clientId, field) {
+    event.stopPropagation();
+    const td = event.currentTarget;
+    if (td.querySelector('.vip-inline-input')) return;
+
+    const client = vipState.clients.find(c => c.id === clientId);
+    if (!client) return;
+
+    let currentVal;
+    if (field === 'todo') {
+        currentVal = (client.todo || []).join(', ');
+    } else {
+        currentVal = client[field] || '';
+    }
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'vip-inline-input';
+    input.value = currentVal;
+
+    td.innerHTML = '';
+    td.appendChild(input);
+    input.focus();
+    input.select();
+
+    const commit = () => {
+        const newVal = input.value.trim();
+        if (field === 'todo') {
+            const arr = newVal ? newVal.split(',').map(s => s.trim()).filter(Boolean) : [];
+            client.todo = arr;
+            vipSaveLocal();
+            renderVIPTable();
+            vipUpdateField(clientId, 'TODO', arr);
+        } else if (field === 'pif') {
+            client.pif = newVal;
+            vipSaveLocal();
+            renderVIPTable();
+            vipUpdateField(clientId, 'PIF', newVal);
+        }
+    };
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); commit(); } if (e.key === 'Escape') renderVIPTable(); });
+    input.addEventListener('blur', commit);
+}
+
+// ── Inline Editing: Multi-Select (Program) ───
+
+function vipEditMultiSelect(event, clientId, field) {
+    event.stopPropagation();
+    const td = event.currentTarget;
+    if (td.querySelector('.vip-multi-dropdown')) return;
+
+    const client = vipState.clients.find(c => c.id === clientId);
+    if (!client) return;
+
+    // Gather all known options
+    const allOptions = new Set();
+    vipState.clients.forEach(c => (c[field] || []).forEach(p => allOptions.add(p)));
+    // Add some defaults
+    ['Group VIP', '1:1', 'Inner Circle'].forEach(p => allOptions.add(p));
+
+    const current = new Set(client[field] || []);
+    const div = document.createElement('div');
+    div.className = 'vip-multi-dropdown';
+
+    [...allOptions].sort().forEach(opt => {
+        const label = document.createElement('label');
+        label.className = 'vip-multi-option';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = opt;
+        cb.checked = current.has(opt);
+        label.appendChild(cb);
+        label.appendChild(document.createTextNode(' ' + opt));
+        div.appendChild(label);
+    });
+
+    const doneBtn = document.createElement('button');
+    doneBtn.className = 'btn btn-sm btn-primary';
+    doneBtn.textContent = 'Done';
+    doneBtn.style.marginTop = '6px';
+    doneBtn.style.width = '100%';
+    div.appendChild(doneBtn);
+
+    td.innerHTML = '';
+    td.appendChild(div);
+
+    doneBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const checked = [...div.querySelectorAll('input:checked')].map(cb => cb.value);
+        client[field] = checked;
+        vipSaveLocal();
+        renderVIPTable();
+        vipUpdateField(clientId, 'Program ', checked); // Note: space after "Program"
+    });
+
+    // Close on outside click
+    const closeHandler = (e) => {
+        if (!div.contains(e.target)) {
+            document.removeEventListener('click', closeHandler, true);
+            renderVIPTable();
+        }
+    };
+    setTimeout(() => document.addEventListener('click', closeHandler, true), 0);
+}
+
+// ── Detail Modal (with inline editing) ───────
+
+function openVIPDetail(id) {
+    const c = vipState.clients.find(cl => cl.id === id);
+    if (!c) return;
+
+    const endDate = vipCalcProgramEnd(c);
+    const endFmt = endDate ? new Date(endDate+'T00:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '—';
+    const endCls = vipEndClass(endDate);
+    const statusClass = {'Active':'vip-badge-active','At Risk':'vip-badge-risk','Churned':'vip-badge-churned','Onboarding':'vip-badge-onboarding'}[c.status] || '';
+
+    const statusOpts = ['Active','At Risk','Churned','Onboarding'].map(o =>
+        `<option value="${o}" ${o === c.status ? 'selected' : ''}>${o}</option>`).join('');
+    const paymentOpts = ['1k/month','3k PIF/Year','PIF','+1',''].map(o =>
+        `<option value="${o}" ${o === c.payment ? 'selected' : ''}>${o || '(empty)'}</option>`).join('');
+    const lengthOpts = ['12 Months','6 Months','3 Months',''].map(o =>
+        `<option value="${o}" ${o === c.programLength ? 'selected' : ''}>${o || '(empty)'}</option>`).join('');
+
+    // Program checkboxes
+    const allPrograms = new Set();
+    vipState.clients.forEach(cl => (cl.program || []).forEach(p => allPrograms.add(p)));
+    ['Group VIP', '1:1', 'Inner Circle'].forEach(p => allPrograms.add(p));
+    const programChecks = [...allPrograms].sort().map(p =>
+        `<label class="vip-modal-check"><input type="checkbox" value="${escapeHtml(p)}" ${(c.program||[]).includes(p)?'checked':''}> ${escapeHtml(p)}</label>`
+    ).join('');
+
+    document.getElementById('vipDetailName').textContent = c.name;
+    document.getElementById('vipDetailBody').innerHTML = `
+        <div class="vip-detail-grid">
+            <div class="form-group">
+                <label>Status</label>
+                <select class="vip-modal-select" id="vipModalStatus">${statusOpts}</select>
+            </div>
+            <div class="form-group">
+                <label>Payment</label>
+                <select class="vip-modal-select" id="vipModalPayment">${paymentOpts}</select>
+            </div>
+            <div class="form-group">
+                <label>PIF Amount</label>
+                <input type="text" class="vip-modal-input" id="vipModalPIF" value="${escapeHtml(c.pif||'')}">
+            </div>
+            <div class="form-group">
+                <label>Program Length</label>
+                <select class="vip-modal-select" id="vipModalLength">${lengthOpts}</select>
+            </div>
+            <div class="form-group">
+                <label>Joined</label>
+                <p style="margin:0;color:#666;font-size:14px">${c.joined ? new Date(c.joined+'T00:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : 'Unknown'}</p>
+            </div>
+            <div class="form-group">
+                <label>Program End</label>
+                <p style="margin:0;font-size:14px" class="${endCls}">${endFmt}</p>
+            </div>
+            <div class="form-group" style="grid-column:1/-1">
+                <label>Program</label>
+                <div class="vip-modal-checks">${programChecks}</div>
+            </div>
+            <div class="form-group" style="grid-column:1/-1">
+                <label>TODO</label>
+                <input type="text" class="vip-modal-input" id="vipModalTodo" value="${escapeHtml((c.todo||[]).join(', '))}" placeholder="Comma-separated">
+            </div>
+            <div class="form-group" style="grid-column:1/-1">
+                <label>Email</label>
+                <p style="margin:0;font-size:14px">${c.email ? `<a href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>` : 'N/A'}</p>
+            </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:16px;justify-content:space-between;align-items:center">
+            ${c.notionUrl ? `<a href="${escapeHtml(c.notionUrl)}" target="_blank" class="btn btn-secondary btn-sm">Open in Notion ↗</a>` : '<span></span>'}
+            <button class="btn btn-primary" onclick="vipSaveModal('${c.id}')">Save Changes</button>
+        </div>
+    `;
+    openModal('vipDetailModal');
+}
+
+function vipSaveModal(clientId) {
+    const c = vipState.clients.find(cl => cl.id === clientId);
+    if (!c) return;
+
+    const newStatus = document.getElementById('vipModalStatus').value;
+    const newPayment = document.getElementById('vipModalPayment').value;
+    const newPIF = document.getElementById('vipModalPIF').value.trim();
+    const newLength = document.getElementById('vipModalLength').value;
+    const newTodo = document.getElementById('vipModalTodo').value.trim().split(',').map(s=>s.trim()).filter(Boolean);
+    const newProgram = [...document.querySelectorAll('.vip-modal-checks input:checked')].map(cb => cb.value);
+
+    // Detect changes and update
+    const changes = [];
+    if (c.status !== newStatus) { c.status = newStatus; changes.push(['Status', newStatus]); }
+    if (c.payment !== newPayment) { c.payment = newPayment; changes.push(['Payment', newPayment]); }
+    if (c.pif !== newPIF) { c.pif = newPIF; changes.push(['PIF', newPIF]); }
+    if (c.programLength !== newLength) { c.programLength = newLength; changes.push(['Program Length', newLength]); }
+    if (JSON.stringify(c.todo) !== JSON.stringify(newTodo)) { c.todo = newTodo; changes.push(['TODO', newTodo]); }
+    if (JSON.stringify(c.program) !== JSON.stringify(newProgram)) { c.program = newProgram; changes.push(['Program ', newProgram]); }
+
+    if (changes.length > 0) {
+        vipSaveLocal();
+        renderVIPStats();
+        renderVIPTable();
+        // Send all changes to Notion
+        changes.forEach(([prop, val]) => vipUpdateField(clientId, prop, val));
+        vipShowToast(`Updated ${changes.length} field(s)`);
+    }
+    closeModal();
+}
+
+window.loadVIPClients = loadVIPClients;
+window.syncVIPClients = syncVIPClients;
+window.filterVIPClients = filterVIPClients;
+window.sortVIPTable = sortVIPTable;
+window.openVIPDetail = openVIPDetail;
+window.vipEditSelect = vipEditSelect;
+window.vipEditText = vipEditText;
+window.vipEditMultiSelect = vipEditMultiSelect;
+window.vipSaveModal = vipSaveModal;
+
+// ═══════════════════════════════════════════════════
+// GOOGLE TASKS INTEGRATION
+// ═══════════════════════════════════════════════════
+
+const TASKS_API = 'http://localhost:3848';
+let tasksData = [];
+let tasksLists = [];
+let currentTaskFilter = 'active';
+let tasksInitialized = false;
+
+async function initTasks() {
+    if (tasksInitialized) return;
+    tasksInitialized = true;
+    
+    try {
+        // Check auth status
+        const status = await fetch(`${TASKS_API}/status`).then(r => r.json());
+        if (!status.authorized) {
+            document.getElementById('tasksList').innerHTML = `
+                <div class="tasks-empty">
+                    <p>⚠️ Google Tasks not connected yet.</p>
+                    <p><a href="${TASKS_API}/auth" target="_blank" style="color: var(--forest-green); font-weight: 600;">Click here to authorize</a></p>
+                </div>`;
+            return;
+        }
+        
+        // Load task lists
+        tasksLists = await fetch(`${TASKS_API}/lists`).then(r => r.json());
+        const select = document.getElementById('tasksListSelect');
+        select.innerHTML = tasksLists.map((l, i) => 
+            `<option value="${l.id}" ${i === 0 ? 'selected' : ''}>${l.title}</option>`
+        ).join('');
+        
+        await loadGTasks();
+    } catch (e) {
+        document.getElementById('tasksList').innerHTML = `
+            <div class="tasks-empty">
+                <p>❌ Cannot connect to Tasks server.</p>
+                <p style="font-size:0.8rem; color:#999;">Make sure tasks-api-server.js is running on port 3848</p>
+            </div>`;
+    }
+}
+
+async function loadGTasks() {
+    const listId = document.getElementById('tasksListSelect').value;
+    if (!listId) return;
+    
+    try {
+        const data = await fetch(`${TASKS_API}/tasks?list=${encodeURIComponent(listId)}&showCompleted=true&showHidden=true`).then(r => r.json());
+        tasksData = data.tasks || [];
+        renderGTasks();
+    } catch (e) {
+        console.error('Failed to load tasks:', e);
+    }
+}
+
+function renderGTasks() {
+    const container = document.getElementById('tasksList');
+    
+    let filtered = tasksData;
+    if (currentTaskFilter === 'active') {
+        filtered = tasksData.filter(t => t.status !== 'completed');
+    } else if (currentTaskFilter === 'completed') {
+        filtered = tasksData.filter(t => t.status === 'completed');
+    }
+    
+    // Sort: active first by due date, then no date, then completed
+    filtered.sort((a, b) => {
+        if (a.status === 'completed' && b.status !== 'completed') return 1;
+        if (a.status !== 'completed' && b.status === 'completed') return -1;
+        if (a.due && b.due) return new Date(a.due) - new Date(b.due);
+        if (a.due && !b.due) return -1;
+        if (!a.due && b.due) return 1;
+        return 0;
+    });
+    
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div class="tasks-empty">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+                <p>${currentTaskFilter === 'completed' ? 'No completed tasks' : currentTaskFilter === 'active' ? 'All clear! No tasks pending. 🎉' : 'No tasks yet'}</p>
+            </div>`;
+        return;
+    }
+    
+    container.innerHTML = filtered.map(task => {
+        const isCompleted = task.status === 'completed';
+        const dueDate = task.due ? new Date(task.due) : null;
+        const isOverdue = dueDate && !isCompleted && dueDate < new Date();
+        const dueDateStr = dueDate ? dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+        
+        return `
+            <div class="task-item ${isCompleted ? 'completed' : ''}" data-task-id="${task.id}">
+                <div class="task-checkbox ${isCompleted ? 'checked' : ''}" 
+                     onclick="toggleGTaskComplete('${task.id}', ${isCompleted})"></div>
+                <div class="task-body">
+                    <div class="task-title" ondblclick="editGTaskTitle(this, '${task.id}')">${escapeHtml(task.title || '')}</div>
+                    <div class="task-meta">
+                        ${(() => { const tm = task.notes?.match(/⏰\s*(\d{1,2}:\d{2})/); const cleanNotes = task.notes?.replace(/⏰\s*\d{1,2}:\d{2}\n?/, '').trim(); return (cleanNotes ? `<span class="task-notes">${escapeHtml(cleanNotes)}</span>` : '') + (dueDateStr ? `<span class="task-due ${isOverdue ? 'overdue' : ''}">${isOverdue ? '⚠️ ' : '📅 '}${dueDateStr}${tm ? ' · ' + tm[1] : ''}</span>` : (tm ? `<span class="task-due">⏰ ${tm[1]}</span>` : '')); })()}
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="task-action-btn delete" onclick="deleteGTask('${task.id}')" title="Delete">🗑</button>
+                </div>
+            </div>`;
+    }).join('');
+}
+
+function filterGTasks(filter) {
+    currentTaskFilter = filter;
+    document.querySelectorAll('.tasks-filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === filter);
+    });
+    renderGTasks();
+}
+
+function showAddGTask() {
+    document.getElementById('addTaskForm').style.display = 'flex';
+    document.getElementById('newTaskTitle').focus();
+}
+
+function hideAddGTask() {
+    document.getElementById('addTaskForm').style.display = 'none';
+    document.getElementById('newTaskTitle').value = '';
+    document.getElementById('newTaskNotes').value = '';
+    document.getElementById('newTaskDue').value = '';
+    const timeEl = document.getElementById('newTaskTime');
+    if (timeEl) timeEl.value = '';
+}
+
+async function createGTask() {
+    const title = document.getElementById('newTaskTitle').value.trim();
+    if (!title) return;
+    
+    const notes = document.getElementById('newTaskNotes').value.trim();
+    const dateVal = document.getElementById('newTaskDue').value;
+    const timeVal = document.getElementById('newTaskTime')?.value;
+    const listId = document.getElementById('tasksListSelect').value;
+    
+    let due = undefined;
+    if (dateVal) {
+        due = timeVal ? `${dateVal}T${timeVal}:00` : dateVal;
+    }
+    
+    // Include time in notes if set
+    let finalNotes = notes || undefined;
+    if (timeVal && dateVal) {
+        finalNotes = `⏰ ${timeVal}${notes ? '\n' + notes : ''}`;
+    }
+    
+    try {
+        await fetch(`${TASKS_API}/tasks`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ list: listId, title, notes: finalNotes, due }),
+        });
+        
+        hideAddGTask();
+        await loadGTasks();
+        if (typeof showToast === 'function') showToast('Task created ✓');
+    } catch (e) {
+        console.error('Failed to create task:', e);
+    }
+}
+
+async function toggleGTaskComplete(taskId, isCurrentlyCompleted) {
+    const listId = document.getElementById('tasksListSelect').value;
+    const endpoint = isCurrentlyCompleted ? 'uncomplete' : 'complete';
+    
+    try {
+        await fetch(`${TASKS_API}/${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ list: listId, taskId }),
+        });
+        
+        await loadGTasks();
+    } catch (e) {
+        console.error('Failed to toggle task:', e);
+    }
+}
+
+async function deleteGTask(taskId) {
+    const listId = document.getElementById('tasksListSelect').value;
+    
+    try {
+        await fetch(`${TASKS_API}/tasks?list=${encodeURIComponent(listId)}&taskId=${encodeURIComponent(taskId)}`, {
+            method: 'DELETE',
+        });
+        
+        await loadGTasks();
+        if (typeof showToast === 'function') showToast('Task deleted');
+    } catch (e) {
+        console.error('Failed to delete task:', e);
+    }
+}
+
+function editGTaskTitle(el, taskId) {
+    const current = el.textContent;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = current;
+    input.className = 'task-title-edit';
+    
+    input.onblur = () => saveGTaskTitle(input, el, taskId);
+    input.onkeydown = (e) => {
+        if (e.key === 'Enter') input.blur();
+        if (e.key === 'Escape') { el.textContent = current; }
+    };
+    
+    el.textContent = '';
+    el.appendChild(input);
+    input.focus();
+    input.select();
+}
+
+async function saveGTaskTitle(input, el, taskId) {
+    const newTitle = input.value.trim();
+    if (!newTitle) {
+        el.textContent = input.defaultValue;
+        return;
+    }
+    
+    el.textContent = newTitle;
+    const listId = document.getElementById('tasksListSelect').value;
+    
+    try {
+        await fetch(`${TASKS_API}/tasks`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ list: listId, taskId, title: newTitle }),
+        });
+    } catch (e) {
+        console.error('Failed to update task:', e);
+    }
+}
+
+// Hook into tab switching to init tasks when tab is selected
+const _origSwitchTab = typeof switchTab === 'function' ? switchTab : null;
+document.querySelectorAll('[data-tab="google-tasks"]').forEach(el => {
+    el.addEventListener('click', () => {
+        setTimeout(initTasks, 100);
+    });
+});
+
+// ═══════════════════════════════════════════════════
+// EMBEDDED TASKS (Business Dashboard)
+// ═══════════════════════════════════════════════════
+
+let bizTasksData = [];
+let bizTasksInitialized = false;
+
+async function initTasksBiz() {
+    if (bizTasksInitialized) return;
+    bizTasksInitialized = true;
+    
+    try {
+        const status = await fetch(`${TASKS_API}/status`).then(r => r.json());
+        if (!status.authorized) {
+            document.getElementById('tasksListBiz').innerHTML = `
+                <div class="tasks-empty">
+                    <p><a href="${TASKS_API}/auth" target="_blank" style="color:var(--forest-green);font-weight:600;">Connect Google Tasks</a></p>
+                </div>`;
+            return;
+        }
+        
+        const lists = await fetch(`${TASKS_API}/lists`).then(r => r.json());
+        const select = document.getElementById('tasksListSelectBiz');
+        select.innerHTML = lists.map((l, i) => 
+            `<option value="${l.id}" ${i === 0 ? 'selected' : ''}>${l.title}</option>`
+        ).join('');
+        
+        // Also populate the standalone tab select if it exists
+        const standaloneSelect = document.getElementById('tasksListSelect');
+        if (standaloneSelect) {
+            standaloneSelect.innerHTML = select.innerHTML;
+        }
+        
+        tasksLists = lists;
+        await loadTasksBiz();
+    } catch (e) {
+        document.getElementById('tasksListBiz').innerHTML = `
+            <div class="tasks-empty">
+                <p style="font-size:0.8rem;color:#999;">Tasks server not running</p>
+            </div>`;
+    }
+}
+
+async function loadTasksBiz() {
+    const listId = document.getElementById('tasksListSelectBiz').value;
+    if (!listId) return;
+    
+    try {
+        const data = await fetch(`${TASKS_API}/tasks?list=${encodeURIComponent(listId)}&showCompleted=true`).then(r => r.json());
+        bizTasksData = (data.tasks || []).filter(t => t.title);
+        renderTasksBiz();
+    } catch (e) {
+        console.error('Failed to load tasks:', e);
+    }
+}
+
+function renderTasksBiz() {
+    const container = document.getElementById('tasksListBiz');
+    
+    // Show active tasks only in the compact view
+    const active = bizTasksData.filter(t => t.status !== 'completed');
+    const completed = bizTasksData.filter(t => t.status === 'completed');
+    
+    // Sort by due date
+    active.sort((a, b) => {
+        if (a.due && b.due) return new Date(a.due) - new Date(b.due);
+        if (a.due) return -1;
+        if (b.due) return 1;
+        return 0;
+    });
+    
+    if (active.length === 0 && completed.length === 0) {
+        container.innerHTML = `<div class="tasks-empty"><p>No tasks yet ✨</p></div>`;
+        return;
+    }
+    
+    const renderItem = (task) => {
+        const isCompleted = task.status === 'completed';
+        const due = task.due ? new Date(task.due) : null;
+        const isOverdue = due && !isCompleted && due < new Date();
+        const dueStr = due ? due.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+        
+        return `<div class="task-item-biz ${isCompleted ? 'completed' : ''}">
+            <div class="task-cb ${isCompleted ? 'checked' : ''}" 
+                 onclick="toggleTaskBiz('${task.id}', ${isCompleted})"></div>
+            <div class="task-body-biz">
+                <div class="task-title-biz">${escapeHtml(task.title)}</div>
+                ${dueStr ? `<div class="task-due-biz ${isOverdue ? 'overdue' : ''}">${isOverdue ? '⚠️ ' : ''}${dueStr}</div>` : ''}
+            </div>
+            <button class="task-del-biz" onclick="deleteTaskBiz('${task.id}')">✕</button>
+        </div>`;
+    };
+    
+    let html = active.map(renderItem).join('');
+    
+    if (completed.length > 0) {
+        html += `<div style="font-size:0.75rem;color:#aaa;padding:0.5rem 0.5rem 0.25rem;margin-top:0.5rem;border-top:1px solid var(--border);">
+            Completed (${completed.length})</div>`;
+        html += completed.slice(0, 5).map(renderItem).join('');
+        if (completed.length > 5) {
+            html += `<div style="font-size:0.7rem;color:#ccc;padding:0.25rem 0.5rem;">+${completed.length - 5} more</div>`;
+        }
+    }
+    
+    container.innerHTML = html;
+}
+
+function showAddTaskBiz() {
+    document.getElementById('addTaskFormBiz').style.display = 'flex';
+    document.getElementById('newTaskTitleBiz').focus();
+}
+
+function hideAddTaskBiz() {
+    document.getElementById('addTaskFormBiz').style.display = 'none';
+    document.getElementById('newTaskTitleBiz').value = '';
+    document.getElementById('newTaskDueBiz').value = '';
+}
+
+async function createTaskBiz() {
+    const title = document.getElementById('newTaskTitleBiz').value.trim();
+    if (!title) return;
+    
+    const due = document.getElementById('newTaskDueBiz').value;
+    const listId = document.getElementById('tasksListSelectBiz').value;
+    
+    try {
+        await fetch(`${TASKS_API}/tasks`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ list: listId, title, due: due || undefined }),
+        });
+        hideAddTaskBiz();
+        await loadTasksBiz();
+        if (typeof showToast === 'function') showToast('Task added ✓');
+    } catch (e) { console.error(e); }
+}
+
+async function toggleTaskBiz(taskId, isCompleted) {
+    const listId = document.getElementById('tasksListSelectBiz').value;
+    try {
+        await fetch(`${TASKS_API}/${isCompleted ? 'uncomplete' : 'complete'}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ list: listId, taskId }),
+        });
+        await loadTasksBiz();
+    } catch (e) { console.error(e); }
+}
+
+async function deleteTaskBiz(taskId) {
+    const listId = document.getElementById('tasksListSelectBiz').value;
+    try {
+        await fetch(`${TASKS_API}/tasks?list=${encodeURIComponent(listId)}&taskId=${encodeURIComponent(taskId)}`, {
+            method: 'DELETE',
+        });
+        await loadTasksBiz();
+    } catch (e) { console.error(e); }
+}
+
+// Auto-init tasks when page loads (business tab is default)
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(initTasksBiz, 500);
+});
+// Also try immediately in case DOMContentLoaded already fired
+setTimeout(initTasksBiz, 500);
+
+// ═══════════════════════════════════════════════════
+// CLIENT HEALTH — POWERED BY VIP DATA
+// ═══════════════════════════════════════════════════
+
+// VIP_API already declared above = 'http://localhost:3847';
+
+async function initClientHealth() {
+    try {
+        const res = await fetch(`${VIP_API}/clients`);
+        if (!res.ok) throw new Error('VIP API not available');
+        const clients = await res.json();
+        renderClientHealth(clients);
+    } catch (e) {
+        // Fallback: try loading from static file
+        try {
+            const res = await fetch('data/vip-clients.json');
+            const clients = await res.json();
+            renderClientHealth(clients);
+        } catch (e2) {
+            console.log('Client health: no data available');
+        }
+    }
+}
+
+function renderClientHealth(clients) {
+    const active = clients.filter(c => c.status === 'Active');
+    const atRisk = clients.filter(c => c.status === 'At Risk');
+    const onboarding = clients.filter(c => c.status === 'Onboarding');
+    const churned = clients.filter(c => c.status === 'Churned');
+    const total = clients.length;
+    
+    // Update total label
+    const totalLabel = document.getElementById('clientsTotalLabel');
+    if (totalLabel) totalLabel.textContent = `${active.length + onboarding.length} active`;
+    
+    // Ring SVG helper
+    const circumference = 2 * Math.PI * 20; // radius 20
+    function ring(value, max, color) {
+        const pct = max > 0 ? value / max : 0;
+        const offset = circumference - (pct * circumference);
+        return `<div class="ch-ring">
+            <svg viewBox="0 0 48 48">
+                <circle class="ch-ring-bg" cx="24" cy="24" r="20"/>
+                <circle class="ch-ring-fill" cx="24" cy="24" r="20" 
+                    stroke="${color}" 
+                    stroke-dasharray="${circumference}" 
+                    stroke-dashoffset="${offset}"/>
+            </svg>
+            <span class="ch-ring-number">${value}</span>
+        </div>`;
+    }
+    
+    const grid = document.getElementById('clientHealthGrid');
+    grid.innerHTML = `
+        <div class="ch-stat">
+            ${ring(active.length, 72, '#34C759')}
+            <span class="ch-label">Active</span>
+        </div>
+        <div class="ch-stat">
+            ${ring(onboarding.length, 5, '#007AFF')}
+            <span class="ch-label">Onboarding</span>
+        </div>
+        <div class="ch-stat">
+            ${ring(atRisk.length, 10, '#FF9F0A')}
+            <span class="ch-label">At Risk</span>
+        </div>
+        <div class="ch-stat">
+            ${ring(churned.length, 10, '#FF3B30')}
+            <span class="ch-label">Churned</span>
+        </div>
+    `;
+    
+    // Build alerts from real data
+    const alerts = document.getElementById('clientAlertsLive');
+    let alertsHtml = '<div class="ca-header">Client Insights</div>';
+    
+    // At-risk clients
+    atRisk.forEach(c => {
+        alertsHtml += `<div class="ca-item">
+            <div class="ca-dot yellow"></div>
+            <div class="ca-text"><strong>${c.name}</strong> <span class="ca-sub">— At Risk · ${c.program || 'Unknown program'}</span></div>
+        </div>`;
+    });
+    
+    // Onboarding clients
+    onboarding.forEach(c => {
+        alertsHtml += `<div class="ca-item">
+            <div class="ca-dot blue"></div>
+            <div class="ca-text"><strong>${c.name}</strong> <span class="ca-sub">— Onboarding · ${c.program || 'New'}</span></div>
+        </div>`;
+    });
+    
+    // Recent churns
+    churned.slice(0, 2).forEach(c => {
+        alertsHtml += `<div class="ca-item">
+            <div class="ca-dot red"></div>
+            <div class="ca-text"><strong>${c.name}</strong> <span class="ca-sub">— Churned · ${c.program || ''}</span></div>
+        </div>`;
+    });
+    
+    // Target progress
+    const pctToTarget = Math.round((active.length / 72) * 100);
+    alertsHtml += `<div class="ca-item">
+        <div class="ca-dot green"></div>
+        <div class="ca-text"><strong>${pctToTarget}%</strong> <span class="ca-sub">to 72 VIP target · ${72 - active.length} spots to fill</span></div>
+    </div>`;
+    
+    alerts.innerHTML = alertsHtml;
+}
+
+// Override createTaskBiz to include time
+const _origCreateTaskBiz = createTaskBiz;
+createTaskBiz = async function() {
+    const title = document.getElementById('newTaskTitleBiz').value.trim();
+    if (!title) return;
+    
+    const dateVal = document.getElementById('newTaskDueBiz').value;
+    const timeVal = document.getElementById('newTaskTimeBiz')?.value;
+    const listId = document.getElementById('tasksListSelectBiz').value;
+    
+    let due = undefined;
+    if (dateVal) {
+        due = timeVal ? `${dateVal}T${timeVal}:00` : dateVal;
+    }
+    
+    // Include time in notes if set
+    let notes = undefined;
+    if (timeVal && dateVal) {
+        notes = `⏰ ${timeVal}`;
+    }
+    
+    try {
+        await fetch(`${TASKS_API}/tasks`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ list: listId, title, due, notes }),
+        });
+        hideAddTaskBiz();
+        await loadTasksBiz();
+        if (typeof showToast === 'function') showToast('Task added ✓');
+    } catch (e) { console.error(e); }
+};
+
+// Update renderTasksBiz to show time
+const _origRenderTasksBiz = renderTasksBiz;
+renderTasksBiz = function() {
+    const container = document.getElementById('tasksListBiz');
+    
+    const active = bizTasksData.filter(t => t.title && t.status !== 'completed');
+    const completed = bizTasksData.filter(t => t.title && t.status === 'completed');
+    
+    active.sort((a, b) => {
+        if (a.due && b.due) return new Date(a.due) - new Date(b.due);
+        if (a.due) return -1;
+        if (b.due) return 1;
+        return 0;
+    });
+    
+    if (active.length === 0 && completed.length === 0) {
+        container.innerHTML = `<div class="tasks-empty"><p>All clear ✨</p></div>`;
+        return;
+    }
+    
+    const renderItem = (task) => {
+        const isCompleted = task.status === 'completed';
+        const due = task.due ? new Date(task.due) : null;
+        const isOverdue = due && !isCompleted && due < new Date();
+        const dueStr = due ? due.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+        
+        // Extract time from notes if present
+        const timeMatch = task.notes?.match(/⏰\s*(\d{1,2}:\d{2})/);
+        const timeStr = timeMatch ? timeMatch[1] : '';
+        
+        return `<div class="task-item-biz ${isCompleted ? 'completed' : ''}">
+            <div class="task-cb ${isCompleted ? 'checked' : ''}" 
+                 onclick="toggleTaskBiz('${task.id}', ${isCompleted})"></div>
+            <div class="task-body-biz">
+                <div class="task-title-biz">${escapeHtml(task.title)}</div>
+                ${dueStr || timeStr ? `<div class="task-due-biz ${isOverdue ? 'overdue' : ''}">
+                    ${isOverdue ? '⚠️ ' : ''}${dueStr}${timeStr ? `<span class="task-time-biz">${timeStr}</span>` : ''}
+                </div>` : ''}
+            </div>
+            <button class="task-del-biz" onclick="deleteTaskBiz('${task.id}')">✕</button>
+        </div>`;
+    };
+    
+    let html = active.map(renderItem).join('');
+    
+    if (completed.length > 0) {
+        html += `<div style="font-size:0.65rem;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.08em;padding:0.75rem 0.75rem 0.25rem;margin-top:0.5rem;border-top:1px solid rgba(0,0,0,0.04);">
+            Done · ${completed.length}</div>`;
+        html += completed.slice(0, 3).map(renderItem).join('');
+        if (completed.length > 3) {
+            html += `<div style="font-size:0.7rem;color:#86868b;padding:0.25rem 0.75rem;">+${completed.length - 3} more</div>`;
+        }
+    }
+    
+    container.innerHTML = html;
+};
+
+// Init client health on load
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(initClientHealth, 600);
+});
+setTimeout(initClientHealth, 600);
