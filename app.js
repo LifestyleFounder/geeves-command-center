@@ -6497,20 +6497,26 @@ setTimeout(initTasksBiz, 500);
 // VIP_API already declared above = 'http://localhost:3847';
 
 async function initClientHealth() {
-    try {
-        const res = await fetch(`${VIP_API}/clients`);
-        if (!res.ok) throw new Error('VIP API not available');
-        const clients = await res.json();
-        renderClientHealth(clients);
-    } catch (e) {
-        // Fallback: try loading from static file
+    let data = null;
+    // Only try localhost API when running locally (avoid mixed content on HTTPS)
+    if (location.protocol === 'http:') {
         try {
-            const res = await fetch('data/vip-clients.json');
-            const clients = await res.json();
-            renderClientHealth(clients);
-        } catch (e2) {
-            console.log('Client health: no data available');
-        }
+            const ctrl = new AbortController();
+            setTimeout(() => ctrl.abort(), 3000);
+            const res = await fetch(`${VIP_API}/clients`, { signal: ctrl.signal });
+            if (res.ok) data = await res.json();
+        } catch (e) { /* API not available */ }
+    }
+    // Fallback: static JSON file
+    if (!data) {
+        try {
+            const res = await fetch('data/vip-clients.json?t=' + Date.now());
+            if (res.ok) data = await res.json();
+        } catch (e2) { /* no data */ }
+    }
+    if (data) {
+        const clients = data.clients || data;
+        renderClientHealth(clients);
     }
 }
 
