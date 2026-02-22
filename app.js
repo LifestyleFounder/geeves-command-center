@@ -5618,33 +5618,49 @@ function vipSaveLocal() {
 // ── Load / Sync ──────────────────────────────
 
 async function loadVIPClients() {
-    // Try API server first, fall back to static JSON
-    try {
-        const res = await fetch(VIP_API + '/clients');
-        if (res.ok) {
-            const data = await res.json();
+    // Try API server first (only on localhost — skip on HTTPS to avoid mixed-content block)
+    if (!vipState.loaded && location.protocol === 'http:') {
+        try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 3000);
+            const res = await fetch(VIP_API + '/clients', { signal: controller.signal });
+            clearTimeout(timeout);
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.clients) {
+                    vipState.clients = data.clients;
+                    vipState.lastSynced = data.lastSynced;
+                    vipState.loaded = true;
+                }
+            }
+        } catch (e) {
+            // API server not running, fall back
+            console.log('VIP API unavailable, using static data:', e.message);
+        }
+    }
+    // Fallback: static JSON file
+    if (!vipState.loaded) {
+        try {
+            const data = await loadJSON('vip-clients');
             if (data && data.clients) {
                 vipState.clients = data.clients;
                 vipState.lastSynced = data.lastSynced;
                 vipState.loaded = true;
             }
-        }
-    } catch {
-        // API server not running, fall back
-    }
-    if (!vipState.loaded) {
-        const data = await loadJSON('vip-clients');
-        if (data && data.clients) {
-            vipState.clients = data.clients;
-            vipState.lastSynced = data.lastSynced;
-            vipState.loaded = true;
+        } catch (e) {
+            console.error('Failed to load VIP clients from static JSON:', e);
         }
     }
-    populateVIPFilters();
-    renderVIPStats();
-    renderVIPTable();
+    try {
+        populateVIPFilters();
+        renderVIPStats();
+        renderVIPTable();
+    } catch (e) {
+        console.error('VIP render error:', e);
+    }
     if (vipState.lastSynced) {
-        document.getElementById('vipLastSynced').textContent = 'Last synced: ' + formatDateTime(vipState.lastSynced);
+        const el = document.getElementById('vipLastSynced');
+        if (el) el.textContent = 'Last synced: ' + formatDateTime(vipState.lastSynced);
     }
 }
 
@@ -6063,7 +6079,9 @@ window.vipSaveModal = vipSaveModal;
 // GOOGLE TASKS INTEGRATION
 // ═══════════════════════════════════════════════════
 
-const TASKS_API = 'http://localhost:3848';
+const TASKS_API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? 'http://localhost:3848'
+    : '/api';
 let tasksData = [];
 let tasksLists = [];
 let currentTaskFilter = 'active';
