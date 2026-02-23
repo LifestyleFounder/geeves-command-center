@@ -7417,6 +7417,13 @@ body {
     flex-direction: row-reverse;
 }
 
+.aie-msg.user > div:not(.aie-msg-avatar) {
+    max-width: 75%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
 .aie-msg-avatar {
     width: 32px;
     height: 32px;
@@ -7454,6 +7461,8 @@ body {
     background: var(--forest-green);
     color: white;
     border-bottom-right-radius: 4px;
+    max-width: 100%;
+    padding: 14px 18px;
 }
 
 .aie-msg-bubble pre {
@@ -7545,6 +7554,59 @@ body {
 
 .aie-input-container textarea::placeholder {
     color: #aaa;
+}
+
+/* ── File Attachment ── */
+.aie-attach-btn {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+.aie-attach-btn:hover {
+    color: var(--forest-green);
+}
+
+.aie-file-chips {
+    max-width: 780px;
+    margin: 0 auto 6px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 0 20px;
+}
+
+.aie-file-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-size: 12px;
+    color: var(--charcoal);
+}
+
+.aie-file-chip-remove {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 2px;
+    line-height: 1;
+}
+
+.aie-file-chip-remove:hover {
+    color: var(--error);
 }
 
 .aie-send-btn {

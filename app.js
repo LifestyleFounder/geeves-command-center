@@ -6941,6 +6941,7 @@ const AIEmployees = (function() {
     let generating = false;
     let sidebarCollapsed = false;
     let initialized = false;
+    let attachedFiles = [];
 
     function init() {
         if (initialized) return;
@@ -7170,12 +7171,13 @@ const AIEmployees = (function() {
             }
         }
 
-        // Add user message
-        messages.push({ role: 'user', content: message });
+        // Add user message (with file context if any)
+        const fullMessage = buildMessageWithFiles(message);
+        messages.push({ role: 'user', content: fullMessage });
         renderMessages();
 
         if (activeThreadId && ChatPersistence.isReady()) {
-            ChatPersistence.saveMessage(activeThreadId, 'user', message);
+            ChatPersistence.saveMessage(activeThreadId, 'user', fullMessage);
         }
 
         input.value = '';
@@ -7185,7 +7187,7 @@ const AIEmployees = (function() {
         addLoadingMsg();
 
         try {
-            const response = await callAPI(message);
+            const response = await callAPI(fullMessage);
             removeLoadingMsg();
             messages.push({ role: 'assistant', content: response });
             renderMessages();
@@ -7278,9 +7280,67 @@ const AIEmployees = (function() {
         loadThreadList();
     }
 
+    // ── File Attachment ──
+
+    function attachFile() {
+        const input = document.getElementById('aieFileInput');
+        if (input) input.click();
+    }
+
+    function handleFiles(fileList) {
+        const maxSize = 100 * 1024; // 100KB
+        const maxFiles = 3;
+        for (const file of fileList) {
+            if (attachedFiles.length >= maxFiles) {
+                alert('Maximum 3 files allowed');
+                break;
+            }
+            if (file.size > maxSize) {
+                alert(`File "${file.name}" is too large (max 100KB)`);
+                continue;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                attachedFiles.push({ name: file.name, content: e.target.result });
+                renderFileChips();
+            };
+            reader.readAsText(file);
+        }
+        // Reset input so same file can be re-selected
+        document.getElementById('aieFileInput').value = '';
+    }
+
+    function removeFile(index) {
+        attachedFiles.splice(index, 1);
+        renderFileChips();
+    }
+
+    function renderFileChips() {
+        const container = document.getElementById('aieFileChips');
+        if (!container) return;
+        if (attachedFiles.length === 0) {
+            container.style.display = 'none';
+            container.innerHTML = '';
+            return;
+        }
+        container.style.display = 'flex';
+        container.innerHTML = attachedFiles.map((f, i) =>
+            `<span class="aie-file-chip">📎 ${escapeHTML(f.name)}<button class="aie-file-chip-remove" onclick="AIEmployees.removeFile(${i})">✕</button></span>`
+        ).join('');
+    }
+
+    function buildMessageWithFiles(message) {
+        if (attachedFiles.length === 0) return message;
+        const fileParts = attachedFiles.map(f => '```' + f.name + '\n' + f.content + '\n```').join('\n\n');
+        attachedFiles = [];
+        renderFileChips();
+        return fileParts + '\n\n' + message;
+    }
+
     return {
         init, startChat, openThread, newChat, send, handleKey, autoResize,
-        switchAgent, switchModel, toggleSidebar, deleteThread, loadThreadList
+        switchAgent, switchModel, toggleSidebar, deleteThread, loadThreadList,
+        attachFile, handleFiles, removeFile
     };
 })();
 
