@@ -7493,13 +7493,21 @@ body {
     padding-left: 4px;
 }
 
+.aie-msg-loading {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 48px;
+    padding: 4px 0;
+}
+
 .aie-msg-loading span {
-    display: inline-block;
+    display: block;
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: #bbb;
-    margin: 0 2px;
+    flex-shrink: 0;
     animation: aie-bounce 1.4s ease-in-out infinite;
 }
 
