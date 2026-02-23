@@ -86,10 +86,7 @@ function switchTab(tabName) {
     
     state.currentTab = tabName;
     
-    // Load tab-specific data on switch
-    if (tabName === 'meta-ads' && typeof initMetaAds === 'function') {
-        initMetaAds();
-    }
+    // Load VIP data on tab switch
     if (tabName === 'vip-clients' && typeof loadVIPClients === 'function') {
         loadVIPClients();
     }
@@ -4562,40 +4559,82 @@ function stopDrag(e) {
 // META ADS INTEGRATION
 // ===========================================
 
-let metaAdsData = null;
+let metaAdsData = {
+    lastUpdated: null,
+    summary: {
+        spend: 0,
+        leads: 0,
+        cpl: 0,
+        roas: 0,
+        impressions: 0,
+        revenue: 0
+    },
+    campaigns: []
+};
+
+// Meta Ads time range state
 let metaAdsRange = '7d';
-let metaSpendChart = null;
-let metaLeadsChart = null;
 
-// Entry point — called when Meta Ads tab is selected
-function initMetaAds() {
-    loadMetaAds();
-}
-
+// Load Meta Ads data from API
 async function loadMetaAds(range) {
     if (range) metaAdsRange = range;
 
     // Update range button states
-    document.querySelectorAll('.ma-range-btn').forEach(btn => {
+    document.querySelectorAll('.meta-range-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.range === metaAdsRange);
     });
 
-    // Show loading
-    const loadingEl = document.getElementById('metaAdsLoading');
-    if (loadingEl) loadingEl.style.display = 'flex';
+    // Show loading state
+    const updateStat = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+    updateStat('metaLastUpdated', 'Loading...');
+
+    // Try Vercel API first (works from any device)
+    const apiBase = location.protocol === 'https:' ? '' : '';
+    const apiUrl = `/api/meta-ads?range=${metaAdsRange}&t=${Date.now()}`;
 
     try {
-        const response = await fetch(`/api/meta-ads?range=${metaAdsRange}&t=${Date.now()}`);
+        const response = await fetch(apiUrl);
         if (response.ok) {
-            metaAdsData = await response.json();
+            const data = await response.json();
+            
+            // Map API response to metaAdsData format
+            metaAdsData = {
+                lastUpdated: data.updatedAt,
+                summary: {
+                    spend: data.totals.spend,
+                    leads: data.totals.leads,
+                    cpl: data.totals.cpl,
+                    roas: 0,
+                    impressions: data.totals.impressions,
+                    revenue: 0,
+                    registrations: data.totals.registrations,
+                    clicks: data.totals.clicks,
+                    ctr: data.totals.ctr
+                },
+                campaigns: data.campaigns.map(c => ({
+                    name: c.name,
+                    status: 'ACTIVE',
+                    spend: c.spend,
+                    impressions: c.impressions,
+                    clicks: c.clicks,
+                    ctr: c.ctr,
+                    leads: c.leads,
+                    registrations: c.registrations,
+                    cpl: c.cpl
+                })),
+                daily: data.daily || [],
+                range: data.range,
+                since: data.since,
+                until: data.until
+            };
             renderMetaAds();
             return;
         }
     } catch (e) {
-        console.log('Meta Ads API not available');
+        console.log('Meta Ads API not available, falling back to static data');
     }
-
-    // Fallback: static file
+    
+    // Fallback: try static data file
     try {
         const response = await fetch(`data/meta-ads.json?t=${Date.now()}`);
         if (response.ok) {
@@ -4603,180 +4642,112 @@ async function loadMetaAds(range) {
             renderMetaAds();
         }
     } catch (e) {
-        console.log('No meta-ads data found');
-    } finally {
-        if (loadingEl) loadingEl.style.display = 'none';
+        console.log('No meta-ads.json found');
     }
 }
 
+// Save Meta Ads data
+function saveMetaAds() {
+    localStorage.setItem('geeves-meta-ads', JSON.stringify(metaAdsData));
+}
+
+// Render Meta Ads data
 function renderMetaAds() {
-    const loadingEl = document.getElementById('metaAdsLoading');
-    if (loadingEl) loadingEl.style.display = 'none';
-
-    if (!metaAdsData) return;
-    const t = metaAdsData.totals || {};
-
-    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-    const rangeLabel = metaAdsRange === 'today' ? 'Today' : metaAdsRange === '30d' ? '30d' : '7d';
-
-    set('metaSpendLabel', `Ad Spend (${rangeLabel})`);
-    set('metaSpend', '$' + (t.spend || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    set('metaLeads', (t.leads || 0).toLocaleString());
-    set('metaCPL', '$' + (t.cpl || 0).toFixed(2));
-    set('metaApplications', (t.applications || 0).toLocaleString());
-    set('metaImpressions', formatCompactNumber(t.impressions || 0));
-
-    // Appointments with "No tracking" fallback
-    const apptEl = document.getElementById('metaAppointments');
-    if (apptEl) {
-        if ((t.appointments || 0) === 0) {
-            apptEl.innerHTML = '<span class="ma-no-tracking" title="Consider setting up Meta pixel schedule/custom events for appointment tracking">No tracking ℹ️</span>';
+    const { summary, campaigns, adSets, lastUpdated } = metaAdsData;
+    
+    // Update summary stats
+    const updateStat = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    };
+    
+    const rangeLabel = metaAdsRange === 'today' ? 'Today' : metaAdsRange === 'yesterday' ? 'Yesterday' : metaAdsRange === '30d' ? '30d' : '7d';
+    updateStat('metaSpendLabel', `Ad Spend (${rangeLabel})`);
+    updateStat('metaSpend', '$' + (summary.spend || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    updateStat('metaLeads', (summary.leads || 0).toLocaleString());
+    updateStat('metaCPL', '$' + (summary.cpl || 0).toFixed(2));
+    updateStat('metaROAS', (summary.roas || 0).toFixed(1) + 'x');
+    updateStat('metaImpressions', formatCompactNumber(summary.impressions || 0));
+    updateStat('metaRevenue', '$' + (summary.revenue || 0).toLocaleString());
+    
+    // Update last updated
+    const lastUpdatedEl = document.getElementById('metaLastUpdated');
+    if (lastUpdatedEl && lastUpdated) {
+        lastUpdatedEl.textContent = 'Last updated: ' + formatRelativeTime(lastUpdated);
+    }
+    
+    // Update campaigns table
+    const campaignsBody = document.getElementById('metaCampaignsBody');
+    if (campaignsBody) {
+        if (campaigns && campaigns.length > 0) {
+            campaignsBody.innerHTML = campaigns.map(c => `
+                <tr>
+                    <td><strong>${escapeHtml(c.name)}</strong></td>
+                    <td><span class="status-badge ${c.status === 'ACTIVE' ? 'active' : 'paused'}">${c.status || 'Unknown'}</span></td>
+                    <td>$${(c.spend || 0).toLocaleString()}</td>
+                    <td>${formatCompactNumber(c.impressions || 0)}</td>
+                    <td>${c.clicks || 0}</td>
+                    <td>${c.impressions ? ((c.clicks / c.impressions) * 100).toFixed(2) + '%' : '—'}</td>
+                    <td>${c.leads || 0}</td>
+                    <td>$${c.leads ? (c.spend / c.leads).toFixed(2) : '—'}</td>
+                </tr>
+            `).join('');
         } else {
-            apptEl.textContent = t.appointments.toLocaleString();
+            campaignsBody.innerHTML = '<tr><td colspan="8" class="empty">No campaigns yet — connect Meta Ads or add data manually</td></tr>';
         }
     }
-
-    const cpaEl = document.getElementById('metaCPA');
-    if (cpaEl) {
-        if ((t.appointments || 0) === 0) {
-            cpaEl.textContent = '—';
+    
+    // Update ad sets table
+    const adSetsBody = document.getElementById('metaAdSetsBody');
+    if (adSetsBody) {
+        if (adSets && adSets.length > 0) {
+            adSetsBody.innerHTML = adSets.map(a => `
+                <tr>
+                    <td>${escapeHtml(a.name)}</td>
+                    <td>${escapeHtml(a.campaign || '')}</td>
+                    <td>$${(a.spend || 0).toLocaleString()}</td>
+                    <td>${a.leads || 0}</td>
+                    <td>$${a.leads ? (a.spend / a.leads).toFixed(2) : '—'}</td>
+                </tr>
+            `).join('');
         } else {
-            cpaEl.textContent = '$' + (t.cost_per_appointment || 0).toFixed(2);
+            adSetsBody.innerHTML = '<tr><td colspan="5" class="empty">No ad set data</td></tr>';
         }
     }
-
-    // Last updated
-    if (metaAdsData.updatedAt) {
-        set('metaLastUpdated', 'Last updated: Just now');
-    }
-
-    // Charts
-    renderMetaCharts();
-
-    // Campaign table
-    renderMetaCampaignTable();
 }
 
-function renderMetaCharts() {
-    const daily = metaAdsData.daily || [];
-    if (daily.length === 0) return;
-
-    const labels = daily.map(d => {
-        const dt = new Date(d.date + 'T00:00:00');
-        return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    });
-
-    // Destroy old instances
-    if (metaSpendChart) { metaSpendChart.destroy(); metaSpendChart = null; }
-    if (metaLeadsChart) { metaLeadsChart.destroy(); metaLeadsChart = null; }
-
-    const spendCtx = document.getElementById('metaSpendChart');
-    const leadsCtx = document.getElementById('metaLeadsChart');
-    if (!spendCtx || !leadsCtx) return;
-
-    const chartFont = { family: "'Inter', sans-serif" };
-
-    metaSpendChart = new Chart(spendCtx, {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [{
-                label: 'Spend',
-                data: daily.map(d => d.spend),
-                borderColor: '#2D5A3D',
-                backgroundColor: 'rgba(45,90,61,0.15)',
-                fill: true,
-                tension: 0.3,
-                pointRadius: 3,
-                pointBackgroundColor: '#2D5A3D'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: ctx => '$' + ctx.parsed.y.toFixed(2)
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { callback: v => '$' + v, font: chartFont },
-                    grid: { color: 'rgba(0,0,0,0.05)' }
-                },
-                x: { ticks: { font: chartFont }, grid: { display: false } }
-            }
-        }
-    });
-
-    metaLeadsChart = new Chart(leadsCtx, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [
-                {
-                    label: 'Leads',
-                    data: daily.map(d => d.leads || 0),
-                    backgroundColor: 'rgba(45,90,61,0.7)',
-                    borderRadius: 4
-                },
-                {
-                    label: 'Appointments',
-                    data: daily.map(d => d.appointments || 0),
-                    backgroundColor: 'rgba(212,168,75,0.7)',
-                    borderRadius: 4
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'top', labels: { font: chartFont, usePointStyle: true, pointStyle: 'rectRounded' } }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { stepSize: 1, font: chartFont },
-                    grid: { color: 'rgba(0,0,0,0.05)' }
-                },
-                x: { ticks: { font: chartFont }, grid: { display: false } }
-            }
-        }
-    });
-}
-
-function renderMetaCampaignTable() {
-    const campaigns = metaAdsData.campaigns || [];
-    const body = document.getElementById('metaCampaignsBody');
-    if (!body) return;
-
-    if (campaigns.length === 0) {
-        body.innerHTML = '<tr><td colspan="11" class="empty">No campaign data available</td></tr>';
+// Quick add Meta data
+function quickAddMetaData() {
+    const spend = parseFloat(document.getElementById('quickAddSpend')?.value) || 0;
+    const leads = parseInt(document.getElementById('quickAddLeads')?.value) || 0;
+    const revenue = parseFloat(document.getElementById('quickAddRevenue')?.value) || 0;
+    
+    if (spend === 0 && leads === 0 && revenue === 0) {
+        alert('Please enter at least one value');
         return;
     }
-
-    body.innerHTML = campaigns.map(c => {
-        const status = c.spend > 0 ? 'ACTIVE' : 'PAUSED';
-        const statusClass = status === 'ACTIVE' ? 'ma-badge-active' : 'ma-badge-paused';
-        return `<tr>
-            <td><strong>${escapeHtml(c.name)}</strong></td>
-            <td><span class="ma-status-badge ${statusClass}">${status}</span></td>
-            <td>$${(c.spend || 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
-            <td>${formatCompactNumber(c.impressions || 0)}</td>
-            <td>${(c.clicks || 0).toLocaleString()}</td>
-            <td>${(c.ctr || 0).toFixed(2)}%</td>
-            <td>${c.leads || 0}</td>
-            <td>${c.leads ? '$' + (c.spend / c.leads).toFixed(2) : '—'}</td>
-            <td>${c.applications || 0}</td>
-            <td>${c.appointments || 0}</td>
-            <td>${c.appointments ? '$' + c.cost_per_appointment.toFixed(2) : '—'}</td>
-        </tr>`;
-    }).join('');
+    
+    // Add to existing totals
+    metaAdsData.summary.spend = (metaAdsData.summary.spend || 0) + spend;
+    metaAdsData.summary.leads = (metaAdsData.summary.leads || 0) + leads;
+    metaAdsData.summary.revenue = (metaAdsData.summary.revenue || 0) + revenue;
+    metaAdsData.summary.cpl = metaAdsData.summary.leads > 0 
+        ? metaAdsData.summary.spend / metaAdsData.summary.leads 
+        : 0;
+    metaAdsData.summary.roas = metaAdsData.summary.spend > 0 
+        ? metaAdsData.summary.revenue / metaAdsData.summary.spend 
+        : 0;
+    
+    metaAdsData.lastUpdated = new Date().toISOString();
+    saveMetaAds();
+    renderMetaAds();
+    
+    // Clear inputs
+    document.getElementById('quickAddSpend').value = '';
+    document.getElementById('quickAddLeads').value = '';
+    document.getElementById('quickAddRevenue').value = '';
+    
+    addActivity('system', 'Added Meta Ads data', `Spend: $${spend}, Leads: ${leads}, Revenue: $${revenue}`);
 }
 
 // Refresh Meta Ads (from API)
