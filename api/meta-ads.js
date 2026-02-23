@@ -18,7 +18,6 @@ module.exports = async (req, res) => {
   const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
   let since, until;
 
-  // Calculate date range
   const fmt = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   until = fmt(now);
 
@@ -43,20 +42,17 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // Campaign-level insights
     const campaignUrl = `https://graph.facebook.com/v21.0/${accountId}/insights?` +
-      `fields=campaign_name,campaign_id,spend,impressions,clicks,ctr,cpc,cpm,actions,cost_per_action_type` +
+      `fields=campaign_name,campaign_id,spend,impressions,clicks,ctr,cpc,actions,cost_per_action_type` +
       `&time_range={"since":"${since}","until":"${until}"}` +
       `&level=campaign&limit=25` +
       `&access_token=${token}`;
 
-    // Account-level totals
     const accountUrl = `https://graph.facebook.com/v21.0/${accountId}/insights?` +
       `fields=spend,impressions,clicks,ctr,actions,cost_per_action_type` +
       `&time_range={"since":"${since}","until":"${until}"}` +
       `&access_token=${token}`;
 
-    // Daily breakdown for charts
     const dailyUrl = `https://graph.facebook.com/v21.0/${accountId}/insights?` +
       `fields=spend,impressions,clicks,actions` +
       `&time_range={"since":"${since}","until":"${until}"}` +
@@ -73,55 +69,86 @@ module.exports = async (req, res) => {
     const account = await accountRes.json();
     const daily = await dailyRes.json();
 
-    // Extract lead counts from actions
-    const extractLeads = (actions) => {
+    // Helper: get action value by type
+    const getAction = (actions, type) => {
       if (!actions) return 0;
-      const leadAction = actions.find(a =>
-        a.action_type === 'lead' ||
-        a.action_type === 'onsite_web_lead' ||
-        a.action_type === 'offsite_conversion.fb_pixel_lead'
-      );
-      return leadAction ? parseInt(leadAction.value) : 0;
-    };
-
-    const extractRegistrations = (actions) => {
-      if (!actions) return 0;
-      const regAction = actions.find(a =>
-        a.action_type === 'complete_registration' ||
-        a.action_type === 'omni_complete_registration' ||
-        a.action_type === 'offsite_conversion.fb_pixel_complete_registration'
-      );
-      return regAction ? parseInt(regAction.value) : 0;
-    };
-
-    const extractApplications = (actions) => {
-      if (!actions) return 0;
-      const a = actions.find(x =>
-        x.action_type === 'offsite_conversion.fb_pixel_custom'
-      );
+      const a = actions.find(x => x.action_type === type);
       return a ? parseInt(a.value) : 0;
     };
 
+    const getCost = (costActions, type) => {
+      if (!costActions) return 0;
+      const a = costActions.find(x => x.action_type === type);
+      return a ? parseFloat(a.value) : 0;
+    };
+
+    // Extract primary result per campaign (matches what Ads Manager shows as "Results")
+    // Priority: complete_registration > lead/fb_pixel_lead > messaging_conversation_started > link_click
+    const extractPrimaryResult = (actions, costActions) => {
+      if (!actions) return { results: 0, resultType: 'None', costPerResult: 0 };
+
+      // Check registrations first (Skool campaign)
+      const regs = getAction(actions, 'omni_complete_registration');
+      if (regs > 0) {
+        return { results: regs, resultType: 'Registrations', costPerResult: getCost(costActions, 'omni_complete_registration') };
+      }
+
+      // Check leads/fb_pixel_lead (Retargeting campaigns)
+      const leads = getAction(actions, 'offsite_conversion.fb_pixel_lead') || getAction(actions, 'lead');
+      if (leads > 0) {
+        const cpr = getCost(costActions, 'offsite_conversion.fb_pixel_lead') || getCost(costActions, 'lead');
+        return { results: leads, resultType: 'Leads', costPerResult: cpr };
+      }
+
+      // Check meta leads / messaging conversations (IG DM campaigns)
+      const metaLeads = getAction(actions, 'onsite_conversion.messaging_conversation_started_7d');
+      if (metaLeads > 0) {
+        return { results: metaLeads, resultType: 'Meta Leads', costPerResult: getCost(costActions, 'onsite_conversion.messaging_conversation_started_7d') };
+      }
+
+      // Fallback: onsite_web_lead
+      const webLeads = getAction(actions, 'onsite_web_lead');
+      if (webLeads > 0) {
+        return { results: webLeads, resultType: 'Leads', costPerResult: getCost(costActions, 'onsite_web_lead') };
+      }
+
+      return { results: 0, resultType: 'None', costPerResult: 0 };
+    };
+
+    // Applications = custom pixel event (submit application)
+    const extractApplications = (actions) => getAction(actions, 'offsite_conversion.fb_pixel_custom');
+
+    // For daily chart: total "results" across all types
+    const extractDailyResults = (actions) => {
+      if (!actions) return 0;
+      const regs = getAction(actions, 'omni_complete_registration');
+      const leads = getAction(actions, 'offsite_conversion.fb_pixel_lead') || getAction(actions, 'lead');
+      const metaLeads = getAction(actions, 'onsite_conversion.messaging_conversation_started_7d');
+      return regs + leads + metaLeads;
+    };
+
     // Format campaign data
-    const formattedCampaigns = (campaigns.data || []).map(c => ({
-      name: c.campaign_name,
-      id: c.campaign_id,
-      spend: parseFloat(c.spend || 0),
-      impressions: parseInt(c.impressions || 0),
-      clicks: parseInt(c.clicks || 0),
-      ctr: parseFloat(c.ctr || 0),
-      cpc: parseFloat(c.cpc || 0),
-      leads: extractLeads(c.actions),
-      registrations: extractRegistrations(c.actions),
-      cpl: extractLeads(c.actions) > 0 ? parseFloat(c.spend) / extractLeads(c.actions) : 0,
-      actions: c.actions || []
-    }));
+    const formattedCampaigns = (campaigns.data || []).map(c => {
+      const primary = extractPrimaryResult(c.actions, c.cost_per_action_type);
+      return {
+        name: c.campaign_name,
+        id: c.campaign_id,
+        spend: parseFloat(c.spend || 0),
+        impressions: parseInt(c.impressions || 0),
+        clicks: parseInt(c.clicks || 0),
+        ctr: parseFloat(c.ctr || 0),
+        results: primary.results,
+        resultType: primary.resultType,
+        costPerResult: primary.costPerResult,
+        applications: extractApplications(c.actions),
+        actions: c.actions || []
+      };
+    });
 
     // Account totals
     const acctData = (account.data || [])[0] || {};
     const totalSpend = parseFloat(acctData.spend || 0);
-    const totalLeads = extractLeads(acctData.actions);
-    const totalRegistrations = extractRegistrations(acctData.actions);
+    const totalResults = formattedCampaigns.reduce((sum, c) => sum + c.results, 0);
     const totalApplications = extractApplications(acctData.actions);
 
     // Daily data for charts
@@ -130,7 +157,7 @@ module.exports = async (req, res) => {
       spend: parseFloat(d.spend || 0),
       impressions: parseInt(d.impressions || 0),
       clicks: parseInt(d.clicks || 0),
-      leads: extractLeads(d.actions),
+      results: extractDailyResults(d.actions),
       applications: extractApplications(d.actions)
     }));
 
@@ -143,11 +170,10 @@ module.exports = async (req, res) => {
         impressions: parseInt(acctData.impressions || 0),
         clicks: parseInt(acctData.clicks || 0),
         ctr: parseFloat(acctData.ctr || 0),
-        leads: totalLeads,
-        registrations: totalRegistrations,
-        cpl: totalLeads > 0 ? totalSpend / totalLeads : 0,
+        results: totalResults,
+        costPerResult: totalResults > 0 ? totalSpend / totalResults : 0,
         applications: totalApplications,
-        cost_per_application: totalApplications > 0 ? totalSpend / totalApplications : 0
+        costPerApplication: totalApplications > 0 ? totalSpend / totalApplications : 0
       },
       campaigns: formattedCampaigns,
       daily: dailyData,

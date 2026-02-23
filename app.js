@@ -4601,23 +4601,17 @@ async function loadMetaAds(range) {
             const data = await response.json();
             
             // Extract appointments + applications from actions
-            const extractApps = (actions) => {
-                if (!actions) return 0;
-                const a = actions.find(x => x.action_type === 'offsite_conversion.fb_pixel_custom');
-                return a ? parseInt(a.value) : 0;
-            };
-
             metaAdsData = {
                 lastUpdated: data.updatedAt,
                 summary: {
                     spend: data.totals.spend,
-                    leads: data.totals.leads,
-                    cpl: data.totals.cpl,
+                    results: data.totals.results,
+                    costPerResult: data.totals.costPerResult,
                     impressions: data.totals.impressions,
                     clicks: data.totals.clicks,
                     ctr: data.totals.ctr,
                     applications: data.totals.applications || 0,
-                    cost_per_application: data.totals.cost_per_application || 0
+                    costPerApplication: data.totals.costPerApplication || 0
                 },
                 campaigns: data.campaigns.map(c => ({
                     name: c.name,
@@ -4626,9 +4620,10 @@ async function loadMetaAds(range) {
                     impressions: c.impressions,
                     clicks: c.clicks,
                     ctr: c.ctr,
-                    leads: c.leads,
-                    cpl: c.cpl,
-                    applications: extractApps(c.actions)
+                    results: c.results,
+                    resultType: c.resultType,
+                    costPerResult: c.costPerResult,
+                    applications: c.applications || 0
                 })),
                 daily: data.daily || [],
                 range: data.range,
@@ -4675,12 +4670,11 @@ function renderMetaAds() {
     const rangeLabel = metaAdsRange === 'today' ? 'Today' : metaAdsRange === '30d' ? '30d' : '7d';
     updateStat('metaSpendLabel', `Ad Spend (${rangeLabel})`);
     updateStat('metaSpend', '$' + (summary.spend || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    updateStat('metaLeads', (summary.leads || 0).toLocaleString());
-    updateStat('metaCPL', '$' + (summary.cpl || 0).toFixed(2));
+    updateStat('metaResults', (summary.results || 0).toLocaleString());
+    updateStat('metaCPR', '$' + (summary.costPerResult || 0).toFixed(2));
     updateStat('metaImpressions', formatCompactNumber(summary.impressions || 0));
     updateStat('metaApplications', (summary.applications || 0).toLocaleString());
-    const costPerApp = summary.applications > 0 ? summary.spend / summary.applications : 0;
-    updateStat('metaCostPerApp', costPerApp > 0 ? '$' + costPerApp.toFixed(2) : '$0');
+    updateStat('metaCostPerApp', summary.costPerApplication > 0 ? '$' + summary.costPerApplication.toFixed(2) : '$0');
     
     // Last updated
     const lastUpdatedEl = document.getElementById('metaLastUpdated');
@@ -4700,13 +4694,14 @@ function renderMetaAds() {
                     <td>${formatCompactNumber(c.impressions || 0)}</td>
                     <td>${(c.clicks || 0).toLocaleString()}</td>
                     <td>${c.ctr ? c.ctr.toFixed(2) + '%' : '—'}</td>
-                    <td>${c.leads || 0}</td>
-                    <td>${c.leads ? '$' + (c.spend / c.leads).toFixed(2) : '$0'}</td>
+                    <td>${c.results || 0}</td>
+                    <td><span style="font-size:11px;color:#888;">${c.resultType || '—'}</span></td>
+                    <td>${c.costPerResult ? '$' + c.costPerResult.toFixed(2) : '—'}</td>
                     <td>${c.applications || 0}</td>
                 </tr>`;
             }).join('');
         } else {
-            campaignsBody.innerHTML = '<tr><td colspan="9" class="empty">No campaign data</td></tr>';
+            campaignsBody.innerHTML = '<tr><td colspan="10" class="empty">No campaign data</td></tr>';
         }
     }
     
@@ -4722,7 +4717,7 @@ function renderMetaCharts(daily) {
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     });
     const spendData = daily.map(d => d.spend || 0);
-    const leadsData = daily.map(d => d.leads || 0);
+    const leadsData = daily.map(d => d.results || d.leads || 0);
     const appsData = daily.map(d => d.applications || 0);
 
     // Destroy old charts
@@ -4765,7 +4760,7 @@ function renderMetaCharts(daily) {
             datasets: [
                 {
                     type: 'line',
-                    label: 'Leads',
+                    label: 'Results',
                     data: leadsData,
                     borderColor: '#2d5016',
                     backgroundColor: 'rgba(45,80,22,0.15)',
