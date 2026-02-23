@@ -70,7 +70,7 @@ function switchTab(tabName) {
     const titles = {
         business: 'Business',
         tracker: 'Performance',
-        'agent-hub': 'Agent Hub',
+        'ai-employees': 'AI Employees',
         reports: 'Reports',
         'knowledge-hub': 'Knowledge Hub',
         content: 'Content Intel',
@@ -6928,3 +6928,363 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(initClientHealth, 600);
 });
 setTimeout(initClientHealth, 600);
+
+// ===========================================
+// AI EMPLOYEES TAB - Claude-style Chat Interface
+// ===========================================
+
+const AIEmployees = (function() {
+    let activeThreadId = null;
+    let activeAgent = null;
+    let activeModel = 'auto';
+    let messages = [];
+    let generating = false;
+    let sidebarCollapsed = false;
+    let initialized = false;
+
+    function init() {
+        if (initialized) return;
+        initialized = true;
+        renderAgentGrid();
+        loadThreadList();
+    }
+
+    // ── Agent Grid (Welcome Screen) ──
+
+    function renderAgentGrid() {
+        const grid = document.getElementById('aieAgentGrid');
+        const select = document.getElementById('aieAgentSelect');
+        if (!grid) return;
+
+        const agents = Object.values(agentConfigs).filter(a => a.systemPrompt);
+        if (agents.length === 0) {
+            grid.innerHTML = '<p style="color:#999">No agents with system prompts configured</p>';
+            return;
+        }
+
+        grid.innerHTML = agents.map(a => `
+            <div class="aie-agent-card" onclick="AIEmployees.startChat('${a.id}')" style="border-color: ${a.color || '#ddd'}">
+                <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${a.color || 'var(--forest-green)'}"></div>
+                <span class="aie-agent-card-emoji">${a.emoji || '🤖'}</span>
+                <div class="aie-agent-card-name">${a.name}</div>
+                <div class="aie-agent-card-role">${a.role || 'AI Assistant'}</div>
+            </div>
+        `).join('');
+
+        // Also populate agent select dropdown
+        if (select) {
+            select.innerHTML = agents.map(a =>
+                `<option value="${a.id}">${a.emoji || '🤖'} ${a.name}</option>`
+            ).join('');
+        }
+    }
+
+    // ── Thread List ──
+
+    async function loadThreadList() {
+        const container = document.getElementById('aieThreadList');
+        if (!container || !ChatPersistence.isReady()) return;
+
+        // Get threads for ALL agents
+        const agents = Object.values(agentConfigs).filter(a => a.systemPrompt);
+        let allThreads = [];
+        for (const agent of agents) {
+            const threads = await ChatPersistence.getThreadsForAgent(agent.id);
+            allThreads.push(...threads.map(t => ({ ...t, agentEmoji: agent.emoji || '🤖', agentName: agent.name })));
+        }
+
+        allThreads.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+
+        if (allThreads.length === 0) {
+            container.innerHTML = '<div class="aie-thread-empty">No conversations yet</div>';
+            return;
+        }
+
+        // Group by time
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const yesterday = new Date(today - 86400000);
+        const weekAgo = new Date(today - 7 * 86400000);
+
+        const groups = { 'Today': [], 'Yesterday': [], 'This Week': [], 'Older': [] };
+        allThreads.forEach(t => {
+            const d = new Date(t.updated_at);
+            if (d >= today) groups['Today'].push(t);
+            else if (d >= yesterday) groups['Yesterday'].push(t);
+            else if (d >= weekAgo) groups['This Week'].push(t);
+            else groups['Older'].push(t);
+        });
+
+        let html = '';
+        for (const [label, threads] of Object.entries(groups)) {
+            if (threads.length === 0) continue;
+            html += `<div class="aie-thread-group-label">${label}</div>`;
+            html += threads.map(t => {
+                const isActive = t.id === activeThreadId;
+                return `<div class="aie-thread-item${isActive ? ' active' : ''}" onclick="AIEmployees.openThread('${t.id}', '${t.agent_id}')">
+                    <span class="aie-thread-item-emoji">${t.agentEmoji}</span>
+                    <div class="aie-thread-item-info">
+                        <div class="aie-thread-item-title">${escapeHTML(t.title)}</div>
+                        <div class="aie-thread-item-date">${t.agentName} · ${formatTimeAgo(t.updated_at)}</div>
+                    </div>
+                    <button class="aie-thread-item-delete" onclick="event.stopPropagation(); AIEmployees.deleteThread('${t.id}')" title="Delete">✕</button>
+                </div>`;
+            }).join('');
+        }
+
+        container.innerHTML = html;
+    }
+
+    function formatTimeAgo(dateStr) {
+        const d = new Date(dateStr);
+        const now = new Date();
+        const diff = (now - d) / 1000;
+        if (diff < 60) return 'just now';
+        if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+        if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    // ── Start/Open Chat ──
+
+    async function startChat(agentId) {
+        activeAgent = agentId;
+        activeThreadId = null;
+        messages = [];
+
+        const agent = agentConfigs[agentId];
+        showChatView(agent);
+        renderMessages();
+        document.getElementById('aieInput')?.focus();
+    }
+
+    async function openThread(threadId, agentId) {
+        activeAgent = agentId;
+        activeThreadId = threadId;
+        const agent = agentConfigs[agentId];
+
+        showChatView(agent);
+
+        const msgs = await ChatPersistence.getMessages(threadId);
+        messages = msgs.map(m => ({ role: m.role, content: m.content }));
+        renderMessages();
+        loadThreadList();
+    }
+
+    function showChatView(agent) {
+        document.getElementById('aieWelcome').style.display = 'none';
+        document.getElementById('aieMessages').style.display = 'flex';
+        document.getElementById('aieChatHeader').style.display = 'flex';
+
+        document.getElementById('aieChatEmoji').textContent = agent?.emoji || '🤖';
+        document.getElementById('aieChatAgentName').textContent = agent?.name || 'Assistant';
+        document.getElementById('aieAgentSelect').value = activeAgent;
+        document.getElementById('aieInput').placeholder = `Message ${agent?.name || 'assistant'}...`;
+    }
+
+    function showWelcomeView() {
+        document.getElementById('aieWelcome').style.display = 'flex';
+        document.getElementById('aieMessages').style.display = 'none';
+        document.getElementById('aieChatHeader').style.display = 'none';
+    }
+
+    // ── Render Messages ──
+
+    function renderMessages() {
+        const container = document.getElementById('aieMessages');
+        if (!container) return;
+
+        if (messages.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
+
+        const agent = agentConfigs[activeAgent] || { emoji: '🤖', name: 'Assistant' };
+        let html = '';
+        let lastRole = null;
+
+        messages.forEach((m, i) => {
+            const isUser = m.role === 'user';
+            let labelHtml = '';
+            if (!isUser && lastRole !== 'assistant' && i > 0) {
+                // Show agent label when switching from user to assistant
+            }
+            if (i === 0 && !isUser) {
+                labelHtml = `<div class="aie-msg-agent-label">${agent.emoji} ${agent.name}</div>`;
+            }
+
+            html += `<div class="aie-msg ${m.role}">
+                <div class="aie-msg-avatar">${isUser ? '👤' : agent.emoji}</div>
+                <div>
+                    ${labelHtml}
+                    <div class="aie-msg-bubble">${formatMessageContent(m.content)}</div>
+                </div>
+            </div>`;
+            lastRole = m.role;
+        });
+
+        container.innerHTML = html;
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function addLoadingMsg() {
+        const container = document.getElementById('aieMessages');
+        const agent = agentConfigs[activeAgent] || { emoji: '🤖' };
+        const div = document.createElement('div');
+        div.className = 'aie-msg assistant';
+        div.id = 'aieLoadingMsg';
+        div.innerHTML = `
+            <div class="aie-msg-avatar">${agent.emoji}</div>
+            <div><div class="aie-msg-bubble"><div class="aie-msg-loading"><span></span><span></span><span></span></div></div></div>
+        `;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function removeLoadingMsg() {
+        document.getElementById('aieLoadingMsg')?.remove();
+    }
+
+    // ── Send Message ──
+
+    async function send() {
+        const input = document.getElementById('aieInput');
+        const message = input.value.trim();
+        if (!message || generating) return;
+
+        // If no agent selected, default to first available
+        if (!activeAgent) {
+            const agents = Object.values(agentConfigs).filter(a => a.systemPrompt);
+            if (agents.length > 0) {
+                activeAgent = agents[0].id;
+                showChatView(agentConfigs[activeAgent]);
+            } else return;
+        }
+
+        // Create thread if needed
+        if (!activeThreadId && ChatPersistence.isReady()) {
+            const thread = await ChatPersistence.createThread(activeAgent, ChatPersistence.generateTitle(message));
+            if (thread) {
+                activeThreadId = thread.id;
+                loadThreadList();
+            }
+        }
+
+        // Add user message
+        messages.push({ role: 'user', content: message });
+        renderMessages();
+
+        if (activeThreadId && ChatPersistence.isReady()) {
+            ChatPersistence.saveMessage(activeThreadId, 'user', message);
+        }
+
+        input.value = '';
+        input.style.height = 'auto';
+        generating = true;
+        document.getElementById('aieSendBtn').disabled = true;
+        addLoadingMsg();
+
+        try {
+            const response = await callAPI(message);
+            removeLoadingMsg();
+            messages.push({ role: 'assistant', content: response });
+            renderMessages();
+
+            if (activeThreadId && ChatPersistence.isReady()) {
+                ChatPersistence.saveMessage(activeThreadId, 'assistant', response);
+            }
+        } catch (err) {
+            removeLoadingMsg();
+            messages.push({ role: 'assistant', content: `Error: ${err.message}` });
+            renderMessages();
+        } finally {
+            generating = false;
+            document.getElementById('aieSendBtn').disabled = false;
+            loadThreadList();
+        }
+    }
+
+    async function callAPI(userMessage) {
+        const settings = getChatSettings();
+        const agent = agentConfigs[activeAgent] || {};
+        
+        let modelConfig;
+        if (activeModel === 'auto') {
+            const defaultModel = agent.defaultModel || 'claude-opus-4';
+            modelConfig = models[defaultModel] || models['claude-opus-4'];
+        } else {
+            modelConfig = models[activeModel];
+        }
+
+        const systemPrompt = agent.systemPrompt || 'You are a helpful assistant.';
+        const apiMessages = [
+            { role: 'system', content: systemPrompt },
+            ...messages.slice(-10),
+            { role: 'user', content: userMessage }
+        ];
+
+        if (modelConfig.provider === 'openai') {
+            return await callOpenAI(apiMessages, modelConfig.apiModel, settings.openaiApiKey);
+        } else if (modelConfig.provider === 'anthropic') {
+            return await callAnthropicProxy(apiMessages, modelConfig.apiModel);
+        }
+        throw new Error('No valid model configuration');
+    }
+
+    // ── UI Helpers ──
+
+    function handleKey(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            send();
+        }
+    }
+
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+    }
+
+    function newChat() {
+        activeThreadId = null;
+        activeAgent = null;
+        messages = [];
+        showWelcomeView();
+        loadThreadList();
+    }
+
+    function switchAgent(agentId) {
+        activeAgent = agentId;
+        const agent = agentConfigs[agentId];
+        document.getElementById('aieChatEmoji').textContent = agent?.emoji || '🤖';
+        document.getElementById('aieChatAgentName').textContent = agent?.name || 'Assistant';
+        document.getElementById('aieInput').placeholder = `Message ${agent?.name || 'assistant'}...`;
+    }
+
+    function switchModel(modelId) {
+        activeModel = modelId;
+    }
+
+    function toggleSidebar() {
+        sidebarCollapsed = !sidebarCollapsed;
+        document.getElementById('aieSidebar')?.classList.toggle('collapsed', sidebarCollapsed);
+    }
+
+    async function deleteThread(threadId) {
+        await ChatPersistence.archiveThread(threadId);
+        if (threadId === activeThreadId) {
+            newChat();
+        }
+        loadThreadList();
+    }
+
+    return {
+        init, startChat, openThread, newChat, send, handleKey, autoResize,
+        switchAgent, switchModel, toggleSidebar, deleteThread, loadThreadList
+    };
+})();
+
+// Initialize AI Employees when tab is clicked
+document.querySelectorAll('[data-tab="ai-employees"]').forEach(el => {
+    el.addEventListener('click', () => setTimeout(() => AIEmployees.init(), 100));
+});

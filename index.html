@@ -88,14 +88,14 @@
                         </svg>
                         <span>Performance</span>
                     </li>
-                    <li class="nav-item" data-tab="agent-hub" draggable="true">
+                    <li class="nav-item" data-tab="ai-employees" draggable="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="7" height="7"/>
-                            <rect x="14" y="3" width="7" height="7"/>
-                            <rect x="14" y="14" width="7" height="7"/>
-                            <rect x="3" y="14" width="7" height="7"/>
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                         </svg>
-                        <span>Agent Hub</span>
+                        <span>AI Employees</span>
                     </li>
                     <li class="nav-item" data-tab="reports" draggable="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -138,7 +138,7 @@
                         </svg>
                         <span>Meta Ads</span>
                     </li>
-                    <li class="nav-item" data-tab="multiplier" draggable="true">
+                    <li class="nav-item" data-tab="multiplier" draggable="true" style="display:none">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                         </svg>
@@ -380,12 +380,64 @@
                 </section>
 
                 <!-- Agent Hub Tab -->
-                <section class="tab-content" id="agent-hub">
-                    <div class="tab-header">
-                        <h1>🤖 Agent Hub</h1>
-                    </div>
-                    <div class="agent-cards-grid" id="agentCardsGrid">
-                        <div class="empty-state"><p>Loading agents...</p></div>
+                <section class="tab-content" id="ai-employees">
+                    <div class="aie-layout">
+                        <!-- Left: Thread Sidebar -->
+                        <div class="aie-sidebar" id="aieSidebar">
+                            <div class="aie-sidebar-header">
+                                <button class="aie-new-chat-btn" onclick="AIEmployees.newChat()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                    New Chat
+                                </button>
+                            </div>
+                            <div class="aie-thread-list" id="aieThreadList">
+                                <div class="aie-thread-empty">No conversations yet</div>
+                            </div>
+                        </div>
+                        <!-- Right: Chat Area -->
+                        <div class="aie-main">
+                            <!-- Chat Header (shown when thread active) -->
+                            <div class="aie-chat-header" id="aieChatHeader" style="display:none">
+                                <div class="aie-chat-header-left">
+                                    <button class="aie-sidebar-toggle" onclick="AIEmployees.toggleSidebar()">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                                    </button>
+                                    <div class="aie-chat-agent-info">
+                                        <span class="aie-chat-agent-emoji" id="aieChatEmoji">🤖</span>
+                                        <span class="aie-chat-agent-name" id="aieChatAgentName">Geeves</span>
+                                    </div>
+                                </div>
+                                <div class="aie-chat-header-right">
+                                    <select class="aie-agent-select" id="aieAgentSelect" onchange="AIEmployees.switchAgent(this.value)"></select>
+                                    <select class="aie-model-select" id="aieModelSelect" onchange="AIEmployees.switchModel(this.value)">
+                                        <option value="auto">🔮 Auto</option>
+                                        <option value="claude-opus-4">🟠 Claude Opus 4</option>
+                                        <option value="claude-sonnet-4">🟠 Claude Sonnet 4</option>
+                                        <option value="gpt-4o">🟢 GPT-4o</option>
+                                        <option value="gpt-4-turbo">🟢 GPT-4 Turbo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Welcome Screen -->
+                            <div class="aie-welcome" id="aieWelcome">
+                                <div class="aie-welcome-inner">
+                                    <h2>What can we help you with?</h2>
+                                    <p class="aie-welcome-sub">Choose an AI employee to start a conversation</p>
+                                    <div class="aie-agent-grid" id="aieAgentGrid"></div>
+                                </div>
+                            </div>
+                            <!-- Messages Area -->
+                            <div class="aie-messages" id="aieMessages" style="display:none"></div>
+                            <!-- Input Area -->
+                            <div class="aie-input-area" id="aieInputArea">
+                                <div class="aie-input-container">
+                                    <textarea id="aieInput" placeholder="Message an AI employee..." rows="1" onkeydown="AIEmployees.handleKey(event)" oninput="AIEmployees.autoResize(this)"></textarea>
+                                    <button class="aie-send-btn" id="aieSendBtn" onclick="AIEmployees.send()">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
