@@ -803,7 +803,12 @@
                     <div class="tab-header">
                         <h1>📣 Meta Ads</h1>
                         <div class="tab-actions">
-                            <button class="btn btn-primary" onclick="refreshMetaAds()">
+                            <div class="meta-range-buttons" style="display:inline-flex;gap:4px;margin-right:8px;">
+                                <button class="btn btn-sm meta-range-btn" data-range="today" onclick="loadMetaAds('today')">Today</button>
+                                <button class="btn btn-sm meta-range-btn active" data-range="7d" onclick="loadMetaAds('7d')">7d</button>
+                                <button class="btn btn-sm meta-range-btn" data-range="30d" onclick="loadMetaAds('30d')">30d</button>
+                            </div>
+                            <button class="btn btn-primary" onclick="loadMetaAds()">
                                 🔄 Refresh
                             </button>
                             <button class="btn btn-secondary" onclick="openMetaAdsSettings()">
@@ -817,7 +822,7 @@
                         <div class="stat-card">
                             <div class="stat-icon meta">💰</div>
                             <div class="stat-content">
-                                <span class="stat-label">Ad Spend (7d)</span>
+                                <span class="stat-label" id="metaSpendLabel">Ad Spend (7d)</span>
                                 <span class="stat-value" id="metaSpend">$0</span>
                             </div>
                         </div>

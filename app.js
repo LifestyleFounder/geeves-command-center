@@ -4572,29 +4572,77 @@ let metaAdsData = {
     campaigns: []
 };
 
-// Load Meta Ads data
-async function loadMetaAds() {
-    // Try loading from localStorage first
-    const saved = localStorage.getItem('geeves-meta-ads');
-    if (saved) {
-        try {
-            metaAdsData = JSON.parse(saved);
+// Meta Ads time range state
+let metaAdsRange = '7d';
+
+// Load Meta Ads data from API
+async function loadMetaAds(range) {
+    if (range) metaAdsRange = range;
+
+    // Update range button states
+    document.querySelectorAll('.meta-range-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.range === metaAdsRange);
+    });
+
+    // Show loading state
+    const updateStat = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+    updateStat('metaLastUpdated', 'Loading...');
+
+    // Try Vercel API first (works from any device)
+    const apiBase = location.protocol === 'https:' ? '' : '';
+    const apiUrl = `/api/meta-ads?range=${metaAdsRange}&t=${Date.now()}`;
+
+    try {
+        const response = await fetch(apiUrl);
+        if (response.ok) {
+            const data = await response.json();
+            
+            // Map API response to metaAdsData format
+            metaAdsData = {
+                lastUpdated: data.updatedAt,
+                summary: {
+                    spend: data.totals.spend,
+                    leads: data.totals.leads,
+                    cpl: data.totals.cpl,
+                    roas: 0,
+                    impressions: data.totals.impressions,
+                    revenue: 0,
+                    registrations: data.totals.registrations,
+                    clicks: data.totals.clicks,
+                    ctr: data.totals.ctr
+                },
+                campaigns: data.campaigns.map(c => ({
+                    name: c.name,
+                    status: 'ACTIVE',
+                    spend: c.spend,
+                    impressions: c.impressions,
+                    clicks: c.clicks,
+                    ctr: c.ctr,
+                    leads: c.leads,
+                    registrations: c.registrations,
+                    cpl: c.cpl
+                })),
+                daily: data.daily || [],
+                range: data.range,
+                since: data.since,
+                until: data.until
+            };
             renderMetaAds();
-        } catch (e) {
-            console.error('Failed to load Meta Ads data:', e);
+            return;
         }
+    } catch (e) {
+        console.log('Meta Ads API not available, falling back to static data');
     }
     
-    // Try fetching from data file
+    // Fallback: try static data file
     try {
         const response = await fetch(`data/meta-ads.json?t=${Date.now()}`);
         if (response.ok) {
             metaAdsData = await response.json();
-            localStorage.setItem('geeves-meta-ads', JSON.stringify(metaAdsData));
             renderMetaAds();
         }
     } catch (e) {
-        console.log('No meta-ads.json found, using localStorage');
+        console.log('No meta-ads.json found');
     }
 }
 
@@ -4613,7 +4661,9 @@ function renderMetaAds() {
         if (el) el.textContent = value;
     };
     
-    updateStat('metaSpend', '$' + (summary.spend || 0).toLocaleString());
+    const rangeLabel = metaAdsRange === 'today' ? 'Today' : metaAdsRange === 'yesterday' ? 'Yesterday' : metaAdsRange === '30d' ? '30d' : '7d';
+    updateStat('metaSpendLabel', `Ad Spend (${rangeLabel})`);
+    updateStat('metaSpend', '$' + (summary.spend || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
     updateStat('metaLeads', (summary.leads || 0).toLocaleString());
     updateStat('metaCPL', '$' + (summary.cpl || 0).toFixed(2));
     updateStat('metaROAS', (summary.roas || 0).toFixed(1) + 'x');
