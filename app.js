@@ -96,6 +96,11 @@ function switchTab(tabName) {
         loadCompetitorData();
     }
     
+    // Load Meta Ads data on tab switch
+    if (tabName === 'meta-ads' && typeof loadMetaAds === 'function') {
+        loadMetaAds();
+    }
+    
     // Close sidebar on mobile
     document.getElementById('sidebar').classList.remove('open');
 }
@@ -4838,14 +4843,19 @@ function quickAddMetaData() {
     addActivity('system', 'Added Meta Ads data', `Spend: $${spend}, Leads: ${leads}, Revenue: $${revenue}`);
 }
 
-// Refresh Meta Ads (from API)
+// Refresh Meta Ads (from API) — now delegates to Vercel serverless
 async function refreshMetaAds() {
+    // Use Vercel serverless API (env vars handle auth)
+    loadMetaAds();
+    return;
+    
+    // Legacy code below (kept for reference)
     const token = localStorage.getItem('metaAccessToken');
     const adAccountId = localStorage.getItem('metaAdAccountId');
     
     if (!token || !adAccountId) {
-        alert('Please configure Meta Ads API settings first');
-        openMetaAdsSettings();
+        // No longer needed — Vercel handles auth via env vars
+        loadMetaAds();
         return;
     }
     
@@ -4949,10 +4959,7 @@ function saveMetaAdsSettings() {
         if (adAccountId) localStorage.setItem('metaAdAccountId', adAccountId);
         
         closeModal();
-        
-        if (token && adAccountId) {
-            refreshMetaAds();
-        }
+        loadMetaAds();
     } else {
         // Manual mode
         const spend = parseFloat(document.getElementById('metaManualSpend').value) || 0;
