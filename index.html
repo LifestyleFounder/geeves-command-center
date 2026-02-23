@@ -6,7 +6,8 @@
     <title>Geeves Command Center</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260221">
+    <link rel="stylesheet" href="styles.css?v=20260222">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 </head>
 <body>
     <div class="app">
@@ -798,202 +799,115 @@
 
                 <!-- Schedules Tab -->
 
-                <!-- Meta Ads Tab (Combined with Ad Swipes) -->
+                <!-- Meta Ads Tab -->
                 <section class="tab-content" id="meta-ads">
                     <div class="tab-header">
                         <h1>📣 Meta Ads</h1>
                         <div class="tab-actions">
-                            <div class="meta-range-buttons" style="display:inline-flex;gap:4px;margin-right:8px;">
-                                <button class="btn btn-sm meta-range-btn" data-range="today" onclick="loadMetaAds('today')">Today</button>
-                                <button class="btn btn-sm meta-range-btn active" data-range="7d" onclick="loadMetaAds('7d')">7d</button>
-                                <button class="btn btn-sm meta-range-btn" data-range="30d" onclick="loadMetaAds('30d')">30d</button>
+                            <div class="ma-range-toggle">
+                                <button class="ma-range-btn" data-range="today" onclick="loadMetaAds('today')">Today</button>
+                                <button class="ma-range-btn active" data-range="7d" onclick="loadMetaAds('7d')">7d</button>
+                                <button class="ma-range-btn" data-range="30d" onclick="loadMetaAds('30d')">30d</button>
                             </div>
-                            <button class="btn btn-primary" onclick="loadMetaAds()">
-                                🔄 Refresh
-                            </button>
-                            <button class="btn btn-secondary" onclick="openMetaAdsSettings()">
-                                ⚙️ Settings
-                            </button>
+                            <span class="last-updated" id="metaLastUpdated">Last updated: --</span>
+                            <button class="btn btn-secondary" onclick="openMetaAdsSettings()">⚙️</button>
                         </div>
                     </div>
 
-                    <!-- Summary Stats (Always Visible) -->
-                    <div class="meta-stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon meta">💰</div>
-                            <div class="stat-content">
-                                <span class="stat-label" id="metaSpendLabel">Ad Spend (7d)</span>
-                                <span class="stat-value" id="metaSpend">$0</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon meta">🎯</div>
-                            <div class="stat-content">
-                                <span class="stat-label">Leads</span>
-                                <span class="stat-value" id="metaLeads">0</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon meta">📊</div>
-                            <div class="stat-content">
-                                <span class="stat-label">Cost Per Lead</span>
-                                <span class="stat-value" id="metaCPL">$0</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon meta">📈</div>
-                            <div class="stat-content">
-                                <span class="stat-label">ROAS</span>
-                                <span class="stat-value" id="metaROAS">0x</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon meta">👁</div>
-                            <div class="stat-content">
-                                <span class="stat-label">Impressions</span>
-                                <span class="stat-value" id="metaImpressions">0</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon meta">💵</div>
-                            <div class="stat-content">
-                                <span class="stat-label">Revenue</span>
-                                <span class="stat-value" id="metaRevenue">$0</span>
-                            </div>
-                        </div>
+                    <!-- Loading State -->
+                    <div id="metaAdsLoading" class="ma-loading" style="display:none;">
+                        <div class="ma-loading-spinner"></div>
+                        <span>Loading Meta Ads data...</span>
                     </div>
 
-                    <!-- Toggle Section: Campaign Performance -->
-                    <div class="toggle-section">
-                        <div class="toggle-header" onclick="toggleSection('campaignPerformance')">
-                            <span class="toggle-icon" id="campaignPerformanceIcon">▼</span>
-                            <h2>📊 Campaign Performance</h2>
-                            <div class="toggle-header-right">
-                                <span class="meta-last-updated" id="metaLastUpdated">Last updated: --</span>
+                    <!-- KPI Cards -->
+                    <div class="ma-kpi-grid" id="metaKpiGrid">
+                        <div class="ma-kpi-card">
+                            <div class="ma-kpi-icon" style="background:rgba(45,90,61,0.1);color:var(--forest-green);">💰</div>
+                            <div class="ma-kpi-info">
+                                <span class="ma-kpi-label" id="metaSpendLabel">Ad Spend (7d)</span>
+                                <span class="ma-kpi-value" id="metaSpend">$0</span>
                             </div>
                         </div>
-                        <div class="toggle-content" id="campaignPerformanceContent">
-                            <!-- Campaigns Table -->
-                            <div class="meta-campaigns-table">
-                                <table class="data-table" id="metaCampaignsTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Campaign</th>
-                                            <th>Status</th>
-                                            <th>Spend</th>
-                                            <th>Impressions</th>
-                                            <th>Clicks</th>
-                                            <th>CTR</th>
-                                            <th>Leads</th>
-                                            <th>CPL</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="metaCampaignsBody">
-                                        <tr><td colspan="8" class="empty">No campaigns yet — connect Meta Ads or add data manually</td></tr>
-                                    </tbody>
-                                </table>
+                        <div class="ma-kpi-card">
+                            <div class="ma-kpi-icon" style="background:rgba(59,130,246,0.1);color:#3B82F6;">🎯</div>
+                            <div class="ma-kpi-info">
+                                <span class="ma-kpi-label">Leads</span>
+                                <span class="ma-kpi-value" id="metaLeads">0</span>
                             </div>
-
-                            <!-- Ad Sets Table -->
-                            <div class="subsection">
-                                <h3>Ad Sets</h3>
-                                <div class="meta-adsets-table">
-                                    <table class="data-table" id="metaAdSetsTable">
-                                        <thead>
-                                            <tr>
-                                                <th>Ad Set</th>
-                                                <th>Campaign</th>
-                                                <th>Spend</th>
-                                                <th>Leads</th>
-                                                <th>CPL</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="metaAdSetsBody">
-                                            <tr><td colspan="5" class="empty">No ad set data</td></tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                        </div>
+                        <div class="ma-kpi-card">
+                            <div class="ma-kpi-icon" style="background:rgba(139,92,246,0.1);color:#8B5CF6;">📊</div>
+                            <div class="ma-kpi-info">
+                                <span class="ma-kpi-label">Cost Per Lead</span>
+                                <span class="ma-kpi-value" id="metaCPL">$0</span>
                             </div>
-
-                            <!-- Quick Add -->
-                            <div class="subsection">
-                                <h3>Quick Add Data</h3>
-                                <div class="meta-quick-add">
-                                    <p>Manually add today's ad performance:</p>
-                                    <div class="quick-add-form">
-                                        <div class="form-row">
-                                            <div class="form-group">
-                                                <label>Spend</label>
-                                                <input type="number" id="quickAddSpend" placeholder="0.00" step="0.01">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Leads</label>
-                                                <input type="number" id="quickAddLeads" placeholder="0">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Revenue</label>
-                                                <input type="number" id="quickAddRevenue" placeholder="0.00" step="0.01">
-                                            </div>
-                                            <div class="form-group">
-                                                <button class="btn btn-primary" onclick="quickAddMetaData()">Add</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        </div>
+                        <div class="ma-kpi-card">
+                            <div class="ma-kpi-icon" style="background:rgba(6,182,212,0.1);color:#06B6D4;">📋</div>
+                            <div class="ma-kpi-info">
+                                <span class="ma-kpi-label">Applications</span>
+                                <span class="ma-kpi-value" id="metaApplications">0</span>
+                            </div>
+                        </div>
+                        <div class="ma-kpi-card">
+                            <div class="ma-kpi-icon" style="background:rgba(212,168,75,0.1);color:var(--gold);">📅</div>
+                            <div class="ma-kpi-info">
+                                <span class="ma-kpi-label">Appointments</span>
+                                <span class="ma-kpi-value" id="metaAppointments">0</span>
+                            </div>
+                        </div>
+                        <div class="ma-kpi-card">
+                            <div class="ma-kpi-icon" style="background:rgba(245,158,11,0.1);color:#F59E0B;">💵</div>
+                            <div class="ma-kpi-info">
+                                <span class="ma-kpi-label">Cost Per Appt</span>
+                                <span class="ma-kpi-value" id="metaCPA">$0</span>
+                            </div>
+                        </div>
+                        <div class="ma-kpi-card">
+                            <div class="ma-kpi-icon" style="background:rgba(107,114,128,0.1);color:#6B7280;">👁</div>
+                            <div class="ma-kpi-info">
+                                <span class="ma-kpi-label">Impressions</span>
+                                <span class="ma-kpi-value" id="metaImpressions">0</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Toggle Section: Ad Swipes -->
-                    <div class="toggle-section">
-                        <div class="toggle-header" onclick="toggleSection('adSwipes')">
-                            <span class="toggle-icon" id="adSwipesIcon">▼</span>
-                            <h2>🎯 Ad Swipe File</h2>
-                            <div class="toggle-header-right">
-                                <span class="last-research" id="lastResearchDate">Last research: --</span>
-                                <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); openCompetitorSettings()">
-                                    👥 Competitors
-                                </button>
-                            </div>
+                    <!-- Charts -->
+                    <div class="ma-charts-grid">
+                        <div class="card">
+                            <h2>Spend Over Time</h2>
+                            <canvas id="metaSpendChart"></canvas>
                         </div>
-                        <div class="toggle-content" id="adSwipesContent">
-                            <!-- Filter Bar -->
-                            <div class="swipes-filter-bar">
-                                <div class="filter-group">
-                                    <select id="swipeFilterCompetitor" onchange="filterSwipes()">
-                                        <option value="all">All Competitors</option>
-                                    </select>
-                                    <select id="swipeFilterType" onchange="filterSwipes()">
-                                        <option value="all">All Types</option>
-                                        <option value="image">Image</option>
-                                        <option value="video">Video</option>
-                                        <option value="carousel">Carousel</option>
-                                    </select>
-                                    <select id="swipeFilterCategory" onchange="filterSwipes()">
-                                        <option value="all">All Categories</option>
-                                        <option value="hook">Great Hook</option>
-                                        <option value="offer">Strong Offer</option>
-                                        <option value="creative">Creative Format</option>
-                                        <option value="copy">Copy Inspiration</option>
-                                        <option value="social-proof">Social Proof</option>
-                                        <option value="retargeting">Retargeting</option>
-                                    </select>
-                                </div>
-                                <div class="filter-stats">
-                                    <span id="swipeCount">0 ads</span>
-                                </div>
-                            </div>
+                        <div class="card">
+                            <h2>Leads & Appointments</h2>
+                            <canvas id="metaLeadsChart"></canvas>
+                        </div>
+                    </div>
 
-                            <!-- Swipes Grid -->
-                            <div class="swipes-grid" id="swipesGrid">
-                                <div class="swipes-empty" id="swipesEmpty">
-                                    <div class="empty-icon">🎯</div>
-                                    <h3>No Ad Swipes Yet</h3>
-                                    <p>I'll research competitor ads weekly and add inspiring examples here.</p>
-                                    <p class="competitors-list">Watching: <span id="competitorsList">Loading...</span></p>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Campaign Performance Table -->
+                    <div class="card" style="margin-top:var(--space-lg);overflow-x:auto;">
+                        <h2>Campaign Performance</h2>
+                        <table class="data-table" id="metaCampaignsTable">
+                            <thead>
+                                <tr>
+                                    <th>Campaign</th>
+                                    <th>Status</th>
+                                    <th>Spend</th>
+                                    <th>Impressions</th>
+                                    <th>Clicks</th>
+                                    <th>CTR</th>
+                                    <th>Leads</th>
+                                    <th>CPL</th>
+                                    <th>Apps</th>
+                                    <th>Appts</th>
+                                    <th>CPA</th>
+                                </tr>
+                            </thead>
+                            <tbody id="metaCampaignsBody">
+                                <tr><td colspan="11" class="empty">Loading campaigns...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </section>
 

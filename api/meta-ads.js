@@ -93,35 +93,73 @@ module.exports = async (req, res) => {
       return regAction ? parseInt(regAction.value) : 0;
     };
 
+    const extractAppointments = (actions) => {
+      if (!actions) return 0;
+      const apptAction = actions.find(a =>
+        a.action_type === 'offsite_conversion.fb_pixel_schedule' ||
+        a.action_type === 'schedule' ||
+        a.action_type === 'onsite_conversion.messaging_conversation_started_7d' ||
+        a.action_type === 'offsite_conversion.fb_pixel_custom'
+      );
+      return apptAction ? parseInt(apptAction.value) : 0;
+    };
+
+    const extractApplications = (actions) => {
+      if (!actions) return 0;
+      const appAction = actions.find(a =>
+        a.action_type === 'initiate_checkout' ||
+        a.action_type === 'omni_initiated_checkout' ||
+        a.action_type === 'offsite_conversion.fb_pixel_initiate_checkout'
+      );
+      return appAction ? parseInt(appAction.value) : 0;
+    };
+
     // Format campaign data
-    const formattedCampaigns = (campaigns.data || []).map(c => ({
-      name: c.campaign_name,
-      id: c.campaign_id,
-      spend: parseFloat(c.spend || 0),
-      impressions: parseInt(c.impressions || 0),
-      clicks: parseInt(c.clicks || 0),
-      ctr: parseFloat(c.ctr || 0),
-      cpc: parseFloat(c.cpc || 0),
-      leads: extractLeads(c.actions),
-      registrations: extractRegistrations(c.actions),
-      cpl: extractLeads(c.actions) > 0 ? parseFloat(c.spend) / extractLeads(c.actions) : 0,
-      actions: c.actions || []
-    }));
+    const formattedCampaigns = (campaigns.data || []).map(c => {
+      const spend = parseFloat(c.spend || 0);
+      const leads = extractLeads(c.actions);
+      const appointments = extractAppointments(c.actions);
+      const applications = extractApplications(c.actions);
+      return {
+        name: c.campaign_name,
+        id: c.campaign_id,
+        spend,
+        impressions: parseInt(c.impressions || 0),
+        clicks: parseInt(c.clicks || 0),
+        ctr: parseFloat(c.ctr || 0),
+        cpc: parseFloat(c.cpc || 0),
+        leads,
+        registrations: extractRegistrations(c.actions),
+        cpl: leads > 0 ? spend / leads : 0,
+        appointments,
+        cost_per_appointment: appointments > 0 ? spend / appointments : 0,
+        applications,
+        cost_per_application: applications > 0 ? spend / applications : 0,
+        actions: c.actions || []
+      };
+    });
 
     // Account totals
     const acctData = (account.data || [])[0] || {};
     const totalSpend = parseFloat(acctData.spend || 0);
     const totalLeads = extractLeads(acctData.actions);
     const totalRegistrations = extractRegistrations(acctData.actions);
+    const totalAppointments = extractAppointments(acctData.actions);
+    const totalApplications = extractApplications(acctData.actions);
 
     // Daily data for charts
-    const dailyData = (daily.data || []).map(d => ({
-      date: d.date_start,
-      spend: parseFloat(d.spend || 0),
-      impressions: parseInt(d.impressions || 0),
-      clicks: parseInt(d.clicks || 0),
-      leads: extractLeads(d.actions)
-    }));
+    const dailyData = (daily.data || []).map(d => {
+      const spend = parseFloat(d.spend || 0);
+      return {
+        date: d.date_start,
+        spend,
+        impressions: parseInt(d.impressions || 0),
+        clicks: parseInt(d.clicks || 0),
+        leads: extractLeads(d.actions),
+        appointments: extractAppointments(d.actions),
+        applications: extractApplications(d.actions)
+      };
+    });
 
     res.status(200).json({
       range,
@@ -134,7 +172,11 @@ module.exports = async (req, res) => {
         ctr: parseFloat(acctData.ctr || 0),
         leads: totalLeads,
         registrations: totalRegistrations,
-        cpl: totalLeads > 0 ? totalSpend / totalLeads : 0
+        cpl: totalLeads > 0 ? totalSpend / totalLeads : 0,
+        appointments: totalAppointments,
+        cost_per_appointment: totalAppointments > 0 ? totalSpend / totalAppointments : 0,
+        applications: totalApplications,
+        cost_per_application: totalApplications > 0 ? totalSpend / totalApplications : 0
       },
       campaigns: formattedCampaigns,
       daily: dailyData,
