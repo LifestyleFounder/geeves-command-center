@@ -4857,30 +4857,27 @@ function saveMetaAdsSettings() {
 // SORTABLE SIDEBAR NAVIGATION
 // ===========================================
 
+// Hardcoded default sidebar order — consistent across all devices
+const DEFAULT_SIDEBAR_ORDER = [
+    'google-tasks', 'business', 'meta-ads', 'competitors',
+    'tracker', 'vip-clients', 'knowledge-hub', 'youtube',
+    'agent-hub', 'reports'
+];
+
+// Tabs to hide completely
+const HIDDEN_TABS = ['content', 'multiplier', 'instagram'];
+
 let sidebarOrder = [];
 
-// Load saved sidebar order
+// Load sidebar order (always use hardcoded default)
 function loadSidebarOrder() {
-    const saved = localStorage.getItem('geeves-sidebar-order');
-    if (saved) {
-        try {
-            sidebarOrder = JSON.parse(saved);
-            applySidebarOrder();
-        } catch (e) {
-            console.error('Failed to load sidebar order:', e);
-        }
-    }
+    sidebarOrder = [...DEFAULT_SIDEBAR_ORDER];
+    applySidebarOrder();
 }
 
-// Save sidebar order
+// Save sidebar order (no-op — using hardcoded order)
 function saveSidebarOrder() {
-    const navList = document.getElementById('navList');
-    if (!navList) return;
-    
-    sidebarOrder = Array.from(navList.querySelectorAll('.nav-item'))
-        .map(item => item.dataset.tab);
-    
-    localStorage.setItem('geeves-sidebar-order', JSON.stringify(sidebarOrder));
+    // Intentionally disabled — order is hardcoded in DEFAULT_SIDEBAR_ORDER
 }
 
 // Apply saved order to sidebar
@@ -4893,11 +4890,25 @@ function applySidebarOrder() {
     items.forEach(item => {
         itemMap[item.dataset.tab] = item;
     });
+
+    // Hide tabs that should be removed
+    HIDDEN_TABS.forEach(tabId => {
+        if (itemMap[tabId]) {
+            itemMap[tabId].style.display = 'none';
+        }
+    });
     
-    // Reorder based on saved order
+    // Reorder based on hardcoded order
     sidebarOrder.forEach(tabId => {
         if (itemMap[tabId]) {
             navList.appendChild(itemMap[tabId]);
+        }
+    });
+
+    // Append any remaining visible tabs not in the order (future-proofing)
+    items.forEach(item => {
+        if (!sidebarOrder.includes(item.dataset.tab) && !HIDDEN_TABS.includes(item.dataset.tab)) {
+            navList.appendChild(item);
         }
     });
 }
