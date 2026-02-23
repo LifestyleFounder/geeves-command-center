@@ -4670,8 +4670,8 @@ function renderMetaAds() {
     const rangeLabel = metaAdsRange === 'today' ? 'Today' : metaAdsRange === '30d' ? '30d' : '7d';
     updateStat('metaSpendLabel', `Ad Spend (${rangeLabel})`);
     updateStat('metaSpend', '$' + (summary.spend || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    updateStat('metaResults', (summary.results || 0).toLocaleString());
-    updateStat('metaCPR', '$' + (summary.costPerResult || 0).toFixed(2));
+    updateStat('metaLeads', (summary.results || 0).toLocaleString());
+    updateStat('metaCPL', summary.costPerResult > 0 ? '$' + summary.costPerResult.toFixed(2) : '$0');
     updateStat('metaImpressions', formatCompactNumber(summary.impressions || 0));
     updateStat('metaApplications', (summary.applications || 0).toLocaleString());
     updateStat('metaCostPerApp', summary.costPerApplication > 0 ? '$' + summary.costPerApplication.toFixed(2) : '$0');
@@ -4695,9 +4695,9 @@ function renderMetaAds() {
                     <td>${(c.clicks || 0).toLocaleString()}</td>
                     <td>${c.ctr ? c.ctr.toFixed(2) + '%' : '—'}</td>
                     <td>${c.results || 0}</td>
-                    <td><span style="font-size:11px;color:#888;">${c.resultType || '—'}</span></td>
                     <td>${c.costPerResult ? '$' + c.costPerResult.toFixed(2) : '—'}</td>
                     <td>${c.applications || 0}</td>
+                    <td>${c.applications > 0 ? '$' + (c.spend / c.applications).toFixed(2) : '—'}</td>
                 </tr>`;
             }).join('');
         } else {
@@ -4760,7 +4760,7 @@ function renderMetaCharts(daily) {
             datasets: [
                 {
                     type: 'line',
-                    label: 'Results',
+                    label: 'Leads',
                     data: leadsData,
                     borderColor: '#2d5016',
                     backgroundColor: 'rgba(45,80,22,0.15)',
