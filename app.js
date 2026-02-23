@@ -4601,14 +4601,9 @@ async function loadMetaAds(range) {
             const data = await response.json();
             
             // Extract appointments + applications from actions
-            const extractAppts = (actions) => {
-                if (!actions) return 0;
-                const a = actions.find(x => x.action_type === 'onsite_conversion.messaging_conversation_started_7d' || x.action_type === 'offsite_conversion.fb_pixel_schedule' || x.action_type === 'schedule');
-                return a ? parseInt(a.value) : 0;
-            };
             const extractApps = (actions) => {
                 if (!actions) return 0;
-                const a = actions.find(x => x.action_type === 'initiate_checkout' || x.action_type === 'omni_initiated_checkout' || x.action_type === 'offsite_conversion.fb_pixel_initiate_checkout');
+                const a = actions.find(x => x.action_type === 'offsite_conversion.fb_pixel_custom');
                 return a ? parseInt(a.value) : 0;
             };
 
@@ -4621,9 +4616,8 @@ async function loadMetaAds(range) {
                     impressions: data.totals.impressions,
                     clicks: data.totals.clicks,
                     ctr: data.totals.ctr,
-                    appointments: data.totals.appointments || 0,
                     applications: data.totals.applications || 0,
-                    cost_per_appointment: data.totals.cost_per_appointment || 0
+                    cost_per_application: data.totals.cost_per_application || 0
                 },
                 campaigns: data.campaigns.map(c => ({
                     name: c.name,
@@ -4634,7 +4628,6 @@ async function loadMetaAds(range) {
                     ctr: c.ctr,
                     leads: c.leads,
                     cpl: c.cpl,
-                    appointments: extractAppts(c.actions),
                     applications: extractApps(c.actions)
                 })),
                 daily: data.daily || [],
@@ -4686,9 +4679,8 @@ function renderMetaAds() {
     updateStat('metaCPL', '$' + (summary.cpl || 0).toFixed(2));
     updateStat('metaImpressions', formatCompactNumber(summary.impressions || 0));
     updateStat('metaApplications', (summary.applications || 0).toLocaleString());
-    updateStat('metaAppointments', (summary.appointments || 0).toLocaleString());
-    const cpa = summary.appointments > 0 ? summary.spend / summary.appointments : 0;
-    updateStat('metaCPA', cpa > 0 ? '$' + cpa.toFixed(2) : '$0');
+    const costPerApp = summary.applications > 0 ? summary.spend / summary.applications : 0;
+    updateStat('metaCostPerApp', costPerApp > 0 ? '$' + costPerApp.toFixed(2) : '$0');
     
     // Last updated
     const lastUpdatedEl = document.getElementById('metaLastUpdated');
@@ -4701,9 +4693,6 @@ function renderMetaAds() {
     if (campaignsBody) {
         if (campaigns && campaigns.length > 0) {
             campaignsBody.innerHTML = campaigns.map(c => {
-                const appts = c.appointments || 0;
-                const apps = c.applications || 0;
-                const campCpa = appts > 0 ? '$' + (c.spend / appts).toFixed(2) : '$0';
                 return `<tr>
                     <td><strong>${escapeHtml(c.name)}</strong></td>
                     <td><span class="status-badge ${c.status === 'ACTIVE' ? 'active' : 'paused'}">${c.status}</span></td>
@@ -4713,13 +4702,11 @@ function renderMetaAds() {
                     <td>${c.ctr ? c.ctr.toFixed(2) + '%' : '—'}</td>
                     <td>${c.leads || 0}</td>
                     <td>${c.leads ? '$' + (c.spend / c.leads).toFixed(2) : '$0'}</td>
-                    <td>${apps}</td>
-                    <td>${appts}</td>
-                    <td>${campCpa}</td>
+                    <td>${c.applications || 0}</td>
                 </tr>`;
             }).join('');
         } else {
-            campaignsBody.innerHTML = '<tr><td colspan="11" class="empty">No campaign data</td></tr>';
+            campaignsBody.innerHTML = '<tr><td colspan="9" class="empty">No campaign data</td></tr>';
         }
     }
     
@@ -4736,13 +4723,7 @@ function renderMetaCharts(daily) {
     });
     const spendData = daily.map(d => d.spend || 0);
     const leadsData = daily.map(d => d.leads || 0);
-    // Extract appointments from daily actions if available
-    const apptsData = daily.map(d => {
-        if (d.appointments) return d.appointments;
-        if (!d.actions) return 0;
-        // not available in current daily response, default to 0
-        return 0;
-    });
+    const appsData = daily.map(d => d.applications || 0);
 
     // Destroy old charts
     if (maSpendChartInstance) { maSpendChartInstance.destroy(); maSpendChartInstance = null; }
@@ -4779,21 +4760,29 @@ function renderMetaCharts(daily) {
     });
 
     maLeadsChartInstance = new Chart(leadsCtx, {
-        type: 'bar',
         data: {
             labels,
             datasets: [
                 {
+                    type: 'line',
                     label: 'Leads',
                     data: leadsData,
-                    backgroundColor: 'rgba(45,80,22,0.7)',
-                    borderRadius: 4
+                    borderColor: '#2d5016',
+                    backgroundColor: 'rgba(45,80,22,0.15)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#2d5016',
+                    order: 1
                 },
                 {
-                    label: 'Appointments',
-                    data: apptsData,
-                    backgroundColor: 'rgba(193,154,72,0.7)',
-                    borderRadius: 4
+                    type: 'bar',
+                    label: 'Applications',
+                    data: appsData,
+                    backgroundColor: 'rgba(193,154,72,0.8)',
+                    borderRadius: 4,
+                    barPercentage: 0.4,
+                    order: 0
                 }
             ]
         },

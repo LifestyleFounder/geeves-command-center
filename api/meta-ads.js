@@ -14,11 +14,12 @@ module.exports = async (req, res) => {
   }
 
   const range = req.query.range || '7d';
-  const now = new Date();
+  // Use Pacific time for date calculations (Dan's timezone)
+  const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
   let since, until;
 
   // Calculate date range
-  const fmt = d => d.toISOString().split('T')[0];
+  const fmt = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   until = fmt(now);
 
   switch (range) {
@@ -93,22 +94,10 @@ module.exports = async (req, res) => {
       return regAction ? parseInt(regAction.value) : 0;
     };
 
-    const extractAppointments = (actions) => {
-      if (!actions) return 0;
-      const a = actions.find(x =>
-        x.action_type === 'onsite_conversion.messaging_conversation_started_7d' ||
-        x.action_type === 'offsite_conversion.fb_pixel_schedule' ||
-        x.action_type === 'schedule'
-      );
-      return a ? parseInt(a.value) : 0;
-    };
-
     const extractApplications = (actions) => {
       if (!actions) return 0;
       const a = actions.find(x =>
-        x.action_type === 'initiate_checkout' ||
-        x.action_type === 'omni_initiated_checkout' ||
-        x.action_type === 'offsite_conversion.fb_pixel_initiate_checkout'
+        x.action_type === 'offsite_conversion.fb_pixel_custom'
       );
       return a ? parseInt(a.value) : 0;
     };
@@ -133,7 +122,6 @@ module.exports = async (req, res) => {
     const totalSpend = parseFloat(acctData.spend || 0);
     const totalLeads = extractLeads(acctData.actions);
     const totalRegistrations = extractRegistrations(acctData.actions);
-    const totalAppointments = extractAppointments(acctData.actions);
     const totalApplications = extractApplications(acctData.actions);
 
     // Daily data for charts
@@ -142,7 +130,8 @@ module.exports = async (req, res) => {
       spend: parseFloat(d.spend || 0),
       impressions: parseInt(d.impressions || 0),
       clicks: parseInt(d.clicks || 0),
-      leads: extractLeads(d.actions)
+      leads: extractLeads(d.actions),
+      applications: extractApplications(d.actions)
     }));
 
     res.status(200).json({
@@ -157,9 +146,8 @@ module.exports = async (req, res) => {
         leads: totalLeads,
         registrations: totalRegistrations,
         cpl: totalLeads > 0 ? totalSpend / totalLeads : 0,
-        appointments: totalAppointments,
         applications: totalApplications,
-        cost_per_appointment: totalAppointments > 0 ? totalSpend / totalAppointments : 0
+        cost_per_application: totalApplications > 0 ? totalSpend / totalApplications : 0
       },
       campaigns: formattedCampaigns,
       daily: dailyData,
