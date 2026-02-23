@@ -7321,14 +7321,14 @@ body {
 
 .aie-welcome-inner {
     text-align: center;
-    max-width: 700px;
+    max-width: 760px;
     width: 100%;
 }
 
 .aie-welcome h2 {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--charcoal);
+    font-size: 22px;
+    font-weight: 500;
+    color: #aaa;
     margin-bottom: 8px;
 }
 
@@ -7340,16 +7340,17 @@ body {
 
 .aie-agent-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
     text-align: left;
+    max-width: 720px;
 }
 
 .aie-agent-card {
     background: var(--bg-secondary);
-    border: 2px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 24px 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
@@ -7357,9 +7358,8 @@ body {
 }
 
 .aie-agent-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--border);
+    background: var(--bg-tertiary, rgba(255,255,255,0.06));
+    border-color: rgba(255,255,255,0.15);
 }
 
 .aie-agent-card::before {
@@ -7368,26 +7368,24 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
+    height: 2px;
 }
 
 .aie-agent-card-emoji {
-    font-size: 36px;
-    margin-bottom: 12px;
-    display: block;
+    display: none;
 }
 
 .aie-agent-card-name {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 600;
     color: var(--charcoal);
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .aie-agent-card-role {
-    font-size: 13px;
-    color: #888;
-    line-height: 1.4;
+    font-size: 11px;
+    color: #777;
+    line-height: 1.3;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -7652,5 +7650,9 @@ body {
 
     .aie-layout {
         position: relative;
+    }
+
+    .aie-agent-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
