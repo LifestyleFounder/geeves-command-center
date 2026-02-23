@@ -93,6 +93,26 @@ module.exports = async (req, res) => {
       return regAction ? parseInt(regAction.value) : 0;
     };
 
+    const extractAppointments = (actions) => {
+      if (!actions) return 0;
+      const a = actions.find(x =>
+        x.action_type === 'onsite_conversion.messaging_conversation_started_7d' ||
+        x.action_type === 'offsite_conversion.fb_pixel_schedule' ||
+        x.action_type === 'schedule'
+      );
+      return a ? parseInt(a.value) : 0;
+    };
+
+    const extractApplications = (actions) => {
+      if (!actions) return 0;
+      const a = actions.find(x =>
+        x.action_type === 'initiate_checkout' ||
+        x.action_type === 'omni_initiated_checkout' ||
+        x.action_type === 'offsite_conversion.fb_pixel_initiate_checkout'
+      );
+      return a ? parseInt(a.value) : 0;
+    };
+
     // Format campaign data
     const formattedCampaigns = (campaigns.data || []).map(c => ({
       name: c.campaign_name,
@@ -113,6 +133,8 @@ module.exports = async (req, res) => {
     const totalSpend = parseFloat(acctData.spend || 0);
     const totalLeads = extractLeads(acctData.actions);
     const totalRegistrations = extractRegistrations(acctData.actions);
+    const totalAppointments = extractAppointments(acctData.actions);
+    const totalApplications = extractApplications(acctData.actions);
 
     // Daily data for charts
     const dailyData = (daily.data || []).map(d => ({
@@ -134,7 +156,10 @@ module.exports = async (req, res) => {
         ctr: parseFloat(acctData.ctr || 0),
         leads: totalLeads,
         registrations: totalRegistrations,
-        cpl: totalLeads > 0 ? totalSpend / totalLeads : 0
+        cpl: totalLeads > 0 ? totalSpend / totalLeads : 0,
+        appointments: totalAppointments,
+        applications: totalApplications,
+        cost_per_appointment: totalAppointments > 0 ? totalSpend / totalAppointments : 0
       },
       campaigns: formattedCampaigns,
       daily: dailyData,

@@ -4580,7 +4580,7 @@ async function loadMetaAds(range) {
     if (range) metaAdsRange = range;
 
     // Update range button states
-    document.querySelectorAll('.meta-range-btn').forEach(btn => {
+    document.querySelectorAll('.ma-range-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.range === metaAdsRange);
     });
 
@@ -4588,8 +4588,6 @@ async function loadMetaAds(range) {
     const updateStat = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
     updateStat('metaLastUpdated', 'Loading...');
 
-    // Try Vercel API first (works from any device)
-    const apiBase = location.protocol === 'https:' ? '' : '';
     const apiUrl = `/api/meta-ads?range=${metaAdsRange}&t=${Date.now()}`;
 
     try {
@@ -4597,30 +4595,42 @@ async function loadMetaAds(range) {
         if (response.ok) {
             const data = await response.json();
             
-            // Map API response to metaAdsData format
+            // Extract appointments + applications from actions
+            const extractAppts = (actions) => {
+                if (!actions) return 0;
+                const a = actions.find(x => x.action_type === 'onsite_conversion.messaging_conversation_started_7d' || x.action_type === 'offsite_conversion.fb_pixel_schedule' || x.action_type === 'schedule');
+                return a ? parseInt(a.value) : 0;
+            };
+            const extractApps = (actions) => {
+                if (!actions) return 0;
+                const a = actions.find(x => x.action_type === 'initiate_checkout' || x.action_type === 'omni_initiated_checkout' || x.action_type === 'offsite_conversion.fb_pixel_initiate_checkout');
+                return a ? parseInt(a.value) : 0;
+            };
+
             metaAdsData = {
                 lastUpdated: data.updatedAt,
                 summary: {
                     spend: data.totals.spend,
                     leads: data.totals.leads,
                     cpl: data.totals.cpl,
-                    roas: 0,
                     impressions: data.totals.impressions,
-                    revenue: 0,
-                    registrations: data.totals.registrations,
                     clicks: data.totals.clicks,
-                    ctr: data.totals.ctr
+                    ctr: data.totals.ctr,
+                    appointments: data.totals.appointments || 0,
+                    applications: data.totals.applications || 0,
+                    cost_per_appointment: data.totals.cost_per_appointment || 0
                 },
                 campaigns: data.campaigns.map(c => ({
                     name: c.name,
-                    status: 'ACTIVE',
+                    status: c.spend > 0 ? 'ACTIVE' : 'PAUSED',
                     spend: c.spend,
                     impressions: c.impressions,
                     clicks: c.clicks,
                     ctr: c.ctr,
                     leads: c.leads,
-                    registrations: c.registrations,
-                    cpl: c.cpl
+                    cpl: c.cpl,
+                    appointments: extractAppts(c.actions),
+                    applications: extractApps(c.actions)
                 })),
                 daily: data.daily || [],
                 range: data.range,
@@ -4651,69 +4661,147 @@ function saveMetaAds() {
     localStorage.setItem('geeves-meta-ads', JSON.stringify(metaAdsData));
 }
 
+// Chart instances for cleanup
+let maSpendChartInstance = null;
+let maLeadsChartInstance = null;
+
 // Render Meta Ads data
 function renderMetaAds() {
-    const { summary, campaigns, adSets, lastUpdated } = metaAdsData;
+    const { summary, campaigns, daily, lastUpdated } = metaAdsData;
     
-    // Update summary stats
     const updateStat = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.textContent = value;
     };
     
-    const rangeLabel = metaAdsRange === 'today' ? 'Today' : metaAdsRange === 'yesterday' ? 'Yesterday' : metaAdsRange === '30d' ? '30d' : '7d';
+    const rangeLabel = metaAdsRange === 'today' ? 'Today' : metaAdsRange === '30d' ? '30d' : '7d';
     updateStat('metaSpendLabel', `Ad Spend (${rangeLabel})`);
     updateStat('metaSpend', '$' + (summary.spend || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
     updateStat('metaLeads', (summary.leads || 0).toLocaleString());
     updateStat('metaCPL', '$' + (summary.cpl || 0).toFixed(2));
-    updateStat('metaROAS', (summary.roas || 0).toFixed(1) + 'x');
     updateStat('metaImpressions', formatCompactNumber(summary.impressions || 0));
-    updateStat('metaRevenue', '$' + (summary.revenue || 0).toLocaleString());
+    updateStat('metaApplications', (summary.applications || 0).toLocaleString());
+    updateStat('metaAppointments', (summary.appointments || 0).toLocaleString());
+    const cpa = summary.appointments > 0 ? summary.spend / summary.appointments : 0;
+    updateStat('metaCPA', cpa > 0 ? '$' + cpa.toFixed(2) : '$0');
     
-    // Update last updated
+    // Last updated
     const lastUpdatedEl = document.getElementById('metaLastUpdated');
     if (lastUpdatedEl && lastUpdated) {
-        lastUpdatedEl.textContent = 'Last updated: ' + formatRelativeTime(lastUpdated);
+        lastUpdatedEl.textContent = 'Last updated: Just now';
     }
     
-    // Update campaigns table
+    // Campaigns table
     const campaignsBody = document.getElementById('metaCampaignsBody');
     if (campaignsBody) {
         if (campaigns && campaigns.length > 0) {
-            campaignsBody.innerHTML = campaigns.map(c => `
-                <tr>
+            campaignsBody.innerHTML = campaigns.map(c => {
+                const appts = c.appointments || 0;
+                const apps = c.applications || 0;
+                const campCpa = appts > 0 ? '$' + (c.spend / appts).toFixed(2) : '$0';
+                return `<tr>
                     <td><strong>${escapeHtml(c.name)}</strong></td>
-                    <td><span class="status-badge ${c.status === 'ACTIVE' ? 'active' : 'paused'}">${c.status || 'Unknown'}</span></td>
-                    <td>$${(c.spend || 0).toLocaleString()}</td>
+                    <td><span class="status-badge ${c.status === 'ACTIVE' ? 'active' : 'paused'}">${c.status}</span></td>
+                    <td>$${(c.spend || 0).toFixed(2)}</td>
                     <td>${formatCompactNumber(c.impressions || 0)}</td>
-                    <td>${c.clicks || 0}</td>
-                    <td>${c.impressions ? ((c.clicks / c.impressions) * 100).toFixed(2) + '%' : '—'}</td>
+                    <td>${(c.clicks || 0).toLocaleString()}</td>
+                    <td>${c.ctr ? c.ctr.toFixed(2) + '%' : '—'}</td>
                     <td>${c.leads || 0}</td>
-                    <td>$${c.leads ? (c.spend / c.leads).toFixed(2) : '—'}</td>
-                </tr>
-            `).join('');
+                    <td>${c.leads ? '$' + (c.spend / c.leads).toFixed(2) : '$0'}</td>
+                    <td>${apps}</td>
+                    <td>${appts}</td>
+                    <td>${campCpa}</td>
+                </tr>`;
+            }).join('');
         } else {
-            campaignsBody.innerHTML = '<tr><td colspan="8" class="empty">No campaigns yet — connect Meta Ads or add data manually</td></tr>';
+            campaignsBody.innerHTML = '<tr><td colspan="11" class="empty">No campaign data</td></tr>';
         }
     }
     
-    // Update ad sets table
-    const adSetsBody = document.getElementById('metaAdSetsBody');
-    if (adSetsBody) {
-        if (adSets && adSets.length > 0) {
-            adSetsBody.innerHTML = adSets.map(a => `
-                <tr>
-                    <td>${escapeHtml(a.name)}</td>
-                    <td>${escapeHtml(a.campaign || '')}</td>
-                    <td>$${(a.spend || 0).toLocaleString()}</td>
-                    <td>${a.leads || 0}</td>
-                    <td>$${a.leads ? (a.spend / a.leads).toFixed(2) : '—'}</td>
-                </tr>
-            `).join('');
-        } else {
-            adSetsBody.innerHTML = '<tr><td colspan="5" class="empty">No ad set data</td></tr>';
+    // Charts
+    renderMetaCharts(daily);
+}
+
+function renderMetaCharts(daily) {
+    if (!daily || daily.length === 0 || typeof Chart === 'undefined') return;
+    
+    const labels = daily.map(d => {
+        const date = new Date(d.date + 'T12:00:00');
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    });
+    const spendData = daily.map(d => d.spend || 0);
+    const leadsData = daily.map(d => d.leads || 0);
+    // Extract appointments from daily actions if available
+    const apptsData = daily.map(d => {
+        if (d.appointments) return d.appointments;
+        if (!d.actions) return 0;
+        // not available in current daily response, default to 0
+        return 0;
+    });
+
+    // Destroy old charts
+    if (maSpendChartInstance) { maSpendChartInstance.destroy(); maSpendChartInstance = null; }
+    if (maLeadsChartInstance) { maLeadsChartInstance.destroy(); maLeadsChartInstance = null; }
+
+    const spendCtx = document.getElementById('maSpendChart');
+    const leadsCtx = document.getElementById('maLeadsChart');
+    if (!spendCtx || !leadsCtx) return;
+
+    maSpendChartInstance = new Chart(spendCtx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Daily Spend',
+                data: spendData,
+                borderColor: '#2d5016',
+                backgroundColor: 'rgba(45,80,22,0.15)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 4,
+                pointBackgroundColor: '#2d5016'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { callback: v => '$' + v } },
+                x: { grid: { display: false } }
+            }
         }
-    }
+    });
+
+    maLeadsChartInstance = new Chart(leadsCtx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Leads',
+                    data: leadsData,
+                    backgroundColor: 'rgba(45,80,22,0.7)',
+                    borderRadius: 4
+                },
+                {
+                    label: 'Appointments',
+                    data: apptsData,
+                    backgroundColor: 'rgba(193,154,72,0.7)',
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } },
+            scales: {
+                y: { beginAtZero: true },
+                x: { grid: { display: false } }
+            }
+        }
+    });
 }
 
 // Quick add Meta data
