@@ -5198,6 +5198,21 @@ function renderAdSwipes() {
         competitorFilter.value = currentValue || 'all';
     }
     
+    // Populate audience filter
+    const audienceFilter = document.getElementById('swipeFilterAudience');
+    if (audienceFilter && adSwipesData.swipes) {
+        const currentValue = audienceFilter.value;
+        const audiences = [...new Set(adSwipesData.swipes
+            .map(s => s.targetAudience)
+            .filter(Boolean)
+            .map(audience => audience.split(/[,;]/)[0].trim()))] // Take first part if comma-separated
+            .sort();
+        
+        audienceFilter.innerHTML = '<option value="all">All Audiences</option>' +
+            audiences.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
+        audienceFilter.value = currentValue || 'all';
+    }
+    
     // Update count
     const countEl = document.getElementById('swipeCount');
     if (countEl) {
@@ -5251,6 +5266,7 @@ function renderAdSwipes() {
             <div class="swipe-media">
                 ${mediaContent}
                 <span class="swipe-type-badge">${swipe.mediaType || 'image'}</span>
+                ${swipe.hookType ? `<span class="swipe-hook-badge hook-${swipe.hookType}">${swipe.hookType}</span>` : ''}
             </div>
             <div class="swipe-info">
                 <div class="swipe-advertiser">${escapeHtml(swipe.advertiser)}</div>
@@ -5274,11 +5290,15 @@ function renderAdSwipes() {
 function getFilteredSwipes() {
     const competitor = document.getElementById('swipeFilterCompetitor')?.value || 'all';
     const type = document.getElementById('swipeFilterType')?.value || 'all';
+    const hookType = document.getElementById('swipeFilterHookType')?.value || 'all';
+    const audience = document.getElementById('swipeFilterAudience')?.value || 'all';
     const category = document.getElementById('swipeFilterCategory')?.value || 'all';
     
     return (adSwipesData.swipes || []).filter(swipe => {
         if (competitor !== 'all' && swipe.advertiser !== competitor) return false;
         if (type !== 'all' && swipe.mediaType !== type) return false;
+        if (hookType !== 'all' && swipe.hookType !== hookType) return false;
+        if (audience !== 'all' && (!swipe.targetAudience || !swipe.targetAudience.toLowerCase().includes(audience.toLowerCase()))) return false;
         if (category !== 'all' && swipe.category !== category) return false;
         return true;
     });
@@ -5335,6 +5355,18 @@ function openSwipeDetail(swipeId) {
     document.getElementById('swipeDetailHeadline').textContent = swipe.headline || 'No headline';
     document.getElementById('swipeDetailText').textContent = swipe.primaryText || 'No ad copy available';
     document.getElementById('swipeDetailCta').textContent = swipe.cta || 'No CTA';
+    document.getElementById('swipeDetailAudience').textContent = swipe.targetAudience || 'Audience analysis coming soon...';
+    document.getElementById('swipeDetailFramework').textContent = swipe.hookFramework || 'Framework analysis coming soon...';
+    document.getElementById('swipeDetailStructure').textContent = swipe.copyStructure || 'Structure analysis coming soon...';
+    
+    // Handle swipeable elements array
+    const elementsEl = document.getElementById('swipeDetailElements');
+    if (swipe.swipeElements && Array.isArray(swipe.swipeElements) && swipe.swipeElements.length > 0) {
+        elementsEl.innerHTML = swipe.swipeElements.map(element => `<span class="element-tag">${element}</span>`).join('');
+    } else {
+        elementsEl.textContent = 'Element analysis coming soon...';
+    }
+    
     document.getElementById('swipeDetailWhy').textContent = swipe.whyItWorks || 'Analysis coming soon...';
     document.getElementById('swipeDetailNotes').textContent = swipe.notes || 'No notes yet';
     

@@ -30,10 +30,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1297720635316986",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Opens with specific metric (15% ROI increase) which functions as both social proof and quantified benefit. The guarantee reduces risk while the mention of 'AI Print Attribution' adds technology credibility and curiosity.",
       "libraryID": "1297720635316986",
       "id": "swipe-001",
-      "advertiser": "Hyros"
+      "advertiser": "Hyros",
+      "hookFramework": "Metric Hook → Social Proof → Guarantee",
+      "copyStructure": "Statistic → Benefit → Risk Reversal",
+      "targetAudience": "SaaS companies running paid ads seeking better attribution/tracking",
+      "swipeElements": ["specific metrics", "guarantee", "AI positioning", "social proof"],
+      "hookType": "direct-offer"
     },
     {
       "headline": "Make More From Info Ads",
@@ -45,10 +50,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=734381212760182",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Uses market dominance positioning ('the dominant tracking solution') to establish authority, then promises simple outcome ('simply make more'). The guarantee removes risk while targeting specific verticals builds credibility and relevance.",
       "libraryID": "734381212760182",
       "id": "swipe-002",
-      "advertiser": "Hyros"
+      "advertiser": "Hyros",
+      "hookFramework": "Authority Positioning → Simplicity Promise → Guarantee",
+      "copyStructure": "Market Position → Benefit → Risk Reversal",
+      "targetAudience": "Info marketers, coaches, course creators running paid ads",
+      "swipeElements": ["market dominance", "simplicity", "vertical targeting", "guarantee"],
+      "hookType": "authority"
     },
     {
       "headline": "Sign at least 10 new clients, or you don't pay.",
@@ -60,10 +70,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=3874624096201625",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Masterful metaphor weaving (mountain climbing = business growth) with personal transformation story. The Sherpa metaphor positions them as experienced guides, while the 99% statistic creates exclusivity and urgency. The guarantee in the headline removes all risk.",
       "libraryID": "3874624096201625",
       "id": "swipe-003",
-      "advertiser": "Jordan Platten"
+      "advertiser": "Jordan Platten",
+      "hookFramework": "Pain → Story → Transformation → Solution → CTA",
+      "copyStructure": "Problem Metaphor → Personal Story → Solution Positioning → Benefit Promise",
+      "targetAudience": "Agency owners struggling with client acquisition and growth",
+      "swipeElements": ["extended metaphor", "transformation story", "exclusivity stats", "risk reversal guarantee"],
+      "hookType": "story"
     },
     {
       "headline": "Increase Revenue With 1 Click (Primary Inbox Software)",
@@ -75,10 +90,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=3734730880154561",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Comprehensive problem agitation with detailed frustration list that readers can relate to. Positions the product as 'one-click' solution while stacking social proof (640+ businesses, name-drop big brands). The specific metrics (20.2% open rate increase) add credibility.",
       "libraryID": "3734730880154561",
       "id": "swipe-004",
-      "advertiser": "Troy Ericson, E-mailmarketing.com"
+      "advertiser": "Troy Ericson, E-mailmarketing.com",
+      "hookFramework": "Problem Agitation → Failed Solutions → One-Click Solution → Social Proof → CTA",
+      "copyStructure": "Pain → Frustration List → Solution Reveal → Authority Stack → Action Steps",
+      "targetAudience": "Email marketers struggling with deliverability and Gmail promotions tab",
+      "swipeElements": ["problem agitation", "failed solutions list", "one-click positioning", "authority stack", "specific metrics"],
+      "hookType": "pain"
     },
     {
       "headline": "Make More From Your Ads",
@@ -90,10 +110,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1696855494351710",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Same market dominance positioning as swipe-002 but with different headline hook. 'Make More From Your Ads' is more direct and benefit-focused, appealing to the core desire for ROI improvement. Simple but effective positioning.",
       "libraryID": "1696855494351710",
       "id": "swipe-005",
-      "advertiser": "Hyros"
+      "advertiser": "Hyros",
+      "hookFramework": "Benefit Promise → Authority → Guarantee",
+      "copyStructure": "Direct Benefit → Market Position → Risk Reversal",
+      "targetAudience": "Paid advertisers across coaching/courses/education verticals",
+      "swipeElements": ["direct benefit", "market authority", "guarantee", "simplicity"],
+      "hookType": "direct-offer"
     },
     {
       "headline": "Make More From Info Ads",
@@ -105,10 +130,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1252880530186674",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Identical copy to swipe-002 but with 'Info Ads' hook which specifically targets information marketers. The vertical-specific language ('coaching courses, and education') builds immediate relevance and trust with the target audience.",
       "libraryID": "1252880530186674",
       "id": "swipe-006",
-      "advertiser": "Hyros"
+      "advertiser": "Hyros",
+      "hookFramework": "Vertical-Specific Hook → Authority → Guarantee",
+      "copyStructure": "Niche Targeting → Market Position → Risk Reversal",
+      "targetAudience": "Information marketers, course creators selling educational content",
+      "swipeElements": ["vertical targeting", "market dominance", "simplicity promise", "guarantee"],
+      "hookType": "direct-offer"
     },
     {
       "headline": "Increase Email Revenue With 1 Click | Deliverability Software",
@@ -120,10 +150,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1388459689560093",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Opens with reassurance ('your list isn't dead') to counter common fears, then reveals the hidden problem (Gmail filtering). The step-by-step explanation of Gmail's algorithm builds credibility while the emotional journey ('watching it all happen') creates urgency to fix it.",
       "libraryID": "1388459689560093",
       "id": "swipe-007",
-      "advertiser": "Troy Ericson, E-mailmarketing.com"
+      "advertiser": "Troy Ericson, E-mailmarketing.com",
+      "hookFramework": "Reassurance → Problem Reveal → Behind-the-Scenes → Solution",
+      "copyStructure": "False Beliefs → Hidden Truth → Problem Education → Solution Positioning",
+      "targetAudience": "Email marketers with declining open rates and revenue",
+      "swipeElements": ["reassurance hook", "hidden problem reveal", "algorithm education", "emotional journey"],
+      "hookType": "education"
     },
     {
       "headline": "Increase Email Revenue With 1 Click | Deliverability Software",
@@ -135,10 +170,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=2640696869638893",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Opens with relatable customer quote that creates immediate identification. Lists out common 'best practices' that aren't working to build frustration, then positions Gmail algorithm changes as the real culprit. Validates reader's struggle ('email has gotten HARD lately').",
       "libraryID": "2640696869638893",
       "id": "swipe-008",
-      "advertiser": "Troy Ericson, E-mailmarketing.com"
+      "advertiser": "Troy Ericson, E-mailmarketing.com",
+      "hookFramework": "Customer Quote → Best Practice Frustration → Algorithm Education → Solution",
+      "copyStructure": "Social Proof → Failed Methods → Environmental Shift → Solution Positioning",
+      "targetAudience": "Email marketers following best practices but still struggling with performance",
+      "swipeElements": ["customer testimonial", "best practice frustration", "external blame shift", "validation"],
+      "hookType": "social-proof"
     },
     {
       "headline": "Make More From Your Ads",
@@ -150,10 +190,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1957280865133857",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Adds social proof element with 'Everyone else is' to create FOMO, while maintaining the direct benefit promise and guarantee. The casual 'You should use it' tone reduces resistance compared to harder sales language.",
       "libraryID": "1957280865133857",
       "id": "swipe-009",
-      "advertiser": "Hyros"
+      "advertiser": "Hyros",
+      "hookFramework": "Benefit Promise → Social Proof → Casual Recommendation",
+      "copyStructure": "ROI Promise → Guarantee → FOMO → Soft CTA",
+      "targetAudience": "Paid advertisers who want ROI improvement with social validation",
+      "swipeElements": ["ROI guarantee", "social proof", "FOMO", "casual tone"],
+      "hookType": "direct-offer"
     },
     {
       "headline": "Increase Email Revenue With 1 Click | Deliverability Software",
@@ -165,10 +210,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=788725270857702",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Nearly identical to swipe-008 but different creative. The proven formula of customer quote → best practice frustration → algorithm education → solution works consistently. Strong validation and problem externalization.",
       "libraryID": "788725270857702",
       "id": "swipe-010",
-      "advertiser": "Troy Ericson, E-mailmarketing.com"
+      "advertiser": "Troy Ericson, E-mailmarketing.com",
+      "hookFramework": "Customer Quote → Best Practice Frustration → Algorithm Education → Solution",
+      "copyStructure": "Social Proof → Failed Methods → Environmental Shift → Solution Positioning",
+      "targetAudience": "Email marketers following best practices but still struggling with performance",
+      "swipeElements": ["customer testimonial", "best practice frustration", "external blame shift", "validation"],
+      "hookType": "social-proof"
     },
     {
       "headline": "The FRAMEWORK That Will Add 50% In CVR \u25b6\ufe0f",
@@ -180,10 +230,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=559697413431540",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Uses authority borrowing by name-dropping Sam Ovens, plus specific metric (50% CVR increase) for credibility. 'STEAL' creates urgency and frames as competitive advantage. Video play button encourages engagement.",
       "libraryID": "559697413431540",
       "id": "swipe-011",
-      "advertiser": "CEO of Solvexmedia - Kam Hossieny"
+      "advertiser": "CEO of Solvexmedia - Kam Hossieny",
+      "hookFramework": "Metric Promise → Authority Borrowing → Framework Steal",
+      "copyStructure": "Specific Benefit → Borrowed Authority → Action Hook",
+      "targetAudience": "Marketers wanting to improve landing page conversion rates",
+      "swipeElements": ["specific metrics", "authority borrowing", "urgency language", "framework positioning"],
+      "hookType": "curiosity"
     },
     {
       "headline": "Dun Rite Trailers",
@@ -195,10 +250,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=731585673328806",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Simple seasonal urgency hook ('Winter is coming') with investment protection framing. The phrase 'get it done right' connects to business name 'DUN-RITE' for brand reinforcement. Direct phone number removes friction.",
       "libraryID": "731585673328806",
       "id": "swipe-012",
-      "advertiser": "Fire Within Mobile Ovens"
+      "advertiser": "Fire Within Mobile Ovens",
+      "hookFramework": "Seasonal Urgency → Investment Protection → Brand Reinforcement",
+      "copyStructure": "Urgency → Value Proposition → Trust Signal → Contact",
+      "targetAudience": "Boat and RV owners needing winterization services",
+      "swipeElements": ["seasonal urgency", "investment framing", "brand reinforcement", "direct contact"],
+      "hookType": "pain"
     },
     {
       "headline": "How To Build $100M Landing Pages \u25b6\ufe0f",
@@ -210,10 +270,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=701175865715223",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Combines aspirational outcome ($100M) with specific competitive advantage (286% higher conversion). The 'STEAL' hook creates urgency while 'industry averages' provides benchmark credibility. Strong curiosity driver.",
       "libraryID": "701175865715223",
       "id": "swipe-013",
-      "advertiser": "CEO of Solvexmedia - Kam Hossieny"
+      "advertiser": "CEO of Solvexmedia - Kam Hossieny",
+      "hookFramework": "Aspirational Outcome → Competitive Advantage → Framework Steal",
+      "copyStructure": "Big Promise → Specific Metrics → Action Hook",
+      "targetAudience": "Marketers wanting to build high-converting product pages",
+      "swipeElements": ["aspirational outcomes", "specific metrics", "competitive benchmarking", "urgency language"],
+      "hookType": "curiosity"
     },
     {
       "headline": "Make More From Your Ads",
@@ -225,10 +290,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=2184888988692445",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Identical copy to swipe-009 with same social proof and FOMO elements. The proven formula of ROI guarantee + social validation + casual recommendation tone continues to work across different creatives.",
       "libraryID": "2184888988692445",
       "id": "swipe-014",
-      "advertiser": "Hyros"
+      "advertiser": "Hyros",
+      "hookFramework": "Benefit Promise → Social Proof → Casual Recommendation",
+      "copyStructure": "ROI Promise → Guarantee → FOMO → Soft CTA",
+      "targetAudience": "Paid advertisers who want ROI improvement with social validation",
+      "swipeElements": ["ROI guarantee", "social proof", "FOMO", "casual tone"],
+      "hookType": "direct-offer"
     },
     {
       "headline": "Increase Email Revenue With 1 Click | Deliverability Software",
@@ -240,10 +310,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1516358279655941",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Opens with contrarian positioning ('real reason isn't bad copy') to challenge common beliefs. Creates clear problem-solution contrast while positioning their tool as the only solution. Strong logical flow from problem to solution.",
       "libraryID": "1516358279655941",
       "id": "swipe-015",
-      "advertiser": "Troy Ericson, E-mailmarketing.com"
+      "advertiser": "Troy Ericson, E-mailmarketing.com",
+      "hookFramework": "Contrarian Hook → Problem Logic → One-Click Solution → Social Proof",
+      "copyStructure": "False Belief → Root Cause → Solution Positioning → Authority Stack",
+      "targetAudience": "Email marketers struggling with deliverability despite good copy/offers",
+      "swipeElements": ["contrarian positioning", "logical reasoning", "one-click solution", "false belief correction"],
+      "hookType": "contrarian"
     },
     {
       "headline": "",
@@ -255,10 +330,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1018652580202370",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "No headline version tests pure copy strength. Maintains same ROI guarantee + social proof formula as previous Hyros ads. The absence of headline makes the primary text hook more critical for grabbing attention.",
       "libraryID": "1018652580202370",
       "id": "swipe-016",
-      "advertiser": "Hyros"
+      "advertiser": "Hyros",
+      "hookFramework": "Direct Statement → Social Proof → Casual Recommendation",
+      "copyStructure": "ROI Promise → Guarantee → FOMO → Soft CTA",
+      "targetAudience": "Paid advertisers who want ROI improvement with social validation",
+      "swipeElements": ["no headline test", "ROI guarantee", "social proof", "casual tone"],
+      "hookType": "direct-offer"
     },
     {
       "headline": "Increase Email Revenue With 1 Click | Deliverability Software",
@@ -270,10 +350,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=2014095482708758",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Identical copy to swipe-015 with different creative. This contrarian hook ('real reason isn't copy/offers') consistently performs well by challenging assumptions and redirecting blame to deliverability issues.",
       "libraryID": "2014095482708758",
       "id": "swipe-017",
-      "advertiser": "Troy Ericson, E-mailmarketing.com"
+      "advertiser": "Troy Ericson, E-mailmarketing.com",
+      "hookFramework": "Contrarian Hook → Problem Logic → One-Click Solution → Social Proof",
+      "copyStructure": "False Belief → Root Cause → Solution Positioning → Authority Stack",
+      "targetAudience": "Email marketers struggling with deliverability despite good copy/offers",
+      "swipeElements": ["contrarian positioning", "logical reasoning", "one-click solution", "false belief correction"],
+      "hookType": "contrarian"
     },
     {
       "headline": "How To Build $100M Product Pages \u25b6\ufe0f",
@@ -285,10 +370,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=2689104247959185",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Nearly identical to swipe-013 with same framework stealing hook. Changes 'Landing Pages' to 'Product Pages' for better targeting. The $100M aspiration + 286% metric continues to work well for conversion optimization audience.",
       "libraryID": "2689104247959185",
       "id": "swipe-018",
-      "advertiser": "SolveXmedia"
+      "advertiser": "SolveXmedia",
+      "hookFramework": "Aspirational Outcome → Competitive Advantage → Framework Steal",
+      "copyStructure": "Big Promise → Specific Metrics → Action Hook",
+      "targetAudience": "E-commerce marketers wanting to build high-converting product pages",
+      "swipeElements": ["aspirational outcomes", "specific metrics", "competitive benchmarking", "urgency language"],
+      "hookType": "curiosity"
     },
     {
       "headline": "Why are so many business owners struggling to generate sales from email, even though everyone says \u201cthe money is in the list\u201d?",
@@ -300,10 +390,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1094092799268605",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Opens with question that references common belief ('money is in the list') then systematically disproves it. Creates cognitive dissonance before revealing the real problem. The development backstory adds credibility and justifies the price/investment.",
       "libraryID": "1094092799268605",
       "id": "swipe-019",
-      "advertiser": "Troy Ericson, E-mailmarketing.com"
+      "advertiser": "Troy Ericson, E-mailmarketing.com",
+      "hookFramework": "Question Hook → Belief Challenge → Problem Education → Solution Story",
+      "copyStructure": "Question → False Beliefs → Root Cause → Development Story → Solution",
+      "targetAudience": "Email marketers frustrated despite following conventional wisdom",
+      "swipeElements": ["question hook", "belief challenging", "development backstory", "conventional wisdom breakdown"],
+      "hookType": "education"
     },
     {
       "headline": "The real reason most people don\u2019t make money from email isn\u2019t bad copy or weak offers\u2026it\u2019s that their emails never even reach the inbox.",
@@ -315,10 +410,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=691924953961403",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Headline duplicates the primary text opening line for emphasis. Same contrarian positioning as swipe-015/017 but with headline reinforcement. The repeated hook in both headline and body amplifies the message impact.",
       "libraryID": "691924953961403",
       "id": "swipe-020",
-      "advertiser": "Troy Ericson, E-mailmarketing.com"
+      "advertiser": "Troy Ericson, E-mailmarketing.com",
+      "hookFramework": "Contrarian Hook → Problem Logic → One-Click Solution → Social Proof",
+      "copyStructure": "False Belief → Root Cause → Solution Positioning → Authority Stack",
+      "targetAudience": "Email marketers struggling with deliverability despite good copy/offers",
+      "swipeElements": ["headline repetition", "contrarian positioning", "logical reasoning", "one-click solution"],
+      "hookType": "contrarian"
     },
     {
       "headline": "FREE Skool Course",
@@ -330,10 +430,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=778761898581145",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Extremely simple approach with casual tone. The 27-hour timeframe adds specificity and value perception, while ':)' emoji creates friendly, approachable feel. Sometimes simple directness outperforms complex copy.",
       "libraryID": "778761898581145",
       "id": "swipe-021",
-      "advertiser": "Max Perzon"
+      "advertiser": "Max Perzon",
+      "hookFramework": "Free Offer → Specificity → Casual Invitation",
+      "copyStructure": "Free Hook → Time Value → Friendly CTA",
+      "targetAudience": "Entrepreneurs interested in learning Skool platform",
+      "swipeElements": ["free offer", "specific time commitment", "casual tone", "simplicity"],
+      "hookType": "direct-offer"
     },
     {
       "headline": "Great Jeans AND Great Email Deliverability",
@@ -360,10 +465,15 @@
       "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1512521046962113",
       "foundDate": "2026-02-23",
       "notes": "",
-      "whyItWorks": "",
+      "whyItWorks": "Expands the deliverability problem to include SMS, addressing modern multi-channel marketing. The iPhone spam folder insight creates urgency and positions their solution as essential for both channels. Strong authority stack with name-dropping.",
       "libraryID": "1512521046962113",
       "id": "swipe-023",
-      "advertiser": "EmailMarketing.com"
+      "advertiser": "EmailMarketing.com",
+      "hookFramework": "Problem Expansion → Modern Pain Point → Dual Solution → Social Proof",
+      "copyStructure": "Multi-Channel Problem → Technical Insight → One-Click Solution → Authority Stack",
+      "targetAudience": "Multi-channel marketers using both email and SMS",
+      "swipeElements": ["problem expansion", "technical insight", "multi-channel solution", "authority names"],
+      "hookType": "education"
     },
     {
       "headline": "Increase Email Revenue With 1 Click | Deliverability Software",

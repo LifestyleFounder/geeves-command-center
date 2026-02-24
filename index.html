@@ -980,6 +980,21 @@
                                         <option value="video">Video</option>
                                         <option value="carousel">Carousel</option>
                                     </select>
+                                    <select id="swipeFilterHookType" onchange="filterSwipes()">
+                                        <option value="all">All Hook Types</option>
+                                        <option value="curiosity">Curiosity</option>
+                                        <option value="pain">Pain</option>
+                                        <option value="authority">Authority</option>
+                                        <option value="social-proof">Social Proof</option>
+                                        <option value="contrarian">Contrarian</option>
+                                        <option value="direct-offer">Direct Offer</option>
+                                        <option value="story">Story</option>
+                                        <option value="education">Education</option>
+                                    </select>
+                                    <select id="swipeFilterAudience" onchange="filterSwipes()">
+                                        <option value="all">All Audiences</option>
+                                        <!-- Audience options populated dynamically -->
+                                    </select>
                                     <select id="swipeFilterCategory" onchange="filterSwipes()">
                                         <option value="all">All Categories</option>
                                         <option value="hook">Great Hook</option>
@@ -1456,6 +1471,26 @@ Sam Ovens
                     <div class="swipe-detail-section">
                         <h4>🔘 Call to Action</h4>
                         <div class="swipe-detail-cta" id="swipeDetailCta"></div>
+                    </div>
+                    
+                    <div class="swipe-detail-section">
+                        <h4>🎯 Target Audience</h4>
+                        <div class="swipe-detail-audience" id="swipeDetailAudience"></div>
+                    </div>
+                    
+                    <div class="swipe-detail-section">
+                        <h4>🪝 Hook Framework</h4>
+                        <div class="swipe-detail-framework" id="swipeDetailFramework"></div>
+                    </div>
+                    
+                    <div class="swipe-detail-section">
+                        <h4>🏗️ Copy Structure</h4>
+                        <div class="swipe-detail-structure" id="swipeDetailStructure"></div>
+                    </div>
+                    
+                    <div class="swipe-detail-section">
+                        <h4>🧩 Swipeable Elements</h4>
+                        <div class="swipe-detail-elements" id="swipeDetailElements"></div>
                     </div>
                     
                     <div class="swipe-detail-section highlight">
