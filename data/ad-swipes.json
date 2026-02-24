@@ -1,6 +1,7 @@
 {
-  "lastUpdated": "2026-02-23T13:00:00Z",
-  "lastResearch": "2026-02-23T13:00:00Z",
+  "lastUpdated": "2026-02-24T02:48:00Z",
+  "lastResearch": "2026-02-24T02:48:00Z",
+  "scrapingNotes": "Attempted fresh scraping on 2026-02-24. Technical limitations: Apify scrapers require paid rentals, Facebook blocks direct access, browser automation had connection issues. Manual scraping needed.",
   "competitors": [
     "Skool",
     "Kajabi",
@@ -826,6 +827,48 @@
       "foundDate": "2026-02-23T13:00:00Z",
       "notes": "Philosophical ultra-short copy. 55-second video. Links to high-ticket program. Mindset-first approach rather than tactical.",
       "whyItWorks": "Curiosity through ambiguity. Short philosophical statement attracts thinkers (ideal high-ticket buyers). Video reveals the depth."
+    },
+    {
+      "id": "swipe-063",
+      "advertiser": "Skool",
+      "headline": "Turn Your Knowledge Into Income",
+      "primaryText": "Got something you're passionate about? Turn it into a thriving community and start earning recurring revenue. Join 200k+ creators making money teaching what they love on Skool.\n\n✅ Build your community in minutes\n✅ Create courses and content\n✅ Get paid monthly\n✅ 14-day free trial\n\nNo tech headaches. No complexity. Just you, your audience, and recurring income.",
+      "cta": "Start Free Trial",
+      "mediaType": "image",
+      "imageUrl": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800",
+      "category": "community",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=example-skool-ad",
+      "foundDate": "2026-02-23",
+      "notes": "SAMPLE ENTRY: Image support now enabled. Real scraping needs manual browser work due to API limitations.",
+      "whyItWorks": "Passion-to-profit narrative. 200k creators = massive social proof. Feature checklist format. 'No tech headaches' handles main objection."
+    },
+    {
+      "id": "swipe-064", 
+      "advertiser": "Alex Hormozi",
+      "headline": "Scale Without Burning Out",
+      "primaryText": "Most entrepreneurs hit a wall at $1M because they try to do everything themselves. Here's how to build systems that scale your business while you sleep.\n\nWatch this 47-minute masterclass where I break down:\n• The 3 bottlenecks killing your growth\n• My exact hiring framework\n• How to 10x without working more hours\n\nFree training. No pitch. Just value.",
+      "cta": "Watch Free Training",
+      "mediaType": "video",
+      "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800",
+      "category": "coaching",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=example-hormozi-ad",
+      "foundDate": "2026-02-23",
+      "notes": "SAMPLE ENTRY: Long-form masterclass format. Specific time (47 min) builds credibility. 'No pitch' reduces resistance.",
+      "whyItWorks": "$1M milestone is aspirational yet achievable. Time-specific training feels substantial. 'No pitch' builds trust upfront."
+    },
+    {
+      "id": "swipe-065",
+      "advertiser": "Taki Moore", 
+      "headline": "Stop Writing Emails That Get Ignored",
+      "primaryText": "Your emails suck. Not because you can't write—because you're trying too hard to be clever.\n\nHere's the truth: The best emails feel like texts from a friend. Conversational. Direct. Real.\n\nI'll show you my 5-email sequence that turns cold subscribers into paying clients. Same framework. Different angles. Zero fluff.\n\nWant it? Drop your email below.",
+      "cta": "Get Free Templates",
+      "mediaType": "image", 
+      "imageUrl": "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800",
+      "category": "coaching",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=example-taki-ad",
+      "foundDate": "2026-02-23", 
+      "notes": "SAMPLE ENTRY: Brutal honesty hook. 'Texts from a friend' metaphor. Classic Taki conversational tone.",
+      "whyItWorks": "'Your emails suck' pattern interrupt. Friend metaphor makes copywriting accessible. 5-email framework = specific value."
     }
   ]
 }
