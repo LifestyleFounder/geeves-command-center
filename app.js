@@ -5162,6 +5162,22 @@ async function loadAdSwipes() {
         if (response.ok) {
             adSwipesData = await response.json();
             localStorage.setItem('geeves-ad-swipes', JSON.stringify(adSwipesData));
+            
+            // Check if localStorage has newer competitor edits and merge them
+            const competitorData = localStorage.getItem('geeves-ad-swipes-competitors');
+            if (competitorData) {
+                try {
+                    const competitorInfo = JSON.parse(competitorData);
+                    // Use localStorage competitors if they exist (indicating user edits)
+                    if (competitorInfo.competitors && competitorInfo.competitors.length > 0) {
+                        adSwipesData.competitors = competitorInfo.competitors;
+                        // Re-save the merged data to localStorage
+                        localStorage.setItem('geeves-ad-swipes', JSON.stringify(adSwipesData));
+                    }
+                } catch (e) {
+                    console.log('Error parsing competitor data:', e);
+                }
+            }
         }
     } catch (e) {
         const saved = localStorage.getItem('geeves-ad-swipes');
@@ -5329,6 +5345,14 @@ function saveCompetitors() {
         // Update local state for immediate UI feedback
         adSwipesData.competitors = competitors;
         saveAdSwipes();
+        
+        // Also save to separate localStorage key for persistence across reloads
+        const competitorData = {
+            competitors: competitors,
+            timestamp: new Date().toISOString()
+        };
+        localStorage.setItem('geeves-ad-swipes-competitors', JSON.stringify(competitorData));
+        
         renderAdSwipes();
         
         // Copy to clipboard so user can share with Geeves
