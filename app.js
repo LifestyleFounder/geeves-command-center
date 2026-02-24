@@ -103,6 +103,8 @@ function switchTab(tabName) {
     
     // Close sidebar on mobile
     document.getElementById('sidebar').classList.remove('open');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    if (backdrop) backdrop.classList.remove('visible');
 }
 
 function setDefaultDates() {
@@ -3101,7 +3103,10 @@ document.addEventListener('keydown', (e) => {
 // ===========================================
 
 function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    sidebar.classList.toggle('open');
+    if (backdrop) backdrop.classList.toggle('visible', sidebar.classList.contains('open'));
 }
 
 // ===========================================

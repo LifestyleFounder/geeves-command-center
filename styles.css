@@ -1755,13 +1755,30 @@ body {
         position: fixed;
         left: 0;
         top: var(--status-bar-height);
+        width: 260px;
+        height: calc(100vh - var(--status-bar-height));
         transform: translateX(-100%);
         z-index: 80;
         box-shadow: var(--shadow-lg);
+        transition: transform 0.25s ease;
     }
     
     .sidebar.open {
         transform: translateX(0);
+    }
+
+    .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        top: var(--status-bar-height);
+        background: rgba(0,0,0,0.4);
+        z-index: 79;
+    }
+
+    .sidebar.open ~ .sidebar-backdrop,
+    .sidebar-backdrop.visible {
+        display: block;
     }
     
     .mobile-header {
@@ -1774,6 +1791,7 @@ body {
     
     .content {
         padding: var(--space-md);
+        width: 100%;
     }
     
     .tab-header {
