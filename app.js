@@ -3105,8 +3105,11 @@ document.addEventListener('keydown', (e) => {
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('sidebarBackdrop');
+    const edgeTab = document.getElementById('mobileEdgeTab');
     sidebar.classList.toggle('open');
-    if (backdrop) backdrop.classList.toggle('visible', sidebar.classList.contains('open'));
+    const isOpen = sidebar.classList.contains('open');
+    if (backdrop) backdrop.classList.toggle('visible', isOpen);
+    if (edgeTab) edgeTab.style.opacity = isOpen ? '0' : '1';
 }
 
 // ===========================================
