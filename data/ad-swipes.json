@@ -21,60 +21,18 @@
   ],
   "swipes": [
     {
-      "id": "swipe-001",
-      "advertiser": "Skool",
-      "headline": "Turn Your Knowledge Into Income",
-      "primaryText": "Got something you're passionate about? Turn it into a thriving community and start earning recurring revenue. Join 200k+ creators making money teaching what they love on Skool.\n\n\u2705 Build your community in minutes\n\u2705 Create courses and content\n\u2705 Get paid monthly\n\u2705 14-day free trial\n\nNo tech headaches. No complexity. Just you, your audience, and recurring income.",
-      "cta": "Start Free Trial",
-      "mediaType": "image",
-      "imageUrl": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800",
-      "category": "community",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=example-skool-ad",
-      "foundDate": "2026-02-23",
-      "notes": "SAMPLE ENTRY: Image support now enabled. Real scraping needs manual browser work due to API limitations.",
-      "whyItWorks": "Passion-to-profit narrative. 200k creators = massive social proof. Feature checklist format. 'No tech headaches' handles main objection."
-    },
-    {
-      "id": "swipe-002",
-      "advertiser": "Alex Hormozi",
-      "headline": "Scale Without Burning Out",
-      "primaryText": "Most entrepreneurs hit a wall at $1M because they try to do everything themselves. Here's how to build systems that scale your business while you sleep.\n\nWatch this 47-minute masterclass where I break down:\n\u2022 The 3 bottlenecks killing your growth\n\u2022 My exact hiring framework\n\u2022 How to 10x without working more hours\n\nFree training. No pitch. Just value.",
-      "cta": "Watch Free Training",
-      "mediaType": "video",
-      "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800",
-      "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=example-hormozi-ad",
-      "foundDate": "2026-02-23",
-      "notes": "SAMPLE ENTRY: Long-form masterclass format. Specific time (47 min) builds credibility. 'No pitch' reduces resistance.",
-      "whyItWorks": "$1M milestone is aspirational yet achievable. Time-specific training feels substantial. 'No pitch' builds trust upfront."
-    },
-    {
-      "id": "swipe-003",
-      "advertiser": "Taki Moore",
-      "headline": "Stop Writing Emails That Get Ignored",
-      "primaryText": "Your emails suck. Not because you can't write\u2014because you're trying too hard to be clever.\n\nHere's the truth: The best emails feel like texts from a friend. Conversational. Direct. Real.\n\nI'll show you my 5-email sequence that turns cold subscribers into paying clients. Same framework. Different angles. Zero fluff.\n\nWant it? Drop your email below.",
-      "cta": "Get Free Templates",
-      "mediaType": "image",
-      "imageUrl": "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800",
-      "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=example-taki-ad",
-      "foundDate": "2026-02-23",
-      "notes": "SAMPLE ENTRY: Brutal honesty hook. 'Texts from a friend' metaphor. Classic Taki conversational tone.",
-      "whyItWorks": "'Your emails suck' pattern interrupt. Friend metaphor makes copywriting accessible. 5-email framework = specific value."
-    },
-    {
       "headline": "Boost SaaS Ad ROI By 15%",
       "primaryText": "SaaS companies on average see a 15%+ increase in ad revenue from HYROS Ai \"Print\" Attribution. Come try it, we guarantee results.",
       "cta": "Learn More",
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/525558331_762223846169596_7675828957714812885_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=MCKzrT9q1kIQ7kNvwFKbvMj&_nc_oc=AdkXEXW8yzfqnC0PFddvHFRUgAOi6mehVLcW0BbifMX790Jik0vOaIE0QrjWaYpLAlg&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfuMovh7rBqOpNBWzqUhzeo7r1TuR2GkpzcaTB2rA6lA6Q&oe=69A2CC9D",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1297720635316986",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1297720635316986",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1297720635316986",
-      "id": "swipe-004",
+      "id": "swipe-001",
       "advertiser": "Hyros"
     },
     {
@@ -84,12 +42,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/536954002_1392267655212230_7846520300140061894_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=111&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=zSDz7BDSHJAQ7kNvwETkRLC&_nc_oc=AdkLJqV9ZuSLTpO70o1-h6oOLfcgKPNRucn0JETMZY31ckmxVCMkFLh9_O122XDQhNk&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfsCVpqM4zQ5h0FmHGiezgG9AT6d4Nw0taQAM_rqgDdURA&oe=69A2DCAA",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=734381212760182",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=734381212760182",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "734381212760182",
-      "id": "swipe-005",
+      "id": "swipe-002",
       "advertiser": "Hyros"
     },
     {
@@ -99,12 +57,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/474035480_1274766907164262_2328665499092618671_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=108&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=HDs9ynh4awYQ7kNvwE-8NTW&_nc_oc=AdkwbF8PHOn_dOqn_knboXibzy7rN5UJBZt9SfT7h84wOXF8lYIn-_tz_hKW7VysAUE&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfuGQ0efr0P61aOmqKgZ9LChk-xEdO6AbQFL6nLucaXJJg&oe=69A2FE90",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=3874624096201625",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=3874624096201625",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "3874624096201625",
-      "id": "swipe-006",
+      "id": "swipe-003",
       "advertiser": "Jordan Platten"
     },
     {
@@ -114,12 +72,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/531265418_1253431042774104_5292538548432851387_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=103&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=9L_ADv9GADMQ7kNvwGyQaL3&_nc_oc=Adkvc7VsTA8rvG1D9rvJAA6ZlCyDf4yv_FnrqdxC7u4ZH97BnN4BZaDXabxo9XNepXQ&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfttDqJ2sn4RQg8kMX5KStwnd_tBQZwM3PGt1XCqxMtLOg&oe=69A2FF18",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=3734730880154561",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=3734730880154561",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "3734730880154561",
-      "id": "swipe-007",
+      "id": "swipe-004",
       "advertiser": "Troy Ericson, E-mailmarketing.com"
     },
     {
@@ -129,12 +87,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/536239435_743830761792052_3512668165118390010_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=ZPB0odZLAmkQ7kNvwEAF0Oc&_nc_oc=AdlcM5oTL6UF_9HW9Wuw1AlG9VW4nJVatpjhFZMFfFyMq8TeXSy8o9eZFkmOVL3-lcY&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_Aft7jRu6LRk33teqEC31bqjIS3ejkNTwb17dhWos5AnZxQ&oe=69A2F421",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1696855494351710",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1696855494351710",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1696855494351710",
-      "id": "swipe-008",
+      "id": "swipe-005",
       "advertiser": "Hyros"
     },
     {
@@ -144,12 +102,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/536272696_1842840873112206_2443581305360714128_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=108&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=faEQ-LlM5XwQ7kNvwEGR_qH&_nc_oc=Adm6qGfPg5daj26t9zy_780p44thAbMIHciVxsiRNSD6MBXAVKTs1gocBkpXDqG1xjE&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfvGHe1Cs0p5I5OD43cwVZ1UyjiAL4blf2MS0VRFBjiL6Q&oe=69A2F2E7",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1252880530186674",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1252880530186674",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1252880530186674",
-      "id": "swipe-009",
+      "id": "swipe-006",
       "advertiser": "Hyros"
     },
     {
@@ -159,12 +117,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/571486644_1731814267468338_5607335911467494004_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=aVqFsl9mCf0Q7kNvwFP2pQ1&_nc_oc=AdkFp_J6gtDpHumZp3XBaEpbBBF1TPzusdGnWzD-sqRIaPb0_78fqxFHYl2SoaLCfBo&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfsTCBFna-cnyv_HgWUUmhBWkqqqYVWghqn0PJuDeMQTqg&oe=69A2EB43",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1388459689560093",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1388459689560093",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1388459689560093",
-      "id": "swipe-010",
+      "id": "swipe-007",
       "advertiser": "Troy Ericson, E-mailmarketing.com"
     },
     {
@@ -174,12 +132,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/574852224_1530003758339804_8037782579043690302_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=110&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=QvEz8EBdKO8Q7kNvwEVVRL-&_nc_oc=AdnqMTlupQxzxx722bVr9IpjiY9dBlV-raGa6Hq628iSs8p5dfAESJYt-Dvx3lEnntM&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfutQoQj4pA-LAAM2h7vUTBF1OABjnC_vtTe5AF0wrUqnw&oe=69A2CF27",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=2640696869638893",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=2640696869638893",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "2640696869638893",
-      "id": "swipe-011",
+      "id": "swipe-008",
       "advertiser": "Troy Ericson, E-mailmarketing.com"
     },
     {
@@ -189,12 +147,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/616941209_1254376839896358_3708563640825729657_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=_5ERrLwFDjgQ7kNvwEc-Di0&_nc_oc=AdlJaNqXVMj1sMrhHt3qHNN-PWdRkQn7SKBK6NQlSifWDKDQ8kXiw2zeycjfGsWqUiA&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfuJM4gS1JuPul_dO2BkyDjYIhvZZZbSdHZowsReqt1J9Q&oe=69A2CAEF",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1957280865133857",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1957280865133857",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1957280865133857",
-      "id": "swipe-012",
+      "id": "swipe-009",
       "advertiser": "Hyros"
     },
     {
@@ -204,12 +162,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/599925837_1635121481228882_2028602037902770390_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=XZ-ipMg-bDAQ7kNvwG5MAaw&_nc_oc=AdmqwaIc9qaZ89DsWoHN7AHSh2vEWXyOwdNAcNHX4tPwsn4HrTB46BqaU-2GvHDf-mQ&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfuvcG_Rv70jM4osFONCYNFUJmdk1hKUOSJsmbKaME4RyQ&oe=69A2CC63",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=788725270857702",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=788725270857702",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "788725270857702",
-      "id": "swipe-013",
+      "id": "swipe-010",
       "advertiser": "Troy Ericson, E-mailmarketing.com"
     },
     {
@@ -219,12 +177,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/428701830_364143589766605_3234654356004788468_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=QepahtUUSvMQ7kNvwHLXxlH&_nc_oc=Adls7Q4wC-V6y35PH4JPKtPigWbKevTAHluHWOoU1ttXpaOWFKyMwZUq69I_GQwn0MI&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_Afv00t0zKZ0mkHcRD-aEy6uqQLw0y_pHQ1BD4zvbKhfmFw&oe=69A30054",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=559697413431540",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=559697413431540",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "559697413431540",
-      "id": "swipe-014",
+      "id": "swipe-011",
       "advertiser": "CEO of Solvexmedia - Kam Hossieny"
     },
     {
@@ -234,12 +192,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/599693391_1369870034593531_519903190669660781_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=108&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=BlK7tQH1ELMQ7kNvwFPOHPV&_nc_oc=Adkx7dJksAag0m0R9WjxB6KtgpTeeh-L98jCt25YaNKlBgiLvnPliuuaz0zFTI3on6c&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_Afv-BPioqNKfo_rkPTTeG_AEUOegzNhbWnZNjh1kW06PKg&oe=69A2CCC3",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=731585673328806",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=731585673328806",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "731585673328806",
-      "id": "swipe-015",
+      "id": "swipe-012",
       "advertiser": "Fire Within Mobile Ovens"
     },
     {
@@ -249,12 +207,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/422647781_3011165545738270_2016167033289889013_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=110&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=ntr1c_zd-6YQ7kNvwHnMIfh&_nc_oc=Adk-wTv0IRaMPiesx_o68fW3HLRj9dwXas0x7gp8JK_FIhpji2NzsdDdV-usMjbw3Hk&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfsVmGrjG32pDDxAbY0yuDvTgz5ZN15J89rojl1I7w8jTA&oe=69A2F3E3",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=701175865715223",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=701175865715223",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "701175865715223",
-      "id": "swipe-016",
+      "id": "swipe-013",
       "advertiser": "CEO of Solvexmedia - Kam Hossieny"
     },
     {
@@ -264,12 +222,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/536631337_1902364506974251_5066190299496747108_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=107&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=5vI0vY4nfywQ7kNvwF6mViP&_nc_oc=Adl1yfkRnbGHIOBVtNk99kzk4rkImiSFV7I9eLLIlJ6JS4sTRnXjdMCNQ7tOhRoxnKw&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AftELMKAoZG1Z1xDxkBN4dA3Z-HXHXVvFH1rLQy-eG-apg&oe=69A2D22F",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=2184888988692445",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=2184888988692445",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "2184888988692445",
-      "id": "swipe-017",
+      "id": "swipe-014",
       "advertiser": "Hyros"
     },
     {
@@ -279,12 +237,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/575124599_1140283658212461_2055409839700583230_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=biU_IyoNoSIQ7kNvwGKfdag&_nc_oc=AdnOKO3oQB52Ou5tpIFrn1NgVW-MAbuAlvrXDHT2qSPFjIeZoZoqN8_lAeQ98czNPsE&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfvE9n2LsyuFIR9xdPBd7zU8lDsA581lYRLhKR79GLQKAA&oe=69A2F697",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1516358279655941",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1516358279655941",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1516358279655941",
-      "id": "swipe-018",
+      "id": "swipe-015",
       "advertiser": "Troy Ericson, E-mailmarketing.com"
     },
     {
@@ -294,12 +252,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/536274709_1506752240759970_5211549025468069567_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=6ds1IN0uKx0Q7kNvwEbEpSo&_nc_oc=AdkMnKqWl-iDOKRheAqdVj3zdIw2eYNVDuCNmuA6Rq9pYDX87dM64641ZoVCOpj3drU&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfvRf-FIzRF1IKlOJy0__yor0_8kHJxpSzu0rUiKJrmtmQ&oe=69A2D4A3",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1018652580202370",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1018652580202370",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1018652580202370",
-      "id": "swipe-019",
+      "id": "swipe-016",
       "advertiser": "Hyros"
     },
     {
@@ -309,12 +267,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/576581973_799996396077933_8299697667394006048_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=1IGWqPwDZroQ7kNvwH4XjXm&_nc_oc=Adm34S0DSMhJkdoU7q6mN-OqZDuJviRCJKaWz9dtjTnpwlinogiLlOb6TJx2gH8_gos&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_Afv3J3khQ9EL-olzj7ycskY5H_11SvXlIvte0Mv31QNx2g&oe=69A2D325",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=2014095482708758",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=2014095482708758",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "2014095482708758",
-      "id": "swipe-020",
+      "id": "swipe-017",
       "advertiser": "Troy Ericson, E-mailmarketing.com"
     },
     {
@@ -324,12 +282,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/428598531_334261302972475_8970797341910204572_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=IcuTW-AHPTQQ7kNvwERcqJ4&_nc_oc=AdnyRKM0WRMWHXz5Ef6fybhmMhbjluoeSUyYetRTi6fECP8aH2fc-eSyktmd7oND6HA&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfvWgNCN0AaNFuW_8g4ZyHXxg9KNctGO2Zaq33uWiJBC6Q&oe=69A2D3E7",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=2689104247959185",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=2689104247959185",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "2689104247959185",
-      "id": "swipe-021",
+      "id": "swipe-018",
       "advertiser": "SolveXmedia"
     },
     {
@@ -339,12 +297,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/576734320_1986633855466403_3188173705584990975_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=dfXK9X1ODdEQ7kNvwFB42ld&_nc_oc=AdkD52J40b7IodWuwqDHYW3Pam3ZWnsziIr41Zm1_jgbRz2cqavuybSROFhBaFu_gvk&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_Afv3WFOOLEcKMIOt2-CZl0K-TD1_oyALJph4BoFiZ8WvZw&oe=69A2EE3E",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1094092799268605",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1094092799268605",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1094092799268605",
-      "id": "swipe-022",
+      "id": "swipe-019",
       "advertiser": "Troy Ericson, E-mailmarketing.com"
     },
     {
@@ -354,12 +312,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/571206310_1173920834692861_2829572501526318994_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=105&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=GkP5TqvvsEUQ7kNvwHS45kN&_nc_oc=Adlz_MKOdujovOAXJQFt2w6G9ms-nQr3MKT7W8FhlkunO1lNdQLDkLlf2VV2f3N5nxE&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfvdHNTGDbeMvCmLmme2k3ZPKs9OOuJD4wprxUOSxI218Q&oe=69A2FB78",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=691924953961403",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=691924953961403",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "691924953961403",
-      "id": "swipe-023",
+      "id": "swipe-020",
       "advertiser": "Troy Ericson, E-mailmarketing.com"
     },
     {
@@ -369,12 +327,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/625360467_2508766896191846_8090136024807893424_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=104&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=trVyTKUuTlsQ7kNvwF-be8b&_nc_oc=Adnv8_bh1MQnDuXNyY2tbdCoAZ9DJ7um6hzs4Ye_2rEl526ZApwPAOk9xjyakGvhifg&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_Aftdf-gu2ULDOP6FWVHvPOG6l5PFGSVrCSuktk6v2azvtA&oe=69A2DBAE",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=778761898581145",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=778761898581145",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "778761898581145",
-      "id": "swipe-024",
+      "id": "swipe-021",
       "advertiser": "Max Perzon"
     },
     {
@@ -384,12 +342,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/530658339_2573388112998042_8798872056806256303_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=109&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=G594rN7LoesQ7kNvwHBxMgY&_nc_oc=Adk6xqg9KNoA72JexH_yE9wVb-iRiPjri24HTz6VoWDn2ufCXZO0ZhcTkrBZfBl4qJU&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_Afs14ktsQE5PYdBAE2G5wmtBT-LxT5ZFaMvdANse45t6XQ&oe=69A2E38D",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1347549977127190",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1347549977127190",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1347549977127190",
-      "id": "swipe-025",
+      "id": "swipe-022",
       "advertiser": "EmailMarketing.com"
     },
     {
@@ -399,12 +357,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/619113778_893194423199940_1248301500249949322_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=100&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=919f6LV1pzsQ7kNvwHmwPY-&_nc_oc=Adk5EiceoZVwYm6vzI9FI3Yb87_fMxgxhOPe7TGaN5Sv4pS2zm_lZrujuoMlUPh-MmQ&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_Afs64sSOtVk7gMJcSnzU72EMuhvuA3o_usbw1mRQjaJ_BA&oe=69A2F490",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1512521046962113",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1512521046962113",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1512521046962113",
-      "id": "swipe-026",
+      "id": "swipe-023",
       "advertiser": "EmailMarketing.com"
     },
     {
@@ -414,12 +372,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/574604285_1210046967839751_164687139831532097_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=100&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=BEJrIQKDP3IQ7kNvwG6YI8i&_nc_oc=Adm9z61eM2QnN9wVn4AzFnGw0HLp79vPxAXIQqcp5IR5FBEX0XwiPNm-BziVaNlyfLs&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AftY0xv0VwjZ1dx3RuMZBpWesXMcFJbn5s1HwU6OJv_nuQ&oe=69A2F804",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1200391805298792",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1200391805298792",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1200391805298792",
-      "id": "swipe-027",
+      "id": "swipe-024",
       "advertiser": "Troy Ericson, E-mailmarketing.com"
     },
     {
@@ -429,12 +387,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/607453190_1599576131037502_3791919211958436467_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=108&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=nDQ8stHz3PIQ7kNvwHWBd4Y&_nc_oc=AdmWSUnu_UkH_cQZOkv4XSCJAv2KxYjf9XJQSxNf8IMnlU68nLjZ1FVAOu_7e6dMRVY&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_AfuocP42motdmQwfIGSqUlVlDXmmNuHG34ACPP7JQxHdUA&oe=69A2D3B0",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=2599041983793063",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=2599041983793063",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "2599041983793063",
-      "id": "swipe-028",
+      "id": "swipe-025",
       "advertiser": "Stefan Andjelovic"
     },
     {
@@ -444,12 +402,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/626793699_2391268001388308_638037846832072976_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=f5FULP8_Z48Q7kNvwGuovjh&_nc_oc=AdkAEucvhS7FSCr48JksSI69zCBaSnCPTH5LC2DX7WlkDS3ot0YKsPOpEPhhAsTn7NI&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=bIBmduZ0ggD2xM6QeLPzYg&oh=00_Afv2kLdKfDEQUIryIWy--LXN8xsBYU5elW1qdWHVs-ej1g&oe=69A2F459",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1291328389491130",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1291328389491130",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1291328389491130",
-      "id": "swipe-029",
+      "id": "swipe-026",
       "advertiser": "EmailMarketing.com"
     },
     {
@@ -459,12 +417,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/482358435_607351615472482_5470880063264272687_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=q4G1wqesFSwQ7kNvwFLpAI2&_nc_oc=AdktMtBsJVaxOfKQEJ8ZLZtj1SfG5jaz9s_CxXyLjR-dQD1TSO5pNa6dEusASS8V3n8&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=X94GL5LIDfSCeuoHX7ZKWA&oh=00_AfvBh4OE2WuX41zxhULtbnrg5dl3MUnHmtk7UAAGJjfo8Q&oe=69A2FD1E",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=703125068727744",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=703125068727744",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "703125068727744",
-      "id": "swipe-030",
+      "id": "swipe-027",
       "advertiser": "Alex Hormozi"
     },
     {
@@ -474,12 +432,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/605573248_705590002375104_8587298917770879198_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=104&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=vZbrQMmbDuMQ7kNvwEqBaRq&_nc_oc=AdmCu7TvuUD6hwM6JIRDDTvkcwFi4C6uwFJAz4BEf9v9p_0TuxIXu084wFEmh750664&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=X94GL5LIDfSCeuoHX7ZKWA&oh=00_Afv8t4lWKITKIfgIT_1IbvngL1WXaoeUPYC4bcAQyghq3A&oe=69A2F2AF",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=882942064170200",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=882942064170200",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "882942064170200",
-      "id": "swipe-031",
+      "id": "swipe-028",
       "advertiser": "Alex Hormozi"
     },
     {
@@ -489,12 +447,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/546891896_670883092710682_4482913889044894432_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=Y6S3TpOpS9MQ7kNvwHWDCJQ&_nc_oc=AdkxRiJb-A_uotmfmPY0L8_q6KLYnbQFhKIhRRZHE9U4DRLsakVmoYarw3B71P37xIg&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=X94GL5LIDfSCeuoHX7ZKWA&oh=00_Afsp0XrIjIyFf7XdIuxccpuUp3ch1q6So3g3p9zFUQrSmg&oe=69A2DFB9",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1555035972151372",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1555035972151372",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1555035972151372",
-      "id": "swipe-032",
+      "id": "swipe-029",
       "advertiser": "Alex Hormozi"
     },
     {
@@ -504,12 +462,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/581529794_811606635208650_7493809971989609233_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=111&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=ISkPq7SZ_wMQ7kNvwGit2q9&_nc_oc=Adl10iAjvd-b6ZIjwC0trZU9qcJ2KP0bF9RWWjciXELCvgbTHj_uhNjQOBdJbnUYlY8&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=X94GL5LIDfSCeuoHX7ZKWA&oh=00_AfvAyvQfS_jb79DCCe1DKigOGEBRiAzM31cyDgABDJsyGQ&oe=69A2D2A7",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=718241887980171",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=718241887980171",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "718241887980171",
-      "id": "swipe-033",
+      "id": "swipe-030",
       "advertiser": "Alex Hormozi"
     },
     {
@@ -519,12 +477,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/621831168_1389826079279290_7249021219068654335_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=100&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=HN5W6ZCIzN0Q7kNvwEdnfW8&_nc_oc=Adnvcgi4k42pjYYoydpvgmatjOkxIlmleS_FvwgGpmXoquVDfWe1ENVb2kMbWz9OIlI&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=X94GL5LIDfSCeuoHX7ZKWA&oh=00_AftTKJp_peTbfZ5SV0jZCgYevvU5aVVCl0Yxny0mjOuGaw&oe=69A2F74B",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=867165669269280",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=867165669269280",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "867165669269280",
-      "id": "swipe-034",
+      "id": "swipe-031",
       "advertiser": "Alex Hormozi"
     },
     {
@@ -534,12 +492,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/616379643_1500064795496492_2617066125082872238_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=103&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=injWbwh4ASsQ7kNvwEtmWg6&_nc_oc=AdlDi3SPuwjLB7eWOy9xFG7fJRx_bDRZnPQFpansfsLFsJ3G0eei1Yh2KhBpxMy-orE&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=X94GL5LIDfSCeuoHX7ZKWA&oh=00_Afv3AjugNdyExVclcUznw7dzjH2QG273p_SsOw3c4qd44Q&oe=69A2D024",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=25506088685685916",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=25506088685685916",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "25506088685685916",
-      "id": "swipe-035",
+      "id": "swipe-032",
       "advertiser": "Alex Hormozi"
     },
     {
@@ -549,12 +507,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/615558260_2330233587389108_1725740446340483187_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=103&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=B9zzIc3a6Q0Q7kNvwH-ASFk&_nc_oc=AdkLhiYX0xgyzRWu90n5chaOoPLcDQ0RbW6-GA628dv4Vq0mVbGLTr66-5zKgZiskt8&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=X94GL5LIDfSCeuoHX7ZKWA&oh=00_Afu1E5TFwTHz6trchObX14A257Vu8InqOQx0doKdjMhT8w&oe=69A2E2C0",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1810954329599190",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1810954329599190",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1810954329599190",
-      "id": "swipe-036",
+      "id": "swipe-033",
       "advertiser": "Alex Hormozi"
     },
     {
@@ -564,12 +522,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/602918979_839316348980586_6579825310551832900_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=108&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=3EdZazEXV3cQ7kNvwEsZpfw&_nc_oc=Admbj86C_HYiE2dKOgV0rcGBEXQa6NQXCOkKFgSzpo3Xj8Wy8CJ_hJMfQVfM45geTTU&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=X94GL5LIDfSCeuoHX7ZKWA&oh=00_Afuh4sAHjIW3T-fCjb2Tnc63jyLGIZhR6NEpO6H1wdMOBQ&oe=69A2FC3E",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1549051119770342",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1549051119770342",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1549051119770342",
-      "id": "swipe-037",
+      "id": "swipe-034",
       "advertiser": "Alex Hormozi"
     },
     {
@@ -579,12 +537,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/571802739_1325508198953055_7968451960364915938_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=100&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=j26ndT6Cy_MQ7kNvwFn4Cqb&_nc_oc=AdnVR-p_FQ3bqVkUJbX8SYmChO0q5RQtKz5QU_roFFFqnghl06RBw8TKdq5Gxq3C9BQ&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=X94GL5LIDfSCeuoHX7ZKWA&oh=00_Afv0GrKNg7qT2NOsJ2uMuNy094mBtsadII0evq8LGQC7uQ&oe=69A2D03B",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=2201603717013337",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=2201603717013337",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "2201603717013337",
-      "id": "swipe-038",
+      "id": "swipe-035",
       "advertiser": "Dr. Josh Axe"
     },
     {
@@ -594,12 +552,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/531031164_3062238577320645_3290229137449650644_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=108&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=bl2bR8XnjgIQ7kNvwE80FSr&_nc_oc=AdmvMTljMu5ns0LbT7A_qHjMFxSBigMzsf-y4n5esGRmnWbXlBtIVcAtIBKjRIWoZ6U&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=Tv3kS5V6g8VxMZyMU6_TUQ&oh=00_AfsaKN9j0FA51P9aHLpiDIGv3Czx4VJsJjQigRHVAhwPZw&oe=69A301F4",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1909350919662915",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1909350919662915",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1909350919662915",
-      "id": "swipe-039",
+      "id": "swipe-036",
       "advertiser": "Taki Moore - Million Dollar Coach"
     },
     {
@@ -609,12 +567,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/528391415_2586249878385401_1645628113675777750_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=106&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=1yeKVILKC6cQ7kNvwGK6amz&_nc_oc=Adlo5AMZg9-Zw8_0usfPDRk9a5AXc9JFgujlLCPqFaB5vZHj4-Xu-1rl652frh-Pvio&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=Tv3kS5V6g8VxMZyMU6_TUQ&oh=00_Aft14jwkrzbdQdmk-h4GzAgxZF2uoi8WcXiJxctW0U3cUA&oe=69A2E6DE",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1172074131790642",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1172074131790642",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1172074131790642",
-      "id": "swipe-040",
+      "id": "swipe-037",
       "advertiser": "Taki Moore - Million Dollar Coach"
     },
     {
@@ -624,12 +582,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/637526293_878926281809908_5002833844394892471_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=111&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=ko1YwM0emr8Q7kNvwFf17do&_nc_oc=Adm23ov1iVBybqACcgru6zb5_1zVGDvR646KDZPBgGQIEETxkpgDTxfcsvis-4rL8Co&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=Tv3kS5V6g8VxMZyMU6_TUQ&oh=00_AftN5hvtFMch8OC1UeCI56UOwLKAZ6vfN9sC3kiBZk1sYw&oe=69A2D34B",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1315076690449679",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1315076690449679",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1315076690449679",
-      "id": "swipe-041",
+      "id": "swipe-038",
       "advertiser": "Taki Moore - Million Dollar Coach"
     },
     {
@@ -639,12 +597,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/637878054_1350552667090065_4083010430273155132_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=109&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=53YlsJPqAoQQ7kNvwHX7swi&_nc_oc=AdmZmml0OZoNWi9iaIrdnMzwhLndpFFvHb77VKlEVC4zOAXnA2sMjBI6e8hZP5JTqt4&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=Tv3kS5V6g8VxMZyMU6_TUQ&oh=00_Afv_WvciwECU2Vh_OhRfZqRQ7kJquDpiWKIWBdmpl4A--A&oe=69A2FC47",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=910976921296545",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=910976921296545",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "910976921296545",
-      "id": "swipe-042",
+      "id": "swipe-039",
       "advertiser": "The Tiger Table"
     },
     {
@@ -654,12 +612,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/536009888_3270411806457242_9122544080574818222_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=111&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=88O-Y06BDEgQ7kNvwEi1Qz8&_nc_oc=AdkJJfi0ctOpiJhOFef2V5E47k8EltjfsrfUazf3NOEigG6YG6nlZZ7teU6vfKZ1G94&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=Tv3kS5V6g8VxMZyMU6_TUQ&oh=00_Afu0p76puEk2dtVBpeDvpbULBu9bk97maa-I74XvVc5IqA&oe=69A2D9CC",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=24567196249566187",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=24567196249566187",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "24567196249566187",
-      "id": "swipe-043",
+      "id": "swipe-040",
       "advertiser": "Rob Kosberg"
     },
     {
@@ -669,12 +627,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/464226026_1053505666320956_8524265238480974052_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=108&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=W7Q-Kbn0wrMQ7kNvwFOnMUu&_nc_oc=Adlf66fGd-Cp6PnlH8cB6KwZd-giYMTDj98LwynBifwMKipL_Ov685hc6khF2sr6Jqc&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AfsYXqWxxfJ_Qgt3Lp1Ds3GAQA05JXomF4vP_oZb4wNDtA&oe=69A2EC7F",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=924006159594116",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=924006159594116",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "924006159594116",
-      "id": "swipe-044",
+      "id": "swipe-041",
       "advertiser": "Richmond Dinh"
     },
     {
@@ -684,12 +642,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/451987839_385090940863079_2939228630121562527_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=100&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=oKdz4HhfmZ4Q7kNvwGlPe2C&_nc_oc=AdlIf4e52PPQbLGXVHK2YcG2JBWtbRucbrqvWI4sp4Gb2aqcX7L-X1-ytQ7ITETLv7o&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AfuwndG4pOzbLSvIaZqTMJUhd_KZA6B31Ugp0BiGXKUulg&oe=69A2D9C6",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=26594168906864563",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=26594168906864563",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "26594168906864563",
-      "id": "swipe-045",
+      "id": "swipe-042",
       "advertiser": "Richmond Dinh"
     },
     {
@@ -699,12 +657,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/497459471_1007705418139133_8744371642597220183_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=108&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=NwuPeUmYfEUQ7kNvwHrj9Mi&_nc_oc=AdkwwlCKNuN7iQArxrTA-ihIkYIsSOTTIjj2DOesE1uAfHLYjPy2qdE9Gd-xUG-5L9c&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AfshX5SFKVHgf5J3pLCiICULDJjgEVGuIECmBXdoQGbjUw&oe=69A2F2BF",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1222233376009049",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1222233376009049",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1222233376009049",
-      "id": "swipe-046",
+      "id": "swipe-043",
       "advertiser": "Richmond Dinh"
     },
     {
@@ -714,12 +672,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/464468450_1052794306641698_4943547767767930045_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=103&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=9Kx8o8-j4aoQ7kNvwFkcFCY&_nc_oc=AdkR1kJJI4GR_iequWGHyK-UzEO0nRB1xsDRXquAo3gyr1vCbpmJQ3StL-XAgljp6cI&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AftOEC1LFxnnB3znvbfLuMCdkSYiPtwMT46TWIhK07LSyA&oe=69A2CC39",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1317349883006251",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1317349883006251",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1317349883006251",
-      "id": "swipe-047",
+      "id": "swipe-044",
       "advertiser": "Richmond Dinh"
     },
     {
@@ -729,12 +687,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/531185764_1273050730968139_6731463384737577248_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=111&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=qArPOgQAVJ0Q7kNvwGNeqes&_nc_oc=AdnEm4suB8CI5OwJWuSWoTEfEzuinrkNCuv7YzSXvZFBmOLbRSd3vVd5WEIhO5qoA2A&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_Aft_RxHUiz2aOCfv4x0-LoJ7l9BaIHYsIx-yYZmlUK2YyQ&oe=69A2D28F",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1840238106553600",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1840238106553600",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1840238106553600",
-      "id": "swipe-048",
+      "id": "swipe-045",
       "advertiser": "Richmond Dinh"
     },
     {
@@ -744,12 +702,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/640259272_1590474198906939_39000859357493246_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=Y0kCtO9bNksQ7kNvwHdL7wt&_nc_oc=AdlSC_j85-65iSWWcCvcP870sZZgmJNZFRKBiaTpINOhddrCG0xG-IUAHaCZ6-BYoqs&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AftyPnk6wmZ4lmLCkp5gCDNTasEE1Mds6GBI_pfUk6Jw7g&oe=69A2EE9B",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1254115583321670",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1254115583321670",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1254115583321670",
-      "id": "swipe-049",
+      "id": "swipe-046",
       "advertiser": "100 Speakers"
     },
     {
@@ -759,12 +717,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/621796875_768122449125431_1757488948928210093_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=OJP613S55VIQ7kNvwF2a7ck&_nc_oc=AdnNAVEDd3cLSTzgSWahwANqKhnywKSzMZTM2Z5KNFPN83lN03lplZnMOD7_gLET8gI&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AfsuMXs8OKaONs-RtVjPykleJeqP_UC9I_vuH0WFbNbZrQ&oe=69A2ED89",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1314588440480639",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1314588440480639",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1314588440480639",
-      "id": "swipe-050",
+      "id": "swipe-047",
       "advertiser": "USA Global Group"
     },
     {
@@ -774,12 +732,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/634744109_808265868966766_4162568734140386840_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=110&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=6EZX-DoBe3gQ7kNvwE1r_hy&_nc_oc=AdnJX22xApb0I70ofRQ6gC3x4RP3ymlESKcBUcvAj0jPcVDEd1_Tk62fr50vWFnaOg4&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AfuHZ6UE6WT6NHpoTxOftCl6Pj_7rnhaAaVOidiqcL-m2Q&oe=69A2FF5F",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=886237057534742",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=886237057534742",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "886237057534742",
-      "id": "swipe-051",
+      "id": "swipe-048",
       "advertiser": "100 Speakers"
     },
     {
@@ -789,12 +747,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/635744778_916645800757777_672020828811592134_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=103&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=TluDgrwdFGIQ7kNvwFW2KUd&_nc_oc=AdkYeY8F7pbIe2UKnHxFdMSW_W1n2kfp4qR9X1aIG-VdXji9R_FeEhU3PFuPbJoSl60&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_Afs0oWlCuVSfKF6l2_CUOzvDperxQ_nWWkuiOPks1oEOLQ&oe=69A2F1C3",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=2551406738608049",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=2551406738608049",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "2551406738608049",
-      "id": "swipe-052",
+      "id": "swipe-049",
       "advertiser": "100 Speakers"
     },
     {
@@ -804,12 +762,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/637271699_2137542116993243_6776490799754154372_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=Ij_XVmfFgXkQ7kNvwHYmyPP&_nc_oc=Adnu1c5CpvBSkNgtFZzCbW9Hn5EDaGmSct5EcdpaqiLyLCfEImOsKntH0JZDM2tEIy4&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AfuJDA069JUTK1AnBfu84EA9ivqzMRNanOt6xpLjn0_Psg&oe=69A2F9FF",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1453818843009828",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1453818843009828",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1453818843009828",
-      "id": "swipe-053",
+      "id": "swipe-050",
       "advertiser": "100 Speakers"
     },
     {
@@ -819,12 +777,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/632582240_1902777130374809_8366645492984998381_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=110&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=e-gvz7TmXsQQ7kNvwGOL1v2&_nc_oc=Adkvg2W9Rd6r__7sx-ZQM6UK1ts56nRElKFJFaJYEAOeSYAwlKAxim75Qx-Hj3T0mXU&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AfsNBJrLpiah0qQ7-BOwra2HPJ_2oZFk1NsHjUyD1Tq92Q&oe=69A30294",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1567773507630674",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1567773507630674",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1567773507630674",
-      "id": "swipe-054",
+      "id": "swipe-051",
       "advertiser": "Lock It Lending - Page Tieng Viet"
     },
     {
@@ -834,12 +792,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/639729461_2334948533582718_6194907119279557828_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=105&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=-ymb0ipScawQ7kNvwGJdUzA&_nc_oc=AdkZ45C23ve9ym3S-mgaoNfu3oatEefWi7Fx5-uFxgSgmL8dS-I49p0_h_YrVEvK1Qg&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AfuSwoifiaBFT7tpxvkWiGQDoH98qqs4mYZ5rigOl65vrw&oe=69A2D5F4",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1455830595956606",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1455830595956606",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1455830595956606",
-      "id": "swipe-055",
+      "id": "swipe-052",
       "advertiser": "100 Speakers"
     },
     {
@@ -849,12 +807,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/639707155_920580613674175_1724092303497735184_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=106&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=jM-txXfEgI4Q7kNvwFXSpG7&_nc_oc=AdnxzT0rQlQ2VioiwohSKp5fEbRDqxdPkK2UfYwi3RlLyxw8iCjRMytN31CVdzarmHA&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AfvchYLRO-YmXidlqXXxmVjY7HAzCAKhAVcRt06oyVxvsA&oe=69A2D3ED",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1905510340327333",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1905510340327333",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1905510340327333",
-      "id": "swipe-056",
+      "id": "swipe-053",
       "advertiser": "100 Speakers"
     },
     {
@@ -864,12 +822,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/619666544_1198955919119952_2307244928435649654_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=oGXkOZ7CC-QQ7kNvwH-sfP5&_nc_oc=AdkopYxEQ6ZYPlzh0k_wj_9O5ND2AOACUmtigkdalBlTW_-2o87hdBJhXGdTat2Bvdw&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AfvnuF_X3e2urjcZP1QfoK7LUluheKl_mIvQ2OzHz2IVWw&oe=69A2EF58",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=749900104398956",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=749900104398956",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "749900104398956",
-      "id": "swipe-057",
+      "id": "swipe-054",
       "advertiser": "An beauty salon"
     },
     {
@@ -879,12 +837,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/616242078_1197545539180368_9143994537394882509_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=0HX6mru8h3MQ7kNvwEASCNl&_nc_oc=AdmjZfmfGvOkY2gmH8LuosrWBoNnGMKfj1Uksl4EX7o1hYN-jBwAV3UbT37kZFMunkQ&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=9KPDZEwur4iM5Ft6OQjBMQ&oh=00_AfsDvGfQ6n4agYfLL1ylO1ssA9Ura6Rgh9xAtjK7y8QlVg&oe=69A2E80E",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1328337799062430",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1328337799062430",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1328337799062430",
-      "id": "swipe-058",
+      "id": "swipe-055",
       "advertiser": "Anna\u2019s Lash & Brows"
     },
     {
@@ -894,12 +852,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/469076192_3959486050998274_5270299248145262659_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=kW82wFzPHogQ7kNvwFsieU5&_nc_oc=AdnWTr6CyOOh0121Pz-m1SXuNuh7fIO6aHR4-iHNXPGP_IjZNPAQoaAB8NDuBQlP3So&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AfsuN6nOYDpAuBr3iRBYEB8fVJmJmRQ4mUdp1Q9xmRCDKw&oe=69A2FBD3",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=3177876015696389",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=3177876015696389",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "3177876015696389",
-      "id": "swipe-059",
+      "id": "swipe-056",
       "advertiser": "Dan Lok"
     },
     {
@@ -909,12 +867,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/469362566_1124426579045775_4217303033609035249_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=108&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=6IqVAefd-KoQ7kNvwFLy3HT&_nc_oc=AdmCQpCwM4CA7vzLhAdu8lRbj7sfnDAmAlBIUmuRkLII9TQmBJnxIt4ianGyAUt7Pmk&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AftAoFqjbVquZvLBXuD3Jpe8J57K5KFS-mxTwn25WPfdhg&oe=69A2D16B",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1732257254394343",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1732257254394343",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1732257254394343",
-      "id": "swipe-060",
+      "id": "swipe-057",
       "advertiser": "Dan Lok"
     },
     {
@@ -924,12 +882,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/468955840_565573032752938_732548638825980786_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=N5IWpFYX0dIQ7kNvwFy_SDl&_nc_oc=Adn8qZaREMGq17HjUs7MqQf1W6BYhLz2nuqeEFWBt8KaHIHg0JiRhedv4V02TMVtTDM&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AftTMetS82q3GPZ5pRhVh3t80lSVcMRegMnyRUzmpLwG0Q&oe=69A2CB5A",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1243709240785130",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1243709240785130",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1243709240785130",
-      "id": "swipe-061",
+      "id": "swipe-058",
       "advertiser": "Dan Lok"
     },
     {
@@ -939,12 +897,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/469519513_1773168080103557_8896898797946357353_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=100&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=EZJ3WLjXHkEQ7kNvwHi5LgD&_nc_oc=AdkHKND0Y1phGO4e296_tyVyN7mNmahNjGBJmvK1ZRO6lnzdEfHQfMZ4oBC1frxI8HE&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AfswEAxkQUSVBzD3NVxVbi4NBthCmML9Z0An9JYn9Qje0Q&oe=69A2F1C8",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=660862413460475",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=660862413460475",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "660862413460475",
-      "id": "swipe-062",
+      "id": "swipe-059",
       "advertiser": "Dan Lok"
     },
     {
@@ -954,12 +912,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/469276581_552006214308010_6214142786545068799_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=fkZu6sg1jycQ7kNvwEeLeu_&_nc_oc=AdlyQIzdzNvhYjwP7KZCL38qy4o-fp3iqi0jJPR_cSN14zB5JXx-EWuiQEBWlu7jgZk&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AfvNqy97-35ozbkpY8nQnxqkirbH8KZeqT0S0mAJD_pV5A&oe=69A301FC",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=3582371518726135",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=3582371518726135",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "3582371518726135",
-      "id": "swipe-063",
+      "id": "swipe-060",
       "advertiser": "Dan Lok"
     },
     {
@@ -969,12 +927,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/469343915_1577008686347331_8929661189730111897_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=iZhxTI7zhecQ7kNvwHRPov0&_nc_oc=AdlEKhiLnlibKLZd4gBX_OahkoeDw6fzim67jaG7g7c2BkKggKbsZ8S6PLj630LQs1k&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AfswfaG_kVBzMhUcjkJFpWU-oKUtTz0hVMQfrJLj7JajBg&oe=69A2E16B",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=705071961862749",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=705071961862749",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "705071961862749",
-      "id": "swipe-064",
+      "id": "swipe-061",
       "advertiser": "Dan Lok"
     },
     {
@@ -984,12 +942,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/469115381_1253782725946293_2798115878657425074_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=111&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=ALXsUR39cNwQ7kNvwGsi-7p&_nc_oc=AdlDYwbO4TcrNscIjsi5A1eLRyBCYlQbyt9MEL4fwuPMWobFWErGE1u04Za_a7Ap2L8&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AfvhEaSr6_D5df6lmiqzOhX8Pzxf8V_E-z4djTjXspPEJg&oe=69A2F901",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=3442788725853403",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=3442788725853403",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "3442788725853403",
-      "id": "swipe-065",
+      "id": "swipe-062",
       "advertiser": "Dan Lok"
     },
     {
@@ -999,12 +957,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/469520014_1248761226173989_962310605103574256_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=103&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=jtuF8kCXBz0Q7kNvwE0ofEs&_nc_oc=AdmIDkUEtYNyvXf__EpiivmuTtbH0oPzMZr_mGulmDK-0Bwsx79RRyQWvW-YFNrgKuk&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AfvdTx6uiEYFkjW0OjDSS2X68_KqKGCaoyenN2oEu0MzTA&oe=69A2F046",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=662847579973284",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=662847579973284",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "662847579973284",
-      "id": "swipe-066",
+      "id": "swipe-063",
       "advertiser": "Dan Lok"
     },
     {
@@ -1014,12 +972,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/538018941_3237629696391421_2518636569747420179_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=108&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=4hLyYTj73QYQ7kNvwGWdPWG&_nc_oc=AdkciXcPauq_UCEfYfni9rMmJXd9b-jhkrSsEJYjc1QaRl1CK301xxpx89j4aaxeWxI&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_Aftby5nmG3t9xfOW-nksajpzeUMt_6D2noBvJORpxuTf5g&oe=69A2DF2A",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1835974723995218",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1835974723995218",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1835974723995218",
-      "id": "swipe-067",
+      "id": "swipe-064",
       "advertiser": "Dan Lok"
     },
     {
@@ -1029,12 +987,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/537893030_1734629830584211_5632221377785870809_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=Y1ww9nMoOPIQ7kNvwEMVaDk&_nc_oc=AdlVy_Sr1UiwzmRSUfDMQmdmc3mgeSYEKGrhAdqaqLuu-8GawlGgB9EWMwGYvjIGRI8&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AfsaO-VeP4mUjcr31DICa_0I9NVZK-E0LrKZlXFYntOx_Q&oe=69A2D2E9",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=769379045835534",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=769379045835534",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "769379045835534",
-      "id": "swipe-068",
+      "id": "swipe-065",
       "advertiser": "Dan Lok"
     },
     {
@@ -1044,12 +1002,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/537045488_1226381459174607_8266870636869281516_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=YCqeP1F6xBYQ7kNvwFxObID&_nc_oc=AdkuZFLSOrNv2ldpUzZNWKavkyEZgDE-ojBOo_Qzpf_t0XuCDI-Nfhv5EKr95OFlCyo&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AfvzOeIwY8T7vt3sFHamhH9LSN4oppMZj_Bp5T_xyXfNJw&oe=69A2F1AA",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=772107651948267",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=772107651948267",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "772107651948267",
-      "id": "swipe-069",
+      "id": "swipe-066",
       "advertiser": "Dan Lok"
     },
     {
@@ -1059,12 +1017,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/536982773_1059765416320301_8190182407642740975_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=111&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=8lP8rX4vbXcQ7kNvwHze426&_nc_oc=AdnlyiyKZT0PKbKSJeMH2tKJqO4DQ2sfITJCso4REKikG80C0o8Qx04hupNYQOuTcbI&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_Aftysi7ReC0GaRTbA2p3yPsGvs3XLVK6XX8BKhdzxOeobw&oe=69A2F0C7",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=24860715903520676",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=24860715903520676",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "24860715903520676",
-      "id": "swipe-070",
+      "id": "swipe-067",
       "advertiser": "Dan Lok"
     },
     {
@@ -1074,12 +1032,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/537413228_1072687938311854_8197982596695159666_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=110&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=QTIrCaF2znAQ7kNvwFB2svb&_nc_oc=AdktICzSiJU-5uHuVHPyJtYAiu2288EDTQyeX5bp9k3TrRqBGwytFOQ457e9vcw7PN8&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AftmjiJNvkytLHNbANFQstNr_wRcyMTyaSOI6zGxAgq2jA&oe=69A2FFBC",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=707169589013769",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=707169589013769",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "707169589013769",
-      "id": "swipe-071",
+      "id": "swipe-068",
       "advertiser": "Dan Lok"
     },
     {
@@ -1089,12 +1047,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/537360127_4222731254675427_6903365623853341298_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=104&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=U_Gc6f6G-IIQ7kNvwFF9dBx&_nc_oc=AdkoaeWc5ZGUg2PhEoW0d5dWwCjd7Nuk6uWBYbRaI08PNErtvpnX1JqWoiz5uZXOm6w&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_Afvr8EXdJ0UH-ftkYgecfYYnOw-kYxTJ7GYNW_qQODzxgg&oe=69A2E4E1",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1664106924262470",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1664106924262470",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1664106924262470",
-      "id": "swipe-072",
+      "id": "swipe-069",
       "advertiser": "Dan Lok"
     },
     {
@@ -1104,12 +1062,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/482230978_1394976171666349_7721222009789524756_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=104&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=wR1-5QDMTjMQ7kNvwFWdenM&_nc_oc=AdkXxr6MACPpNGMmkaW2OteyNaXVPFi0OJUrem02c7rSSO5EZ0kUdbABCFXHwQ1tSts&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_Afs2I5o9AWL5zZIZQXMjLuBLc9bqF1vFBk9RYYzq4x97Pg&oe=69A2EA62",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=708068055020124",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=708068055020124",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "708068055020124",
-      "id": "swipe-073",
+      "id": "swipe-070",
       "advertiser": "Dan Lok"
     },
     {
@@ -1119,12 +1077,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/482064091_1184687053164807_5699659017592003521_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=110&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=CkISz0VsubQQ7kNvwEuOAQr&_nc_oc=AdnWDtpmg0fBGZEsfH45euDysFBTsmXKsNUzr6k2lWMXhtrIg68xP1Sjo0T4JuTouBc&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_Afu4M_tGqWzM-N9jeWU9BKC8DqLOPeI2yVoNAJ81nQf6LQ&oe=69A2D283",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1440616080448060",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1440616080448060",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1440616080448060",
-      "id": "swipe-074",
+      "id": "swipe-071",
       "advertiser": "Dan Lok"
     },
     {
@@ -1134,12 +1092,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/469399210_1734707300656223_4546643741514165770_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=105&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=LyaI9DClS9sQ7kNvwFjgtok&_nc_oc=AdnSGP9YdBhPEXpoGeNJkK0xrSSVt-FJthn1Xpvmt7-cIVOAZ7iuPW2ikFOft90QThI&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AfsR3h2j2osGyEnRtVivgD_n4yAPxcsJ77c_E0RJv9j6Rw&oe=69A2FE93",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1220539409821551",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1220539409821551",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1220539409821551",
-      "id": "swipe-075",
+      "id": "swipe-072",
       "advertiser": "Dan Lok"
     },
     {
@@ -1149,12 +1107,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/635054775_1648478859498319_8361802581981498672_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=Mm5B7w7njNoQ7kNvwHEtrq6&_nc_oc=AdlUi7E8pF_oi6Yz-UrxYd25N0YFf084JMrYl9GbbLeDVfESwg7l8GlrtBzzWJ2g_cQ&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AfsV-aJhw8VkD4it7bcQ5bSjv0nh1zDrFUnJvDQC0vll8A&oe=69A2D78D",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1412983150282763",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1412983150282763",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1412983150282763",
-      "id": "swipe-076",
+      "id": "swipe-073",
       "advertiser": "Fabi\u00e1n Tejada - Master Trainer PNL, Hipnosis & Coaching avanzado"
     },
     {
@@ -1164,12 +1122,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/619148463_2334999173682319_9138738148817929169_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=108&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=IGAavee8fEYQ7kNvwF5ZYB2&_nc_oc=AdnyGmnxpimrR519RrPwKQeToHNGYoVLd4pWswuXCnV3Rf6UFA_wbizMDfECF-2iz1Y&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_Afsl7OtmJlOB-VGpqUoW7N2MCNvt5VIhbVFRuvyQHCEtNg&oe=69A2D987",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1337352431738228",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1337352431738228",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1337352431738228",
-      "id": "swipe-077",
+      "id": "swipe-074",
       "advertiser": "Study Room-\u09aa\u09a1\u09bc\u09be\u09b0 \u0998\u09b0"
     },
     {
@@ -1179,12 +1137,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/469354963_1330238878428481_8334147400442772235_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=107&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=7RWwGm5hvigQ7kNvwH0bC78&_nc_oc=AdmmUdzBdw5nRRom4LRm5e06hX6Y-EoPOJIzRLoeHemf-cbrjW9macVAvGQhodKYEeo&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=TCofn1fDdkmrGrmMuHHp2w&oh=00_AfuYWDwMly9S6dF36RaQskMV1obZ61j_xoMtCcRw8AIslA&oe=69A2DEA2",
       "category": "coaching",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=498921109876648",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=498921109876648",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "498921109876648",
-      "id": "swipe-078",
+      "id": "swipe-075",
       "advertiser": "Dan Lok"
     },
     {
@@ -1194,12 +1152,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/557613982_834117352376785_2989074078580551893_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=QDzvXZSC6mMQ7kNvwH5t6RK&_nc_oc=AdnixkwFOidFSEDjZTz-HtFaiF65Jmd2DkRrZCV1Czdf94VN1grWobjBoha-TFNnFE8&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AfuBTt_6ZGxjL4iP9ttxaCLn0gAPwa6es-tnfq7hQ-JNiA&oe=69A2D849",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=673771682011609",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=673771682011609",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "673771682011609",
-      "id": "swipe-079",
+      "id": "swipe-076",
       "advertiser": "BJ's Wholesale Club"
     },
     {
@@ -1209,12 +1167,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-19/631588197_18557818792017132_4923786080094140282_n.jpg?stp=dst-jpg_s206x206_tt6&_nc_cat=103&ccb=7-5&_nc_sid=525117&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=oPwKu9ChOzoQ7kNvwHGCnF3&_nc_oc=AdkeJbS8sfUuP89MMFS3K38MZTx3PAQM6ooY09FOqqGUT3Qr6RCGAayDOx0oJQripP4&_nc_zt=24&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_Aft_6FABrYOrKAvtiKJXIu2qOI61iW06Fevtp62Fc3m1sA&oe=69A2DC38",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1261309435775921",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1261309435775921",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1261309435775921",
-      "id": "swipe-080",
+      "id": "swipe-077",
       "advertiser": "southernjoy_3"
     },
     {
@@ -1224,12 +1182,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/529776884_1737752213776422_947506175244870205_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=sdoSSX7bAlAQ7kNvwENCZu4&_nc_oc=Adn8k7NrFPuoY1XPYcAeM63tTJbctvh9dlDVZvvUDRiumuYyENK5iQtRNQond9Eyy3Y&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AfulhRkTWAyV0ONxuHuXKp6jwsJG6JwSjzn-NzWDYqsZaQ&oe=69A2F275",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=658992713277072",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=658992713277072",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "658992713277072",
-      "id": "swipe-081",
+      "id": "swipe-078",
       "advertiser": "The Land Geek"
     },
     {
@@ -1239,12 +1197,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/616832533_1245704867452028_945084248889877968_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=111&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=cE_uUkOTcxIQ7kNvwEscl-7&_nc_oc=AdkGg63kip4m5fFCy8iYzde7mkDeX52B7_buJonS5HWx3eOIf3PETxLSb0Gm-1DRaBY&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_Afs5L_OEu23pYAahEZADDX6NVRD8MZMHRqfo_w8Np8oD2A&oe=69A2F0A4",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=885267900820228",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=885267900820228",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "885267900820228",
-      "id": "swipe-082",
+      "id": "swipe-079",
       "advertiser": "Oh Hey Sam's Club"
     },
     {
@@ -1254,12 +1212,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/618795123_1789824838358966_1682075892712402351_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=kl_X4F1yRAgQ7kNvwG4-icM&_nc_oc=Adll95YY36H6ee6jjOu5pZ3KyePiy2OHe5xMu10U-TmCjaCWjzuZHwstjKV6WN5IK78&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_Afue8YrE5-TqYI6_YRIcz9SB7qYPTJR5murtYQy4GIUE1A&oe=69A2ED73",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1056867086625356",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1056867086625356",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1056867086625356",
-      "id": "swipe-083",
+      "id": "swipe-080",
       "advertiser": "Sandy Bodeau"
     },
     {
@@ -1269,12 +1227,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/491790522_1374992576778299_4883114341314404752_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=UY8tWm4igKEQ7kNvwE347Xb&_nc_oc=AdkbtrPdK8SdRn1GH-_0P9jBKSz3LD_RgljtyTbQihPv7Ydiyg0CuUzq7u3a9KOaGZc&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AftayZqly17olwdxvafzM_psonL4QsDtPmS9Isx2XH8WeQ&oe=69A2FD68",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=969562098597051",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=969562098597051",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "969562098597051",
-      "id": "swipe-084",
+      "id": "swipe-081",
       "advertiser": "The Land Geek"
     },
     {
@@ -1284,12 +1242,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/552543514_1602400760722054_2097788247166590749_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=DIxBkwF2MJMQ7kNvwEusR5i&_nc_oc=AdksDZieACcn0_bfsqM4qFIWuXtoPmZwW28d_orgy1nv-ZuQen31-tGkjaWkQbyCJrg&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AfvgnkUSj0J59xoqVTWH0pX6xYh9aO9M9eD3BP4qpDxgfg&oe=69A2EA65",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1082533677019863",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1082533677019863",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1082533677019863",
-      "id": "swipe-085",
+      "id": "swipe-082",
       "advertiser": "Natasha Brown"
     },
     {
@@ -1299,12 +1257,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/564797416_1384326703413721_6567952412453464916_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=107&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=wMLMzYILPvEQ7kNvwFwPSDw&_nc_oc=Adn6t7Udf_dJvXJOPm9vqga-c7qLHqNPlJv36TadGWnqiNFYOzL5zNRwIX06EI6hwLg&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AftvngLFNkCc-bkxlCJ4AgvtagVpdZue8eqSl6ssLpWHzA&oe=69A2D7E2",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=803705705579116",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=803705705579116",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "803705705579116",
-      "id": "swipe-086",
+      "id": "swipe-083",
       "advertiser": "The CC Creative"
     },
     {
@@ -1314,12 +1272,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/469415254_1363897994597417_2645012205948787107_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=McF4_DoBQV4Q7kNvwHTH-2X&_nc_oc=AdlfpezOjWHNWMwbEJuyJMwvGMQT__nP8LnisN6TUIPJTbm2_C5IOojcii2sPG2UKOI&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AftlftPBJy3L4Wo33rEGE2BRVMHFu5vD9wIqC0wSKZthkw&oe=69A2FC1D",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1091849988891443",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1091849988891443",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1091849988891443",
-      "id": "swipe-087",
+      "id": "swipe-084",
       "advertiser": "Show Her Off Dance"
     },
     {
@@ -1329,12 +1287,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/625046832_1451500213271081_3179693802199247261_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=110&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=WEVigsfMeOwQ7kNvwEl4FVK&_nc_oc=AdlSVO1RdEkWr0EtgU2TxcwdkMMtDQa88jFqv7QnQpStgThS-uCuQs_Cp9XB3RpsAIg&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_Aft8cGy3BD68pKdH-4dzHQEaz1WOUb7XBLfajzvxja05lA&oe=69A30227",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1228673342552093",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1228673342552093",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1228673342552093",
-      "id": "swipe-088",
+      "id": "swipe-085",
       "advertiser": "Sam's Club"
     },
     {
@@ -1344,12 +1302,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/512691471_1310724877288570_4817226223634855229_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=103&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=PRItIodGSYUQ7kNvwHURfg3&_nc_oc=AdlUjuqbMX5tCV8nuWuFV9yKbS3EUoZsOsbT-HRDkquXMKOrzdLADpetF78bryuHMNk&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_Afvw3rpIJVeJQmm8n_we_kIe3EiBgQMEuGuVl_YyWB0fmg&oe=69A2D4F3",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1706102553342298",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1706102553342298",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1706102553342298",
-      "id": "swipe-089",
+      "id": "swipe-086",
       "advertiser": "The Land Geek"
     },
     {
@@ -1359,12 +1317,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/552243263_1324796505825022_1898436085095449946_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=104&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=nWiWX6FRXO8Q7kNvwHowp9Q&_nc_oc=AdkFF4i87fNA1vKwQkBifNglcz0Z-c6vSd6FcyvqzqBMy2UQaRATuZc7SAH1qstlz5k&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AfsD8r0FUQ9E-UIuHotUksJ4ITXrKcF-Nr7_Lug2d3gvBw&oe=69A2F826",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1833037490756212",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1833037490756212",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1833037490756212",
-      "id": "swipe-090",
+      "id": "swipe-087",
       "advertiser": "Natasha Brown"
     },
     {
@@ -1374,12 +1332,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-19/553503419_17845287882577184_8121209712543737937_n.jpg?stp=dst-jpg_s206x206_tt6&_nc_cat=1&ccb=7-5&_nc_sid=525117&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=jPWqs24YN3MQ7kNvwE5K5F5&_nc_oc=AdkPeG_cGTIRIcFZ1SGyiCNmvrWf3k7VzCkEdnTnrbo-OBnqNE1DTzb-2opkS75EQ70&_nc_zt=24&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_Aftsr7u17NRYfKyBBHABzfzaqdD-caEu1lHUFfTLjRjYkQ&oe=69A2CCDE",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1212781547706702",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1212781547706702",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1212781547706702",
-      "id": "swipe-091",
+      "id": "swipe-088",
       "advertiser": "annachernyshovaofficial"
     },
     {
@@ -1389,12 +1347,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/614361174_1195914558824451_6780795959132057842_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=2gaUu94TJdgQ7kNvwHuoSni&_nc_oc=AdnIvb2eMAMom0s0eke780xpcJSpBuieCZRSoXntJxaEhSzLy6AGUpFdKEjALmk7i2I&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_Aftbbj_h-FRgOhG8B83VaPJy-cgwVFOcjLZmT6mxKn6Jsg&oe=69A2D63F",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=860276913654230",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=860276913654230",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "860276913654230",
-      "id": "swipe-092",
+      "id": "swipe-089",
       "advertiser": "SamCart"
     },
     {
@@ -1404,12 +1362,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/638753386_1117345697132714_971302873801060534_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=100&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=sPAQ7F9PF8EQ7kNvwGUeL7t&_nc_oc=Adknob-Q9Ll94c5UNH-juTe0X6Pk0NCp80G5nwz_rAlZhBMsBSyqtsXbA3KLwb1n5AM&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AfsJ-tSbvFCBi_lAZHmUm8-P9wzJYp9VH22SeNQhbjDOiA&oe=69A2EF67",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1436210654825397",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1436210654825397",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1436210654825397",
-      "id": "swipe-093",
+      "id": "swipe-090",
       "advertiser": "Classic Truck Performance"
     },
     {
@@ -1419,12 +1377,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/632379761_2107839593324750_7321824260959574271_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=111&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=QY_MzWyjWOgQ7kNvwFdt5Aw&_nc_oc=AdljfDY4NAhL1hnv2lzT6nMxBOIVpsEfPC-HLHk8A91mCoQMAWuSPJOUcZqOFgquK_Y&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_Afs3QHnvlriyZldZjSWyPfmw2vOwd6dgz5TA743d1VjVlg&oe=69A2FD0A",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=740637855539818",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=740637855539818",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "740637855539818",
-      "id": "swipe-094",
+      "id": "swipe-091",
       "advertiser": "Whatnot"
     },
     {
@@ -1434,12 +1392,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/557627511_655130817374519_6934398411792026834_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=105&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=ddlZyLn5DpcQ7kNvwEa0g0F&_nc_oc=AdmQ3W1fFrWkMj7I7QXoCpFpc6trBCJTizHnfrOQcWUjJwUCMQ8pNKW5jOVr2-f-8CQ&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_Afv9tLCfVhu3By1q9j-uIUVnq2lxv1nIYiEoxfA0My96QQ&oe=69A2EB2D",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1505895160603584",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1505895160603584",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1505895160603584",
-      "id": "swipe-095",
+      "id": "swipe-092",
       "advertiser": "Natasha Brown"
     },
     {
@@ -1449,12 +1407,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/572187335_1365428951743035_9012280513200155216_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=fIfYG_yhdxgQ7kNvwFKt8GR&_nc_oc=AdntTfAokQnsD5yuJ4rA5ai-gM_ufxML5A9ITm4J_PPpjh3aq3Hcr_Er9em8M3W57qo&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_Aft50O8e3sal-YI6QpDk0E1sEBRwV7mRsMcCgU5HE266GA&oe=69A2DF40",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1383929320028509",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1383929320028509",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1383929320028509",
-      "id": "swipe-096",
+      "id": "swipe-093",
       "advertiser": "Amelia Newcomb Dressage"
     },
     {
@@ -1464,12 +1422,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/605516071_1540448610561155_975835553774575523_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=108&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=yORLSGDV00YQ7kNvwFHMbkT&_nc_oc=AdmPeTxsIKr2ooKkmW-re-fXMBC3E9qV-GtbRLVWz70UQZSHbN8pgdFiVk79y74a4s4&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AfvbjPFnbrsKrUT34rJZf9CZhIICowjbb29vGwC0iX2osg&oe=69A2CCA3",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=720048047453600",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=720048047453600",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "720048047453600",
-      "id": "swipe-097",
+      "id": "swipe-094",
       "advertiser": "Timothy Sykes"
     },
     {
@@ -1479,12 +1437,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/571299345_799640359655600_6661774048918105799_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=USbZn4T8Hk4Q7kNvwGNHKT-&_nc_oc=Adm2tgBUxOSAUTOPtSWTAMPuymFoNGD4v4pjL15UzmhDXw8JS1EQKgFDZpUuXAMVTqY&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_Afv7YQ4bMQqHaJ3Lql7rvT8ShKMRtwNxyCXzLql0lilQGA&oe=69A2CF86",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1150124533986816",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1150124533986816",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1150124533986816",
-      "id": "swipe-098",
+      "id": "swipe-095",
       "advertiser": "Amelia Newcomb Dressage"
     },
     {
@@ -1494,12 +1452,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/614199737_24569552066054175_8655145347076152838_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=110&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=524adxy3eoQQ7kNvwHFY3vx&_nc_oc=Adm0aGHK6Db0oNhiQTxENJ49BBvBKEv7uWnkcEF5atgBPVUj4Lcnj7c_th2F7Hpqm-o&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AftdyrQI-6RS_VIedh5xhKQpZ53eXunhJDDBBJoQy2r-zQ&oe=69A2E13D",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=25374190698870793",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=25374190698870793",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "25374190698870793",
-      "id": "swipe-099",
+      "id": "swipe-096",
       "advertiser": "Heyjenbrannen"
     },
     {
@@ -1509,12 +1467,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/571184938_809054921840986_8036602017755861955_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=107&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=gRo2V0kyfbkQ7kNvwEra4LK&_nc_oc=AdkExCF2lhh2xllbLHCIidsU5tOD3rC59BU4ZDf2FnK61kRTTAXg9Ij9-bH-kR8z6UY&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AfvWaJg5CXUP2-13Wyx1ZPQE02HNp088NOsV_OogcMBQvQ&oe=69A2E9DA",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=781431678121507",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=781431678121507",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "781431678121507",
-      "id": "swipe-100",
+      "id": "swipe-097",
       "advertiser": "Amelia Newcomb Dressage"
     },
     {
@@ -1524,12 +1482,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/614735761_1035470662107293_6165407593243439903_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=103&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=dPCFCQq8GWQQ7kNvwH78XHC&_nc_oc=AdnBqv1Mb0aFWkAbA9r3q4uV4dDJCyYcmvhMqKbCRqRyGVwp3baPUAxSirJwMSUd1SU&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_Afu6Gd1G4_rfk5z9wXucpXd4M-SqUjikhQ3Jx941AJF-pQ&oe=69A2FA21",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1455778702825839",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1455778702825839",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1455778702825839",
-      "id": "swipe-101",
+      "id": "swipe-098",
       "advertiser": "Hey Jen Brannen"
     },
     {
@@ -1539,12 +1497,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/564022164_1540728807373845_7777547592978001100_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=106&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=6fo88Q6zrfwQ7kNvwEeqICf&_nc_oc=Admh5A_WnyC9CcB_IPerXB42WpjX6ctWfplkZQpl3xQvsr74SpjMFEFT9aorZEM6siU&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AfvoSWRKcnMf_ZYccYNu3SA3bcOIXu37FSLN44ThFQs_uQ&oe=69A301C3",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=817984197383988",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=817984197383988",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "817984197383988",
-      "id": "swipe-102",
+      "id": "swipe-099",
       "advertiser": "wildnutritionist"
     },
     {
@@ -1554,12 +1512,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/540897616_1680358869467181_8804983776587231341_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=mOskGSBszfMQ7kNvwEveauy&_nc_oc=AdmOVrI65NKTG-NwtkgFXNKbP2RKOFG7H0HZgOLdlzl97Em25I0X5U6VvrG-dxakaSM&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=RGz7IRkf0JAxE9l4HAdNQg&oh=00_AftDQ2Wg17Ll74JhzPjGtXprwai0AMB5Pmj5T6HcbV0ehg&oe=69A2EDA7",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1780406929246809",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1780406929246809",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1780406929246809",
-      "id": "swipe-103",
+      "id": "swipe-100",
       "advertiser": "wildnutritionist"
     },
     {
@@ -1569,12 +1527,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/506531079_9554401664665878_8730312420740247246_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=8R7l2LG4KksQ7kNvwGI5iYZ&_nc_oc=AdkWe2mMG2HxICYxdlIu4RTbwhuZcHvi6PHdKvgHKVxEioFCQbaHdI83BPga-vKYAhI&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_Afvd-ZrUOP8_2i_8i2X9UrXVFw1Q0d9Us-rGtpIaYrKyuQ&oe=69A2E882",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1066234851520638",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1066234851520638",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1066234851520638",
-      "id": "swipe-104",
+      "id": "swipe-101",
       "advertiser": "1Billion.org"
     },
     {
@@ -1584,12 +1542,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/561632755_843827668211337_5890606800522748516_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=106&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=Nb1b5DtAahEQ7kNvwHfVIQp&_nc_oc=Admy-9kTyvF7m0MzbEesMmDvhPID4RhZS0MyOKU0y2urVjaep3wmqmUHONJkoK2rUBw&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_AftKZ8Wos5cu9o8VQESv9T1EMM3yaN-ydZctvfsZdzKTZA&oe=69A2E4F1",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=838652378848292",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=838652378848292",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "838652378848292",
-      "id": "swipe-105",
+      "id": "swipe-102",
       "advertiser": "Skool"
     },
     {
@@ -1599,12 +1557,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/589766032_781713958216702_7118422854721664558_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=PZ2VjxDqKdgQ7kNvwErIbi3&_nc_oc=AdlJPV1yphf-zDDozDJWW6_XVzn1KxW_hcuVKyAxbpJTx_qojv68lhoPDKmW_D2u8O8&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_Afv8_148Y9rk-iRZxzEtsex5TGRGQPGODFj4vPEBv-kfrQ&oe=69A2FDB5",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=2246406522453810",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=2246406522453810",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "2246406522453810",
-      "id": "swipe-106",
+      "id": "swipe-103",
       "advertiser": "Coalion"
     },
     {
@@ -1614,12 +1572,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/574235567_1615118552985120_6875642035752713708_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=100&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=KQ95KPicStQQ7kNvwH3lfhD&_nc_oc=Adn8hhExZ1GXiCdE8BiXuxbUzscW6yL4uJjohDzWZI9qz-ereLhxdqPMz8h02Vw7a5Y&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_Afs8lLTGZkktjn8AfUlK2dCAOhJhMk_5tDwM4a4dI8SM-w&oe=69A2D86C",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=809050075243362",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=809050075243362",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "809050075243362",
-      "id": "swipe-107",
+      "id": "swipe-104",
       "advertiser": "Skool"
     },
     {
@@ -1629,12 +1587,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/461954930_8425182424193945_1562247495251338976_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=cb3yL4ZEkm8Q7kNvwF4Ur2u&_nc_oc=AdkRqQ-b0Qudn4UBpCY-QNNXJayvJYvJxxo9ikBw6b7IcjOqKfCpnSrZqdbmAgTCGPs&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_AfvvqDoOMnpK2dHaZxTfYtUXc8Htn0BKAnkk4dDRm40Emg&oe=69A2FE38",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1488300881938484",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1488300881938484",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1488300881938484",
-      "id": "swipe-108",
+      "id": "swipe-105",
       "advertiser": "Sloth"
     },
     {
@@ -1644,12 +1602,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/606488631_968057976383631_5782462736920846341_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=110&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=8VyK9Rjm6DkQ7kNvwH3eUYt&_nc_oc=Adl-UVa_yClT9YwNbRWqqKn_-osd5hUsMayio50u4pIB4dbRWbjmgDrpVwbWedhBWHo&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_AfvJbJWzmeKMGZwLnFXRlKpahlD5KwX0FpUeSCk4JmAQeQ&oe=69A2F659",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1330535795541044",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1330535795541044",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1330535795541044",
-      "id": "swipe-109",
+      "id": "swipe-106",
       "advertiser": "Skool"
     },
     {
@@ -1659,12 +1617,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/581139049_807848978693943_2561173189777226939_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=Dn7TDooQLEkQ7kNvwFrz7Oz&_nc_oc=Adk4Kvf1Uqzo1Nz8N894n25lloaGEtEgy5GMxgUZgJ5G4qEl-4vu0IxNjOAiy3fQEyY&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_Aft6S8gfd7fFD6Ao4YZHFtQ3ww-YXP6PxFCWrbURH4nK7g&oe=69A2EA9E",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=805207242401997",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=805207242401997",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "805207242401997",
-      "id": "swipe-110",
+      "id": "swipe-107",
       "advertiser": "Skool"
     },
     {
@@ -1674,12 +1632,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/509424166_619459860565054_3095866700542365738_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=109&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=H9CN4fOtEZoQ7kNvwFwGBud&_nc_oc=AdmVl3fyGY9PtAvA3vDu70scGNRTYmJutlOzJhr2rc3q0WU31galCONLrRmh_VhWSls&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_AfvEdYzWBPhhn7oc3whZaaEltaT8BNLwP_L4KQgeV_cr8w&oe=69A2FF63",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=10013873858729624",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=10013873858729624",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "10013873858729624",
-      "id": "swipe-111",
+      "id": "swipe-108",
       "advertiser": "Layers Method Spanish"
     },
     {
@@ -1689,12 +1647,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/572831620_2680197318984009_3502684463041320258_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=111&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=fxmM0qiav0IQ7kNvwG5lh8D&_nc_oc=AdkSp8huj390jY70Nrf7hLmgqscpMdti-fmWGXLBW_T4hUuvRDdJN6J55eotLVwnNf8&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_Afvlh8CgVyM5ba6ocnPdco1455TGBOTqIY9NFIOmKVJNhQ&oe=69A2CCC4",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1808058633415962",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1808058633415962",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1808058633415962",
-      "id": "swipe-112",
+      "id": "swipe-109",
       "advertiser": "Skool"
     },
     {
@@ -1704,12 +1662,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/591885051_875636588226732_7167929333661943820_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=110&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=7iqTdxGSvGkQ7kNvwGkaZRz&_nc_oc=AdnXkD8Y92sfkmA19R_ilBxCUMDmyR3VRg12UwkeumcaKPF1UA05el0J9inCme9AY4U&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_Afvw68bhWwlUSm-LbFdvd5tpA-LqXIw9-CJL6j-2es_2cA&oe=69A2D929",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=847896101504892",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=847896101504892",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "847896101504892",
-      "id": "swipe-113",
+      "id": "swipe-110",
       "advertiser": "Skool"
     },
     {
@@ -1719,12 +1677,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/516703069_1374478497184705_4975252390499346975_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=107&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=nVLWxCic_D4Q7kNvwHh3bz-&_nc_oc=AdmGMeGRanJEsjeEVJrKlm2x6nmjuGppbecbktM9DF6lE5FO5N29JgmB2bVQ7y6bEiU&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_Afu-SBGxIDc5swGlqMnMnUZXVBhMv6TPJ765boY2AJ_37Q&oe=69A2CDF9",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1277896347292568",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1277896347292568",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1277896347292568",
-      "id": "swipe-114",
+      "id": "swipe-111",
       "advertiser": "Skool"
     },
     {
@@ -1734,12 +1692,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/486621539_1206638020980397_8004100597363218760_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=102&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=qZXtPjRpCs8Q7kNvwFZSSol&_nc_oc=Adnk9K6VV6fT6imP8JxIPN-2NxRsctp2Q_DXfbBLagB1NA50-Na03knNZqzlxzzmqqQ&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_AfvADTtdY16mDLN3yu4qJZbQlSh9dvS45qDoTUCIwtZYoA&oe=69A2FD5F",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1757704925088654",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1757704925088654",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1757704925088654",
-      "id": "swipe-115",
+      "id": "swipe-112",
       "advertiser": "QSN"
     },
     {
@@ -1749,12 +1707,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/467683482_1250502062942410_7250060132650907183_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=111&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=m-C1wK8wTcwQ7kNvwGpDDI7&_nc_oc=AdnLTScxpP0AoQ3RsGK3DBQB7C0-IRgzFZaWlfjhr-wzWc6RZ7V0PE6tRr-us61tMjI&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_AftbufaoG48gwUCTKh6tuJaqWJlQGHtHgAoxFBls5dbH3Q&oe=69A2E930",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1132607531818913",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1132607531818913",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1132607531818913",
-      "id": "swipe-116",
+      "id": "swipe-113",
       "advertiser": "Skate Life"
     },
     {
@@ -1764,12 +1722,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/597371451_2000804550768959_3565031381386608050_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=110&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=-L6PO7ZKdm8Q7kNvwHHquRl&_nc_oc=AdngkHTbd5883-Rvc-_SLSVpB9AlVHGG8hz04Iv1kXI95Qjzc08OkdkE76j5R_GqyhE&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_AftyPvaQSaTtykTfrYJ2foJGvZ5JyWL2f3J0cUqFA62axw&oe=69A2CF77",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1483749419386700",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1483749419386700",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1483749419386700",
-      "id": "swipe-117",
+      "id": "swipe-114",
       "advertiser": "Skool"
     },
     {
@@ -1779,12 +1737,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/425499896_407658545472612_7280022762057404358_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=100&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=2A4TOMlBhYoQ7kNvwGeHCOx&_nc_oc=AdnwwD1PiMP9ojsWdZt-aPpPUDL-HU1RKpMNh2X9fRGCAvHfzJPdKZa9Ne_fRjw-H9s&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_AfudEKN5GyV8syhZipZfDTrVaMgBHXZf6FJcg2rd_u1SWw&oe=69A2E17B",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=430377939604321",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=430377939604321",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "430377939604321",
-      "id": "swipe-118",
+      "id": "swipe-115",
       "advertiser": "Divorcetopia"
     },
     {
@@ -1794,12 +1752,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.35426-6/595292565_1253362630031974_6623528956251477565_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=103&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=IGY4mTaFYa4Q7kNvwH6xVla&_nc_oc=Adm9hIrmxAGFyPhRBEyIUJgW21Adl4RBGJY6KAm8Ol_bJ2JgeEaaD_BhWI2PzRcLJ3A&_nc_zt=14&_nc_ht=scontent-iad3-2.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_Afvuhs23qxU6e39LveEpM09cX8hiJtoTscryKVkvWV2MZQ&oe=69A2EAAA",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=1373851710953597",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=1373851710953597",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "1373851710953597",
-      "id": "swipe-119",
+      "id": "swipe-116",
       "advertiser": "Skool"
     },
     {
@@ -1809,12 +1767,12 @@
       "mediaType": "image",
       "imageUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.35426-6/518272297_1135022411788846_56432018281628423_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=109&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=OxnLwIfyhgEQ7kNvwGRMy0o&_nc_oc=AdlukICbVuzxRcc8ZeTp5613lfQs0cf_TCd6_wciUjrLSRK5jSe2YVJu1X1h221_BfA&_nc_zt=14&_nc_ht=scontent-iad3-1.xx&_nc_gid=1jXjURlNR_h8ziocLRl-IA&oh=00_AftjKQdeHU1Z17sQFyMG5ihDjKJp1vyOekz6hr2t1EHIsQ&oe=69A2DCD5",
       "category": "saas",
-      "adsLibraryUrl": "https://www.facebook.com/ads/library/?id=587728380830880",
+      "adsLibraryUrl": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=US&id=587728380830880",
       "foundDate": "2026-02-23",
       "notes": "",
       "whyItWorks": "",
       "libraryID": "587728380830880",
-      "id": "swipe-120",
+      "id": "swipe-117",
       "advertiser": "Skool"
     }
   ]
