@@ -464,5 +464,21 @@ footer .links{display:flex;justify-content:center;gap:24px;margin-top:8px}
 </section>
 
 </div>
+<script>
+// Report height to parent GHL page
+function reportHeight(){
+  window.parent.postMessage({type:'iframeHeight',height:document.body.scrollHeight},'*');
+}
+window.addEventListener('load',reportHeight);
+new ResizeObserver(reportHeight).observe(document.body);
+
+// CTA buttons scroll parent to form
+document.querySelectorAll('a[href="#form"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    window.parent.postMessage('scrollToForm','*');
+  });
+});
+</script>
 </body>
 </html>
