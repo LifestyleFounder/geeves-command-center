@@ -454,7 +454,7 @@ footer .links{display:flex;justify-content:center;gap:24px;margin-top:8px}
 </section>
 
 <!-- ═══ FINAL CTA ═══ -->
-<section class="section bg-glow" style="background:var(--bg);text-align:center;padding:80px 0 20px 0;margin-bottom:0">
+<section id="form" class="section bg-glow" style="background:var(--bg);text-align:center;padding:80px 0 20px 0;margin-bottom:0">
 <div class="container">
 <span class="sec-label">Ready?</span>
 <h2 class="sec-title">Your True Lifestyle Business Starts Here</h2>
@@ -464,21 +464,5 @@ footer .links{display:flex;justify-content:center;gap:24px;margin-top:8px}
 </section>
 
 </div>
-<script>
-// Report height to parent GHL page
-function reportHeight(){
-  window.parent.postMessage({type:'iframeHeight',height:document.body.scrollHeight},'*');
-}
-window.addEventListener('load',reportHeight);
-new ResizeObserver(reportHeight).observe(document.body);
-
-// CTA buttons scroll parent to form
-document.querySelectorAll('a[href="#form"]').forEach(function(a){
-  a.addEventListener('click',function(e){
-    e.preventDefault();
-    window.parent.postMessage('scrollToForm','*');
-  });
-});
-</script>
 </body>
 </html>
