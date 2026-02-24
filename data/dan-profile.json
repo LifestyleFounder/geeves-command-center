@@ -1,0 +1,110 @@
+{
+  "name": "Dan Harrison",
+  "role": "Founder, Lifestyle Founders Group",
+  "location": "Pacific Time",
+  "status": "in-progress",
+  "lastUpdated": "2026-02-23",
+
+  "story": {
+    "summary": "Built LFG from scratch to help established coaches build simple, profitable Skool-based businesses. 3x Skool Games winner. $1M+ generated with Community Funnel System — no sales calls.",
+    "background": "TODO — need Dan's origin story, what led to coaching, pivotal moments",
+    "mission": "Help coaches build $30-50K/mo businesses working 4 days/week. Bigger vision: Giving Games — 100K entrepreneurs × $1K marketing → $1B/year local giving impact."
+  },
+
+  "values": ["Fun", "Flow", "Freedom", "Fulfilment"],
+
+  "business": {
+    "company": "Lifestyle Founders Group",
+    "offer": "Helps established coaches (35-52, making $5-40K/mo) build simple, profitable Skool-based businesses",
+    "targetClient": "Coaches/consultants, 35-52, already making $5-40K/mo, want systems not hustle",
+    "differentiators": [
+      "3x Skool Games winner (only org to win 3 times)",
+      "$1M+ generated with Community Funnel System (no sales calls)",
+      "Blends systems with inner-game/spiritual growth",
+      "Soulful Selling — values-driven enrollment, no bro marketing"
+    ],
+    "offerStack": {
+      "free": "$0 — Top of funnel, community access",
+      "premium": "$100/mo — Weekly calls, playbooks, BackPak CRM, workshops",
+      "vip": "$1,000/mo — 100-day accelerator, 2x/week calls, 1:1 access, retreats",
+      "twelvemonth": "$12K/yr — Daily coaching Mon-Sat, full system build, retreats included"
+    },
+    "keyFrameworks": [
+      "7-Figure Skool Engine — Lead gen with AI, ads, workshops, Skool, BackPak",
+      "Micro-Trust Funnel — Stacking micro-commitments into high-ticket sales",
+      "Soulful Selling — Values-driven enrollment without bro marketing",
+      "BackPak CRM — White-label GHL with pre-loaded funnels/automations"
+    ],
+    "revenue": {
+      "currentVIPs": 28,
+      "targetVIPs": 72,
+      "targetMRR": "$84K core + $16K low-ticket = $100K MRR"
+    }
+  },
+
+  "schedule": {
+    "workDays": "Mon-Thu (4am-4pm PT)",
+    "familyTime": "4pm-9pm",
+    "offDays": "Fri-Sun",
+    "weeklyRhythm": {
+      "monday": "Organization — plan content, check-in with Gabby, bigger projects",
+      "tuesday": "Meetings — client calls, team sync, VIP call (Ads-focused)",
+      "wednesday": "Maker — content creation, passion projects (Dan's favorite day)",
+      "thursday": "Community — group call (Momentum-focused), client meetings",
+      "friday": "Open — projects, community check-ins, light"
+    }
+  },
+
+  "personality": {
+    "energizers": [
+      "Sales conversations (DMs, voice notes, chat)",
+      "Building systems",
+      "Coaching breakthrough moments",
+      "Strategic offer/positioning work",
+      "AI/automation experiments",
+      "Early morning deep work"
+    ],
+    "drains": [
+      "Manual data entry",
+      "Repetitive follow-up",
+      "Clients with info but no execution",
+      "Complex bloated systems",
+      "Hype/urgency/bro marketing"
+    ],
+    "communicationStyle": "Direct, skip the fluff, come with solutions, batch updates, mobile-friendly",
+    "fashion": "Henleys, earth tones, quiet luxury — Buck Mason, Taylor Stitch"
+  },
+
+  "voice": {
+    "status": "TODO — need samples of Dan's writing, posts, emails, scripts to reverse-engineer patterns",
+    "knownTraits": [
+      "Direct but warm",
+      "Anti-hype, anti-bro marketing",
+      "Values-driven",
+      "Systems thinker",
+      "Balances practical + spiritual"
+    ],
+    "sampleSources": "TODO — Skool posts, Instagram captions, email sequences, workshop scripts, sales page copy"
+  },
+
+  "team": {
+    "gabby": "Executive Assistant — relational care, check-ins, gifts, client attunement, calendars, emails",
+    "geeves": "AI EA/Partner — systems, automation, data, admin, the 80% execution"
+  },
+
+  "vision": {
+    "done": "$84K MRR core + $16K low-ticket = $100K MRR with waitlist. Tuesday/Thursday workdays. Growing personal brand. Giving Games ($1B/year impact). Investments growing, taxes paid, full integrity.",
+    "lifestyle": "4-day work week → 2-day work week. Family first. Freedom by design."
+  },
+
+  "gaps": [
+    "Origin story — how Dan got into coaching, pivotal moments",
+    "Voice samples — posts, emails, scripts for pattern analysis",
+    "Personal interests beyond work",
+    "Key beliefs / philosophies he teaches",
+    "Objections he hears most from prospects",
+    "What makes his coaching style unique vs competitors",
+    "Stories he tells repeatedly (signature stories)",
+    "Phrases / language patterns he naturally uses"
+  ]
+}
