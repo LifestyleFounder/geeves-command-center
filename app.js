@@ -810,26 +810,33 @@ function saveChangedEmoji(folderKey) {
 }
 
 // Drag and drop between folders
+let _docDragData = null; // Stash drag payload so drop always has access (Safari fix)
+
 function startDocDrag(event, docKey, isNote) {
-    event.dataTransfer.setData('text/plain', JSON.stringify({ docKey, isNote }));
+    _docDragData = { docKey, isNote };
+    event.dataTransfer.setData('text/plain', JSON.stringify(_docDragData));
     event.dataTransfer.effectAllowed = 'move';
     // Highlight all folder headers as drop targets
     setTimeout(() => {
-        document.querySelectorAll('.folder-header').forEach(el => el.classList.add('drop-target'));
+        document.querySelectorAll('.kh-cat-header').forEach(el => el.classList.add('drop-target'));
     }, 0);
 }
 
 function dropOnFolder(event, targetFolder) {
     event.preventDefault();
-    document.querySelectorAll('.folder-header').forEach(el => {
+    document.querySelectorAll('.kh-cat-header').forEach(el => {
         el.classList.remove('drop-target');
         el.classList.remove('drag-over');
     });
 
-    let data;
-    try { data = JSON.parse(event.dataTransfer.getData('text/plain')); } catch { return; }
+    // Try dataTransfer first, fall back to stashed data (Safari sometimes blocks getData)
+    let data = _docDragData;
+    try {
+        const raw = event.dataTransfer.getData('text/plain');
+        if (raw) data = JSON.parse(raw);
+    } catch {}
+    if (!data || !data.docKey) return;
     const { docKey } = data;
-    if (!docKey) return;
 
     let assignments = UserSettings.get('docFolderAssignments', {});
 
@@ -866,9 +873,48 @@ function dropOnFolder(event, targetFolder) {
 
 // Clean up drag highlights when drag ends
 document.addEventListener('dragend', () => {
-    document.querySelectorAll('.folder-header').forEach(el => {
+    _docDragData = null;
+    document.querySelectorAll('.kh-cat-header').forEach(el => {
         el.classList.remove('drop-target');
         el.classList.remove('drag-over');
+    });
+});
+
+// Delegated dragover/drop on docs tree — ensures drop works even when hovering over child elements
+document.addEventListener('DOMContentLoaded', () => {
+    const docsTree = document.getElementById('docsTree');
+    if (!docsTree) return;
+    
+    docsTree.addEventListener('dragover', (e) => {
+        const header = e.target.closest('.kh-cat-header');
+        if (header) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            // Clear previous highlights
+            docsTree.querySelectorAll('.kh-cat-header.drag-over').forEach(el => {
+                if (el !== header) el.classList.remove('drag-over');
+            });
+            header.classList.add('drag-over');
+        }
+    });
+    
+    docsTree.addEventListener('drop', (e) => {
+        const header = e.target.closest('.kh-cat-header');
+        if (header) {
+            // Find target folder from the ondrop attribute
+            const ondrop = header.getAttribute('ondrop');
+            const match = ondrop && ondrop.match(/dropOnFolder\(event,\s*'([^']+)'\)/);
+            if (match) {
+                dropOnFolder(e, match[1]);
+            }
+        }
+    });
+    
+    docsTree.addEventListener('dragleave', (e) => {
+        const header = e.target.closest('.kh-cat-header');
+        if (header && !header.contains(e.relatedTarget)) {
+            header.classList.remove('drag-over');
+        }
     });
 });
 
