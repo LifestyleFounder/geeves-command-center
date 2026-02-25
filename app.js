@@ -1229,14 +1229,12 @@ async function loadLocalNotes() {
 }
 
 function saveLocalNotes() {
-    // Only save to localStorage as fallback for non-Notion notes
-    const localNotes = notesState.notes.filter(n => n.source !== 'notion');
-    if (localNotes.length > 0) {
-        saveJSON('local-notes', {
-            lastUpdated: new Date().toISOString(),
-            notes: localNotes,
-        });
-    }
+    // Save all non-Notion notes AND Notion notes that have a temporary local ID (failed to sync)
+    const localNotes = notesState.notes.filter(n => n.source !== 'notion' || (n.id && n.id.startsWith('note-')));
+    saveJSON('local-notes', {
+        lastUpdated: new Date().toISOString(),
+        notes: localNotes,
+    });
 }
 
 function createNewNote() {
@@ -1332,18 +1330,30 @@ async function saveNote() {
     notesState.editingNote.content = htmlContent;
     notesState.editingNote.updatedAt = new Date().toISOString();
 
-    // Save to Notion
+    // Save to Notion (fall back to local-only if Notion unavailable)
     if (notesState.isNew) {
-        const created = await NotionNotes.create(title, plainContent);
-        if (created) {
-            notesState.editingNote.id = created.id;
-            notesState.editingNote.source = 'notion';
-            notesState.editingNote.notionUrl = created.url;
+        try {
+            const created = await NotionNotes.create(title, plainContent);
+            if (created) {
+                notesState.editingNote.id = created.id;
+                notesState.editingNote.source = 'notion';
+                notesState.editingNote.notionUrl = created.url;
+            } else {
+                notesState.editingNote.source = 'local';
+                console.warn('[saveNote] Notion unavailable, saving locally');
+            }
+        } catch (e) {
+            notesState.editingNote.source = 'local';
+            console.warn('[saveNote] Notion error, saving locally:', e.message);
         }
         notesState.notes.unshift(notesState.editingNote);
     } else {
         if (notesState.editingNote.source === 'notion') {
-            await NotionNotes.update(notesState.editingNote.id, { title, content: plainContent });
+            try {
+                await NotionNotes.update(notesState.editingNote.id, { title, content: plainContent });
+            } catch (e) {
+                console.warn('[saveNote] Notion update failed:', e.message);
+            }
         }
         const idx = notesState.notes.findIndex(n => n.id === notesState.editingNote.id);
         if (idx !== -1) {
