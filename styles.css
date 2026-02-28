@@ -3129,13 +3129,119 @@ body {
     }
 }
 
-/* Calendar Embed */
-.calendar-embed {
-    margin-top: var(--space-md);
+/* Schedule Widget (native calendar) */
+.schedule-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    max-height: 460px;
 }
 
-.calendar-embed iframe {
-    background: white;
+.schedule-list::-webkit-scrollbar {
+    display: none;
+}
+
+.schedule-date-sep {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.6rem 0.5rem 0.3rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.15rem;
+}
+
+.schedule-date-sep:first-child {
+    padding-top: 0.25rem;
+}
+
+.schedule-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.schedule-item:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.schedule-now {
+    border-left-color: var(--gold, #C8A24A);
+    background: rgba(200, 162, 74, 0.04);
+}
+
+.schedule-time {
+    flex-shrink: 0;
+    width: 65px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.schedule-allday {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--gold, #C8A24A);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.schedule-title {
+    flex: 1;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.35;
+}
+
+/* Loading skeleton */
+.schedule-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+.skel-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.skel-time {
+    width: 55px;
+    height: 14px;
+    background: var(--border);
+    border-radius: 4px;
+    animation: skelPulse 1.5s ease-in-out infinite;
+}
+
+.skel-title {
+    flex: 1;
+    height: 14px;
+    background: var(--border);
+    border-radius: 4px;
+    animation: skelPulse 1.5s ease-in-out 0.1s infinite;
+}
+
+@keyframes skelPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
 }
 
 /* ===========================================
@@ -6107,19 +6213,22 @@ body {
 /* ── Calendar Card ── */
 #business .calendar-card {
     max-height: 560px;
+    display: flex;
+    flex-direction: column;
 }
 
 #business .calendar-card .card-header {
     padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-#business .calendar-embed {
-    padding: 0 0.75rem 0.75rem;
-}
-
-#business .calendar-embed iframe {
-    border-radius: 12px !important;
-    height: 460px !important;
+#business .schedule-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 1rem 0.75rem;
+    max-height: none;
 }
 
 /* ── Tasks Card ── */
