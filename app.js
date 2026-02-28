@@ -6833,85 +6833,9 @@ async function deleteTaskBiz(taskId) {
 // Auto-init tasks when page loads (business tab is default)
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(initTasksBiz, 500);
-    setTimeout(loadSchedule, 600);
 });
 // Also try immediately in case DOMContentLoaded already fired
 setTimeout(initTasksBiz, 500);
-
-// ═══════════════════════════════════════════════════
-// SCHEDULE — GOOGLE CALENDAR NATIVE WIDGET
-// ═══════════════════════════════════════════════════
-
-async function loadSchedule() {
-    const container = document.getElementById('scheduleBody');
-    if (!container) return;
-
-    try {
-        const data = await fetch(`${TASKS_API}/calendar`).then(r => r.json());
-        if (data.error) throw new Error(data.error);
-        renderSchedule(data.events || []);
-    } catch (e) {
-        console.error('Schedule load error:', e);
-        container.innerHTML = `<div class="tasks-empty"><p style="font-size:0.8rem;color:#999;">Calendar unavailable</p></div>`;
-    }
-}
-
-function renderSchedule(events) {
-    const container = document.getElementById('scheduleBody');
-    if (!container) return;
-
-    // Limit to 8 events, already sorted by API
-    const items = events.slice(0, 8);
-
-    if (items.length === 0) {
-        container.innerHTML = `<div class="tasks-empty"><p>No upcoming events</p></div>`;
-        return;
-    }
-
-    const now = new Date();
-    let lastDateStr = '';
-
-    const html = items.map(ev => {
-        const allDay = !!ev.start.date;
-        const startDt = allDay ? new Date(ev.start.date + 'T00:00:00') : new Date(ev.start.dateTime);
-        const endDt = allDay
-            ? new Date(ev.end.date + 'T00:00:00')
-            : (ev.end.dateTime ? new Date(ev.end.dateTime) : null);
-
-        // Is happening now?
-        const isNow = !allDay && endDt && now >= startDt && now < endDt;
-
-        // Format time
-        let timeStr;
-        if (allDay) {
-            timeStr = 'All day';
-        } else {
-            timeStr = startDt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-        }
-
-        // Date separator
-        const dateStr = startDt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-        let separator = '';
-        if (dateStr !== lastDateStr) {
-            const isToday = startDt.toDateString() === now.toDateString();
-            const tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate() + 1);
-            const isTomorrow = startDt.toDateString() === tomorrow.toDateString();
-            const label = isToday ? 'Today' : isTomorrow ? 'Tomorrow' : dateStr;
-            separator = `<div class="schedule-date-sep">${label}</div>`;
-            lastDateStr = dateStr;
-        }
-
-        const title = escapeHtml(ev.summary || '(No title)');
-        const link = ev.htmlLink || '#';
-
-        return `${separator}<a href="${link}" target="_blank" class="schedule-item${isNow ? ' schedule-now' : ''}${allDay ? ' schedule-allday-item' : ''}">
-            <span class="schedule-time${allDay ? ' schedule-allday' : ''}">${timeStr}</span>
-            <span class="schedule-title">${title}</span>
-        </a>`;
-    }).join('');
-
-    container.innerHTML = html;
-}
 
 // ═══════════════════════════════════════════════════
 // CLIENT HEALTH — POWERED BY VIP DATA
