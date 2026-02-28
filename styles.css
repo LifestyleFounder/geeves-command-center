@@ -974,6 +974,7 @@ body {
 .note-toolbar {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: var(--space-xs);
     padding: var(--space-sm) var(--space-lg);
     border-bottom: 1px solid var(--border-light);
@@ -1050,6 +1051,49 @@ body {
     margin-bottom: var(--space-xs);
 }
 
+.note-content-editor code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    background: rgba(0, 0, 0, 0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.note-content-editor pre {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin: var(--space-md) 0;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.note-content-editor pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+    color: inherit;
+}
+
+.note-content-editor mark {
+    background: #fef08a;
+    padding: 1px 4px;
+    border-radius: 2px;
+}
+
+.note-content-editor a {
+    color: var(--forest-green);
+    text-decoration: none;
+}
+
+.note-content-editor a:hover {
+    text-decoration: underline;
+}
+
 .note-editor-footer {
     display: flex;
     align-items: center;
@@ -1111,6 +1155,48 @@ body {
     margin: var(--space-md) 0;
     color: #666;
     font-style: italic;
+}
+
+.note-preview-content code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    background: rgba(0, 0, 0, 0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.note-preview-content pre {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin: var(--space-md) 0;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.note-preview-content pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    color: inherit;
+}
+
+.note-preview-content mark {
+    background: #fef08a;
+    padding: 1px 4px;
+    border-radius: 2px;
+}
+
+.note-preview-content a {
+    color: var(--forest-green);
+    text-decoration: none;
+}
+
+.note-preview-content a:hover {
+    text-decoration: underline;
 }
 
 /* ===========================================
