@@ -212,26 +212,10 @@
                         </div>
                     </div>
                     
-                    <!-- Business Grid: 2x2 Layout -->
-                    <div class="business-grid-2x2" id="businessGrid">
-                        <!-- Row 1: Calendar + Tasks -->
-                        <!-- Calendar Embed -->
-                        <div class="card calendar-card biz-card" data-card="calendar">
-                            <div class="card-header">
-                                <h2>📅 Schedule</h2>
-                            </div>
-                            <div class="calendar-embed">
-                                <iframe 
-                                    src="https://calendar.google.com/calendar/embed?src=dan%40quantumcollective.com&ctz=America%2FVancouver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&showDate=1"
-                                    style="border: 0; width: 100%; height: 460px; border-radius: 8px;"
-                                    frameborder="0"
-                                    scrolling="no">
-                                </iframe>
-                            </div>
-                        </div>
-
-                        <!-- Tasks -->
-                        <div class="card tasks-card biz-card" data-card="tasks">
+                    <!-- Business Dashboard Grid -->
+                    <div class="business-grid" id="businessGrid">
+                        <!-- Row 1: Tasks (full width) -->
+                        <div class="card tasks-card biz-card biz-tasks-full" data-card="tasks">
                             <div class="card-header">
                                 <h2>✅ Tasks</h2>
                                 <div class="tasks-card-controls">
@@ -257,103 +241,51 @@
                             </div>
                         </div>
 
-                        <!-- Row 2: Client Health + Pipeline -->
+                        <!-- Row 2: Schedule + Client Health (side by side) -->
+                        <div class="card calendar-card biz-card" data-card="calendar">
+                            <div class="card-header">
+                                <h2>📅 Schedule</h2>
+                            </div>
+                            <div class="calendar-embed">
+                                <iframe
+                                    src="https://calendar.google.com/calendar/embed?src=dan%40quantumcollective.com&ctz=America%2FVancouver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&showDate=1"
+                                    style="border: 0; width: 100%; height: 400px; border-radius: 8px;"
+                                    frameborder="0"
+                                    scrolling="no">
+                                </iframe>
+                            </div>
+                        </div>
 
-                        <!-- Client Health (powered by VIP data) -->
                         <div class="card clients-card biz-card" data-card="clients">
                             <div class="card-header">
                                 <h2>Clients</h2>
                                 <span class="card-header-sub" id="clientsTotalLabel">—</span>
                             </div>
                             <div class="client-health-grid" id="clientHealthGrid">
-                                <!-- Populated by JS from VIP data -->
                                 <div class="empty-state"><p>Loading...</p></div>
                             </div>
                             <div class="client-alerts-live" id="clientAlertsLive">
-                                <!-- Populated by JS -->
+                                <!-- VIP alerts rendered here by JS -->
                             </div>
                         </div>
 
-                        <!-- Pipeline Metrics -->
-                        <div class="card pipeline-card biz-card" data-card="pipeline">
-                            <div class="card-header">
-                                <h2>🔥 Pipeline (This Week)</h2>
+                        <!-- Row 3: VIP Metrics (4 cards) -->
+                        <div class="vip-metrics-row">
+                            <div class="vip-metric-card">
+                                <span class="vip-metric-value" id="vipActiveCount">—</span>
+                                <span class="vip-metric-label">Active VIPs</span>
                             </div>
-                            <div class="pipeline-metrics-grid">
-                                <!-- Free Community -->
-                                <div class="metric-card free-card">
-                                    <div class="metric-header">
-                                        <span class="metric-icon">🌱</span>
-                                        <span class="metric-title">Free Community</span>
-                                    </div>
-                                    <div class="metric-main">
-                                        <span class="metric-current" id="freeTotal">0</span>
-                                    </div>
-                                    <div class="metric-sub">+<span id="freeLast30">0</span> last 30 days</div>
-                                </div>
-
-                                <!-- Workshop Customers -->
-                                <div class="metric-card workshop-card">
-                                    <div class="metric-header">
-                                        <span class="metric-icon">🎓</span>
-                                        <span class="metric-title">Workshops</span>
-                                    </div>
-                                    <div class="metric-main">
-                                        <span class="metric-current" id="workshopSales">0</span>
-                                        <span class="metric-unit">sales</span>
-                                    </div>
-                                    <div class="metric-sub">$<span id="workshopCash">0</span> collected</div>
-                                </div>
-
-                                <!-- Premium Community -->
-                                <div class="metric-card premium-card">
-                                    <div class="metric-header">
-                                        <span class="metric-icon">⚡</span>
-                                        <span class="metric-title">Premium</span>
-                                    </div>
-                                    <div class="metric-main">
-                                        <span class="metric-current" id="premiumTotal">0</span>
-                                    </div>
-                                    <div class="metric-sub"><span id="premiumChange" class="change-neutral">—</span> vs last month</div>
-                                </div>
-
-                                <!-- VIP Tier -->
-                                <div class="metric-card vip-card">
-                                    <div class="metric-header">
-                                        <span class="metric-icon">💎</span>
-                                        <span class="metric-title">VIP</span>
-                                    </div>
-                                    <div class="metric-main">
-                                        <span class="metric-current" id="vipTotal">0</span>
-                                    </div>
-                                    <div class="metric-sub"><span id="vipChange" class="change-neutral">—</span> vs last month</div>
-                                </div>
-
-                                <!-- 1:1 Tier -->
-                                <div class="metric-card oneone-card">
-                                    <div class="metric-header">
-                                        <span class="metric-icon">⭐</span>
-                                        <span class="metric-title">1:1</span>
-                                    </div>
-                                    <div class="metric-main">
-                                        <span class="metric-current" id="oneoneTotal">0</span>
-                                        <span class="metric-separator">/</span>
-                                        <span class="metric-cap">12</span>
-                                    </div>
-                                    <div class="metric-sub"><span id="oneoneSpots">12</span> spots left</div>
-                                </div>
-
-                                <!-- Applications -->
-                                <div class="metric-card apps-card">
-                                    <div class="metric-header">
-                                        <span class="metric-icon">📋</span>
-                                        <span class="metric-title">Applications</span>
-                                    </div>
-                                    <div class="metric-main">
-                                        <span class="metric-current" id="appsTotal">0</span>
-                                    </div>
-                                    <div class="metric-sub">this week</div>
-                                </div>
+                            <div class="vip-metric-card">
+                                <span class="vip-metric-value" id="vipMrr">—</span>
+                                <span class="vip-metric-label">Est. MRR</span>
+                            </div>
+                            <div class="vip-metric-card vip-metric-warning">
+                                <span class="vip-metric-value" id="vipAtRiskCount">—</span>
+                                <span class="vip-metric-label">At Risk</span>
+                            </div>
+                            <div class="vip-metric-card vip-metric-goal">
+                                <span class="vip-metric-value" id="vipToGoal">—</span>
+                                <span class="vip-metric-label">To Goal (72)</span>
                             </div>
                         </div>
                     </div>

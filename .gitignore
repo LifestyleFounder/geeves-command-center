@@ -1,3 +1,4 @@
 .vercel
 node_modules/
 scripts/.google-tasks-token.json
+.env*.local

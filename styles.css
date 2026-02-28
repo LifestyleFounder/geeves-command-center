@@ -5812,10 +5812,14 @@ body {
    BUSINESS DASHBOARD 2x2 GRID
    ═══════════════════════════════════════════════════ */
 
-.business-grid-2x2 {
+.business-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.25rem;
+}
+
+.biz-tasks-full {
+    grid-column: 1 / -1;
 }
 
 .biz-card {
@@ -6017,7 +6021,7 @@ body {
 }
 
 @media (max-width: 900px) {
-    .business-grid-2x2 {
+    .business-grid {
         grid-template-columns: 1fr;
     }
 }
@@ -6062,11 +6066,15 @@ body {
     transform: scale(1.02);
 }
 
-/* 2x2 Grid — generous spacing */
-.business-grid-2x2 {
+/* Dashboard Grid — tasks full-width, schedule+health side-by-side */
+.business-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
+}
+
+.biz-tasks-full {
+    grid-column: 1 / -1;
 }
 
 /* Cards — Apple glass-like feel */
@@ -6106,7 +6114,7 @@ body {
 
 /* ── Calendar Card ── */
 #business .calendar-card {
-    max-height: 560px;
+    max-height: 500px;
 }
 
 #business .calendar-card .card-header {
@@ -6410,87 +6418,7 @@ body {
     font-size: 0.9rem;
 }
 
-/* ── Pipeline Card ── */
-#business .pipeline-card {
-    padding-bottom: 1.5rem;
-}
-
-#business .pipeline-metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-    padding: 0 1.5rem;
-}
-
-#business .metric-card {
-    background: #f5f5f7;
-    border: none;
-    border-radius: 16px;
-    padding: 1.25rem;
-    text-align: center;
-    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-}
-
-#business .metric-card:hover {
-    background: #ececf0;
-    transform: scale(1.02);
-}
-
-#business .metric-header {
-    margin-bottom: 0.6rem;
-}
-
-#business .metric-icon {
-    font-size: 1.25rem;
-}
-
-#business .metric-title {
-    display: block;
-    font-size: 0.65rem;
-    font-weight: 600;
-    color: #86868b;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-top: 0.25rem;
-}
-
-#business .metric-main {
-    line-height: 1;
-    margin-bottom: 0.3rem;
-}
-
-#business .metric-current {
-    font-size: 1.75rem;
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    color: #1d1d1f;
-}
-
-#business .metric-separator,
-#business .metric-cap,
-#business .metric-unit {
-    font-size: 0.8rem;
-    color: #86868b;
-    font-weight: 500;
-}
-
-#business .metric-sub {
-    font-size: 0.7rem;
-    color: #86868b;
-    font-weight: 400;
-}
-
-/* Remove any old card backgrounds/borders leaking through */
-#business .metric-card.free-card,
-#business .metric-card.workshop-card,
-#business .metric-card.premium-card,
-#business .metric-card.vip-card,
-#business .metric-card.oneone-card,
-#business .metric-card.apps-card {
-    background: #f5f5f7;
-    border: none;
-    box-shadow: none;
-}
+/* (Pipeline card removed — replaced by VIP metrics row) */
 
 /* Tasks empty state */
 #business .tasks-empty {
@@ -6501,16 +6429,36 @@ body {
 }
 
 @media (max-width: 900px) {
-    .business-grid-2x2 {
+    .business-grid {
         grid-template-columns: 1fr;
     }
-    
+
+    .biz-tasks-full {
+        grid-column: 1;
+    }
+
     #business {
         padding: 1.5rem 1rem;
     }
-    
-    #business .pipeline-metrics-grid {
+
+    .vip-metrics-row {
+        grid-column: 1;
         grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .vip-metrics-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .vip-metric-card {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .vip-metric-value {
+        font-size: 1.75rem;
     }
 }
 
@@ -6685,37 +6633,68 @@ body {
     font-size: 0.7rem;
 }
 
-/* ── Pipeline V2 ── */
-#business .pipeline-metrics-grid {
+/* ── VIP Metrics Row ── */
+.vip-metrics-row {
+    grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.625rem;
-    padding: 0.25rem 1.25rem 0.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
 }
 
-#business .metric-card {
-    background: rgba(0, 0, 0, 0.02);
-    border-radius: 16px;
-    padding: 1.1rem 0.75rem;
+.vip-metric-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 20px;
+    padding: 1.5rem 1rem;
     text-align: center;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.02),
+        0 8px 24px rgba(0, 0, 0, 0.04);
+    transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-#business .metric-icon {
-    font-size: 1.1rem;
+.vip-metric-card:hover {
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.03),
+        0 12px 36px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
 }
 
-#business .metric-title {
+.vip-metric-value {
+    display: block;
     font-family: 'DM Sans', -apple-system, sans-serif;
-    font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-}
-
-#business .metric-current {
-    font-family: 'DM Sans', -apple-system, sans-serif;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 700;
     letter-spacing: -0.05em;
+    line-height: 1;
+    color: #1d1d1f;
+}
+
+.vip-metric-label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #86868b;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 0.5rem;
+}
+
+/* Warning accent for At Risk */
+.vip-metric-warning .vip-metric-value {
+    color: #FF9F0A;
+}
+
+/* Gold accent for To Goal */
+.vip-metric-goal {
+    border: 1px solid rgba(200, 162, 74, 0.25);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(200, 162, 74, 0.06) 100%);
+}
+
+.vip-metric-goal .vip-metric-value {
+    color: #C8A24A;
 }
 
 /* Task time input */
