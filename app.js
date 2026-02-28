@@ -1472,40 +1472,8 @@ function deleteNoteFromPreview(noteId) {
 }
 
 function formatText(command, value = null) {
-    const editor = document.getElementById('noteContentEditor');
-
-    if (command === 'createLink') {
-        const url = prompt('Enter URL:');
-        if (!url) { editor.focus(); return; }
-        document.execCommand('createLink', false, url);
-        editor.focus();
-        return;
-    }
-
-    if (command === 'code') {
-        const sel = window.getSelection();
-        if (sel.rangeCount && !sel.isCollapsed) {
-            const text = sel.toString();
-            document.execCommand('insertHTML', false, '<code>' + escapeHtml(text) + '</code>');
-        } else {
-            document.execCommand('insertHTML', false, '<pre><code>\n</code></pre>');
-        }
-        editor.focus();
-        return;
-    }
-
-    if (command === 'highlight') {
-        const sel = window.getSelection();
-        if (sel.rangeCount && !sel.isCollapsed) {
-            const text = sel.toString();
-            document.execCommand('insertHTML', false, '<mark>' + escapeHtml(text) + '</mark>');
-        }
-        editor.focus();
-        return;
-    }
-
     document.execCommand(command, false, value);
-    editor.focus();
+    document.getElementById('noteContentEditor').focus();
 }
 
 // Add notes to the folder tree
