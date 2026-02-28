@@ -6864,7 +6864,6 @@ async function initClientHealth() {
     if (data) {
         const clients = data.clients || data;
         renderClientHealth(clients);
-        renderVipMetrics(clients);
     }
 }
 
@@ -6952,25 +6951,6 @@ function renderClientHealth(clients) {
     </div>`;
     
     alerts.innerHTML = alertsHtml;
-}
-
-// ── VIP Metrics (4-card row) ──
-function renderVipMetrics(clients) {
-    const VIP_GOAL = 72;
-    const activeCount = clients.filter(c => c.status === 'Active').length;
-    const atRiskCount = clients.filter(c => c.status === 'At Risk').length;
-    const mrr = activeCount * 1000;
-    const toGoal = VIP_GOAL - activeCount;
-
-    const el = (id, val) => {
-        const e = document.getElementById(id);
-        if (e) e.textContent = val;
-    };
-
-    el('vipActiveCount', activeCount);
-    el('vipMrr', '$' + mrr.toLocaleString());
-    el('vipAtRiskCount', atRiskCount);
-    el('vipToGoal', toGoal);
 }
 
 // Override createTaskBiz to include time
